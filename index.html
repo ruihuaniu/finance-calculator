@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Finance.niuruihua.com loan calculator for mortgages, auto loans, personal and student loans with instant payment and cost estimates." />
+  <link rel="canonical" href="https://finance.niuruihua.com/" />
+  <meta property="og:title" content="FinCalc — Loan Calculator" />
+  <meta property="og:description" content="Estimate monthly payments, total interest and payoff date for mortgages, auto, personal and student loans." />
+  <meta property="og:url" content="https://finance.niuruihua.com/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FinCalc — Loan Calculator" />
+  <meta name="twitter:description" content="Finance.niuruihua.com loan calculator for mortgages, auto loans, personal and student loans with instant payment and cost estimates." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <title>FinCalc — Loan Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f4f6f9;
+      --surface:   #ffffff;
+      --surface2:  #f0f2f6;
+      --border:    #dde1ea;
+      --accent:    #2a6ef5;
+      --accent2:   #0fa878;
+      --accent3:   #9b5de5;
+      --text:      #1a1d26;
+      --muted:     #7a8099;
+      --danger:    #e0413a;
+      --radius:    14px;
+      --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    body {
+      background: radial-gradient(circle at top, rgba(42,110,245,0.16), transparent 35%),
+                  radial-gradient(circle at 20% 20%, rgba(15,168,120,0.12), transparent 30%),
+                  linear-gradient(180deg, #eef3fb 0%, #f7fafc 100%);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 80px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background aura */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(ellipse, rgba(42,110,245,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -150px; right: -150px;
+      width: 500px; height: 500px;
+      background: radial-gradient(ellipse, rgba(15,168,120,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper { width: 100%; max-width: 900px; position: relative; z-index: 1; }
+
+    /* Header */
+    header { text-align: center; margin-bottom: 48px; animation: fadeDown 0.7s ease both; }
+    .logo-line {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .logo-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(232,200,122,0.6);
+    }
+    .logo-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; letter-spacing: 0.25em;
+      color: var(--accent); text-transform: uppercase;
+    }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: var(--text);
+      line-height: 1.1;
+    }
+    h1 em { font-style: italic; color: var(--accent); }
+    .subtitle { color: var(--muted); font-size: 15px; margin-top: 10px; font-weight: 300; }
+
+    /* Tab switcher */
+    .tabs {
+      display: flex; gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 5px;
+      width: fit-content;
+      margin: 0 auto 36px;
+      animation: fadeDown 0.7s 0.1s ease both;
+    }
+    .tab {
+      padding: 8px 22px; border-radius: 50px; border: none;
+      background: transparent; color: var(--muted);
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+    }
+    .tab.active {
+      background: var(--accent); color: #ffffff; font-weight: 600;
+    }
+    .tab:not(.active):hover { color: var(--text); }
+
+    /* Main grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      animation: fadeUp 0.7s 0.15s ease both;
+    }
+    @media (max-width: 680px) { .main-grid { grid-template-columns: 1fr; } }
+
+    /* Cards */
+    .card {
+      position: relative;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(221,225,234,0.92);
+      border-radius: calc(var(--radius) + 4px);
+      padding: 30px;
+      box-shadow: 0 24px 60px rgba(28,38,84,0.08);
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.24em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    /* Field groups */
+    .field { margin-bottom: 20px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: var(--muted); margin-bottom: 8px;
+    }
+    .field label span { font-family: 'DM Mono', monospace; color: var(--accent); }
+
+    .input-wrap { position: relative; }
+    .prefix, .suffix {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      color: var(--muted); font-family: 'DM Mono', monospace; font-size: 14px;
+      pointer-events: none;
+    }
+    .prefix { left: 14px; }
+    .suffix { right: 14px; }
+
+    input[type=number], input[type=range], select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 15px;
+      padding: 14px 16px;
+      outline: none;
+      transition: var(--transition);
+      appearance: none;
+      -webkit-appearance: none;
+      box-shadow: inset 0 1px 2px rgba(15,23,42,0.05);
+    }
+    input[type=number]:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(42,110,245,0.12);
+    }
+    .has-prefix input[type=number] { padding-left: 34px; }
+    .has-suffix input[type=number] { padding-right: 42px; }
+    .has-prefix .prefix, .has-suffix .suffix {
+      color: rgba(26,29,38,0.6);
+    }
+
+    /* Range slider */
+    .range-group { display: flex; flex-direction: column; gap: 6px; }
+    input[type=range] {
+      padding: 0; height: 4px;
+      background: var(--border); border: none; border-radius: 4px; cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(232,200,122,0.4);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    .range-labels {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace;
+    }
+
+    select option { background: var(--surface2); }
+
+    /* Results card — spans full width */
+    .results-card {
+      grid-column: 1 / -1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .result-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 16px;
+      position: relative; overflow: hidden;
+      transition: var(--transition);
+    }
+    .result-item::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .result-item.highlight::before { background: var(--accent); }
+    .result-item.green::before   { background: var(--accent2); }
+    .result-item.purple::before  { background: var(--accent3); }
+    .result-item.red::before     { background: var(--danger); }
+
+    .result-label {
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); font-weight: 500; margin-bottom: 8px;
+    }
+    .result-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+      line-height: 1;
+    }
+    .result-item.highlight .result-value { color: var(--accent); }
+    .result-item.green .result-value     { color: var(--accent2); }
+    .result-item.purple .result-value    { color: var(--accent3); }
+    .result-item.red .result-value       { color: var(--danger); }
+    .result-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    /* Breakdown bar */
+    .breakdown { margin-top: 4px; }
+    .breakdown-title {
+      font-size: 12px; color: var(--muted); margin-bottom: 10px;
+      display: flex; justify-content: space-between;
+    }
+    .breakdown-bar {
+      height: 8px; border-radius: 4px;
+      background: var(--border);
+      overflow: hidden; margin-bottom: 12px;
+    }
+    .breakdown-bar-fill {
+      height: 100%; border-radius: 4px;
+      display: flex; overflow: hidden;
+      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .bar-principal { background: var(--accent2); }
+    .bar-interest  { background: var(--danger); }
+
+    .legend {
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12px; color: var(--muted);
+    }
+    .legend-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+
+    /* Schedule toggle */
+    .schedule-toggle {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); font-family: 'DM Sans', sans-serif;
+      font-size: 13px; padding: 9px 18px; border-radius: 8px;
+      cursor: pointer; transition: var(--transition);
+      display: flex; align-items: center; gap: 8px; margin-top: 20px;
+    }
+    .schedule-toggle:hover { border-color: var(--accent); color: var(--accent); }
+    .chevron { transition: transform 0.25s ease; }
+    .chevron.open { transform: rotate(180deg); }
+
+    /* Amortization table */
+    .schedule-wrap {
+      margin-top: 20px;
+      max-height: 320px; overflow-y: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+    .schedule-wrap.open { display: block; }
+    .schedule-wrap::-webkit-scrollbar { width: 6px; }
+    .schedule-wrap::-webkit-scrollbar-track { background: transparent; }
+    .schedule-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    table {
+      width: 100%; border-collapse: collapse;
+      font-family: 'DM Mono', monospace; font-size: 12px;
+    }
+    thead th {
+      position: sticky; top: 0;
+      background: var(--surface2);
+      color: var(--muted); font-weight: 500;
+      padding: 12px 14px; text-align: right;
+      border-bottom: 1px solid var(--border);
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    thead th:first-child { text-align: left; }
+    tbody td {
+      padding: 10px 14px; text-align: right;
+      color: var(--text); border-bottom: 1px solid rgba(37,41,53,0.5);
+    }
+    tbody td:first-child { text-align: left; color: var(--muted); }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    /* Calc button */
+    .calc-btn {
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #ffffff;
+      border: none; border-radius: 14px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 800;
+      cursor: pointer; letter-spacing: 0.04em;
+      transition: var(--transition);
+      margin-top: 20px;
+      box-shadow: 0 18px 32px rgba(42,110,245,0.18);
+    }
+    .calc-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 40px rgba(42,110,245,0.24);
+    }
+    .calc-btn:active { transform: translateY(0); }
+    .calc-btn:active { transform: translateY(0); }
+
+    /* Error */
+    .error-msg {
+      color: var(--danger); font-size: 12px; margin-top: 6px;
+      display: none;
+    }
+
+    /* Animations */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.6; }
+    }
+    .updating { animation: pulse 0.4s ease; }
+
+    /* Footer */
+    footer {
+      text-align: center; margin-top: 48px;
+      font-size: 12px; color: var(--muted);
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="logo-line">
+      <div class="logo-dot"></div>
+      <span class="logo-text">FinCalc</span>
+      <div class="logo-dot"></div>
+    </div>
+    <h1>Loan <em>Calculator</em></h1>
+    <p class="subtitle">Estimate your monthly payments and total cost of borrowing.</p>
+  </header>
+
+  <!-- Loan type tabs -->
+  <div class="tabs">
+    <button class="tab active" data-type="mortgage">Mortgage</button>
+    <button class="tab" data-type="auto">Auto Loan</button>
+    <button class="tab" data-type="personal">Personal Loan</button>
+    <button class="tab" data-type="student">Student Loan</button>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- Left: Loan inputs -->
+    <div class="card">
+      <p class="card-title">Loan Details</p>
+
+      <div class="field">
+        <label>Loan Amount <span id="lbl-amount">$250,000</span></label>
+        <div class="input-wrap has-prefix">
+          <span class="prefix">$</span>
+          <input type="number" id="amount" value="250000" min="1000" max="10000000" step="1000" />
+        </div>
+        <p class="error-msg" id="err-amount">Enter a valid amount.</p>
+        <div class="range-group" style="margin-top:10px">
+          <input type="range" id="range-amount" min="1000" max="1000000" step="1000" value="250000" />
+          <div class="range-labels"><span>$1K</span><span>$1M</span></div>
+        </div>
+      </div>
+
+      <div class="field" id="field-down">
+        <label>Down Payment <span id="lbl-down">$50,000</span></label>
+        <div class="input-wrap has-prefix">
+          <span class="prefix">$</span>
+          <input type="number" id="down" value="50000" min="0" step="1000" />
+        </div>
+        <div class="range-group" style="margin-top:10px">
+          <input type="range" id="range-down" min="0" max="500000" step="1000" value="50000" />
+          <div class="range-labels"><span>$0</span><span>$500K</span></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Loan Term <span id="lbl-term">30 years</span></label>
+        <div class="input-wrap has-suffix">
+          <input type="number" id="term" value="30" min="1" max="40" step="1" />
+          <span class="suffix">yrs</span>
+        </div>
+        <div class="range-group" style="margin-top:10px">
+          <input type="range" id="range-term" min="1" max="40" step="1" value="30" />
+          <div class="range-labels"><span>1 yr</span><span>40 yrs</span></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Payment Frequency</label>
+        <select id="frequency">
+          <option value="12" selected>Monthly</option>
+          <option value="26">Bi-weekly</option>
+          <option value="52">Weekly</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Right: Rate inputs -->
+    <div class="card">
+      <p class="card-title">Rate & Fees</p>
+
+      <div class="field">
+        <label>Annual Interest Rate <span id="lbl-rate">6.50%</span></label>
+        <div class="input-wrap has-suffix">
+          <input type="number" id="rate" value="6.5" min="0.01" max="50" step="0.05" />
+          <span class="suffix">%</span>
+        </div>
+        <p class="error-msg" id="err-rate">Enter a valid rate (0.01–50%).</p>
+        <div class="range-group" style="margin-top:10px">
+          <input type="range" id="range-rate" min="0.5" max="20" step="0.05" value="6.5" />
+          <div class="range-labels"><span>0.5%</span><span>20%</span></div>
+        </div>
+      </div>
+
+      <div class="field" id="field-pmi">
+        <label>PMI Rate (annual) <span id="lbl-pmi">0.50%</span></label>
+        <div class="input-wrap has-suffix">
+          <input type="number" id="pmi" value="0.5" min="0" max="5" step="0.05" />
+          <span class="suffix">%</span>
+        </div>
+        <div class="range-group" style="margin-top:10px">
+          <input type="range" id="range-pmi" min="0" max="3" step="0.05" value="0.5" />
+          <div class="range-labels"><span>0%</span><span>3%</span></div>
+        </div>
+      </div>
+
+      <div class="field" id="field-tax">
+        <label>Annual Property Tax <span id="lbl-tax">$3,000</span></label>
+        <div class="input-wrap has-prefix">
+          <span class="prefix">$</span>
+          <input type="number" id="tax" value="3000" min="0" step="100" />
+        </div>
+      </div>
+
+      <div class="field" id="field-insurance">
+        <label>Annual Home Insurance <span id="lbl-insurance">$1,200</span></label>
+        <div class="input-wrap has-prefix">
+          <span class="prefix">$</span>
+          <input type="number" id="insurance" value="1200" min="0" step="100" />
+        </div>
+      </div>
+
+      <button class="calc-btn" id="calc-btn">Calculate</button>
+    </div>
+
+    <!-- Results -->
+    <div class="results-card" id="results-card">
+      <p class="card-title">Your Results</p>
+
+      <div class="results-grid">
+        <div class="result-item highlight">
+          <div class="result-label">Monthly Payment</div>
+          <div class="result-value" id="res-monthly">—</div>
+          <div class="result-sub" id="res-freq-label">Principal & Interest</div>
+        </div>
+        <div class="result-item highlight" id="res-total-item" style="display:none">
+          <div class="result-label" id="res-total-label">Total Monthly</div>
+          <div class="result-value" id="res-total-monthly">—</div>
+          <div class="result-sub">incl. tax, ins & PMI</div>
+        </div>
+        <div class="result-item green">
+          <div class="result-label">Total Principal</div>
+          <div class="result-value" id="res-principal">—</div>
+          <div class="result-sub" id="res-loan-amount-sub">Loan amount</div>
+        </div>
+        <div class="result-item red">
+          <div class="result-label">Total Interest</div>
+          <div class="result-value" id="res-interest">—</div>
+          <div class="result-sub" id="res-interest-pct">—% of loan</div>
+        </div>
+        <div class="result-item purple">
+          <div class="result-label">Total Cost</div>
+          <div class="result-value" id="res-total-cost">—</div>
+          <div class="result-sub">Principal + interest</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Payoff Date</div>
+          <div class="result-value" id="res-payoff" style="font-size:1.3rem">—</div>
+          <div class="result-sub" id="res-payoff-sub">—</div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-title">
+          <span>Cost Breakdown</span>
+          <span id="breakdown-pct-label"></span>
+        </div>
+        <div class="breakdown-bar">
+          <div class="breakdown-bar-fill" id="bar-fill">
+            <div class="bar-principal" id="bar-principal" style="width:60%"></div>
+            <div class="bar-interest"  id="bar-interest"  style="width:40%"></div>
+          </div>
+        </div>
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--accent2)"></div>
+            <span>Principal</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--danger)"></div>
+            <span>Interest</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="schedule-toggle" id="sched-toggle">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        View Amortization Schedule
+        <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+
+      <div class="schedule-wrap" id="schedule-wrap">
+        <table id="amort-table">
+          <thead>
+            <tr>
+              <th>Period</th>
+              <th>Payment</th>
+              <th>Principal</th>
+              <th>Interest</th>
+              <th>Balance</th>
+            </tr>
+          </thead>
+          <tbody id="amort-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- end main-grid -->
+</div><!-- end wrapper -->
+
+<footer>
+  Results are estimates for informational purposes only. Consult a financial advisor for personalized advice.
+</footer>
+
+<script>
+  // ─── State ────────────────────────────────────────────────────
+  const loanType = { current: 'mortgage' };
+  const FREQ_LABELS = { 12: 'Monthly', 26: 'Bi-weekly', 52: 'Weekly' };
+  const STORAGE_KEY = 'finCalcState';
+  const DEFAULTS = {
+    activeType: 'mortgage',
+    mortgage: {
+      amount: 250000,
+      down: 50000,
+      term: 30,
+      rate: 6.5,
+      pmi: 0.5,
+      tax: 3000,
+      insurance: 1200,
+      frequency: 12,
+    },
+    auto: {
+      amount: 30000,
+      term: 5,
+      rate: 7.5,
+      frequency: 12,
+    },
+    personal: {
+      amount: 15000,
+      term: 5,
+      rate: 11.0,
+      frequency: 12,
+    },
+    student: {
+      amount: 40000,
+      term: 10,
+      rate: 5.5,
+      frequency: 12,
+    },
+  };
+
+  function loadStorage() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { ...DEFAULTS };
+    } catch (error) {
+      return { ...DEFAULTS };
+    }
+  }
+
+  function saveStorage(state) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      console.warn('Unable to persist calculator state.', error);
+    }
+  }
+
+  function getSavedState() {
+    const stored = loadStorage();
+    return {
+      ...DEFAULTS,
+      ...stored,
+      mortgage: { ...DEFAULTS.mortgage, ...stored.mortgage },
+      auto: { ...DEFAULTS.auto, ...stored.auto },
+      personal: { ...DEFAULTS.personal, ...stored.personal },
+      student: { ...DEFAULTS.student, ...stored.student },
+    };
+  }
+
+  function persistCurrentState() {
+    const saved = getSavedState();
+    saved[loanType.current] = {
+      amount: +inputs.amount.value,
+      down: +inputs.down.value,
+      term: +inputs.term.value,
+      rate: +inputs.rate.value,
+      pmi: +inputs.pmi.value,
+      tax: +inputs.tax.value,
+      insurance: +inputs.insurance.value,
+      frequency: +inputs.frequency.value,
+    };
+    saved.activeType = loanType.current;
+    saveStorage(saved);
+  }
+
+  function loadState(type) {
+    const saved = getSavedState();
+    return { ...DEFAULTS[type], ...saved[type] };
+  }
+
+  function setTabActive(type) {
+    document.querySelectorAll('.tab').forEach(button => {
+      button.classList.toggle('active', button.dataset.type === type);
+    });
+  }
+
+  function formatTerm(years) {
+    return years + ' year' + (years === 1 ? '' : 's');
+  }
+
+  window.addEventListener('storage', event => {
+    if (event.key === STORAGE_KEY) {
+      const saved = getSavedState();
+      const activeType = saved.activeType || loanType.current;
+      if (activeType !== loanType.current) {
+        applyLoanType(activeType);
+      } else {
+        applyLoanType(loanType.current);
+      }
+      calculate();
+    }
+  });
+
+  // ─── DOM refs ─────────────────────────────────────────────────
+  const $ = id => document.getElementById(id);
+  const inputs = {
+    amount:    $('amount'),    rAmount:   $('range-amount'),
+    down:      $('down'),      rDown:     $('range-down'),
+    rate:      $('rate'),      rRate:     $('range-rate'),
+    pmi:       $('pmi'),       rPmi:      $('range-pmi'),
+    tax:       $('tax'),
+    insurance: $('insurance'),
+    term:      $('term'),    rTerm:     $('range-term'),
+    frequency: $('frequency'),
+  };
+  const lbls = {
+    amount: $('lbl-amount'), down: $('lbl-down'), rate: $('lbl-rate'),
+    pmi: $('lbl-pmi'), tax: $('lbl-tax'), insurance: $('lbl-insurance'),
+    term: $('lbl-term'),
+  };
+  const res = {
+    monthly:       $('res-monthly'),
+    totalMonthly:  $('res-total-monthly'),
+    totalItem:     $('res-total-item'),
+    principal:     $('res-principal'),
+    loanAmtSub:    $('res-loan-amount-sub'),
+    interest:      $('res-interest'),
+    interestPct:   $('res-interest-pct'),
+    totalCost:     $('res-total-cost'),
+    payoff:        $('res-payoff'),
+    payoffSub:     $('res-payoff-sub'),
+    freqLabel:     $('res-freq-label'),
+  };
+
+  // ─── Formatters ───────────────────────────────────────────────
+  const fmtCurr = n => '$' + n.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  const fmtPct  = n => n.toFixed(2) + '%';
+
+  // ─── Sync range ↔ number inputs ───────────────────────────────
+  function syncPair(numEl, rangeEl, lbl, fmtFn) {
+    numEl.addEventListener('input', () => {
+      rangeEl.value = numEl.value;
+      lbl.textContent = fmtFn(+numEl.value);
+      calculate();
+    });
+    rangeEl.addEventListener('input', () => {
+      numEl.value = rangeEl.value;
+      lbl.textContent = fmtFn(+rangeEl.value);
+      calculate();
+    });
+  }
+  syncPair(inputs.amount,    inputs.rAmount,   lbls.amount,    n => fmtCurr(n));
+  syncPair(inputs.down,      inputs.rDown,     lbls.down,      n => fmtCurr(n));
+  syncPair(inputs.rate,      inputs.rRate,     lbls.rate,      n => fmtPct(n));
+  syncPair(inputs.pmi,       inputs.rPmi,      lbls.pmi,       n => fmtPct(n));
+
+  inputs.tax.addEventListener('input',       () => { lbls.tax.textContent = fmtCurr(+inputs.tax.value); calculate(); });
+  inputs.insurance.addEventListener('input', () => { lbls.insurance.textContent = fmtCurr(+inputs.insurance.value); calculate(); });
+  inputs.term.addEventListener('input', () => {
+    const years = Math.max(1, Math.min(40, Math.round(+inputs.term.value || 1)));
+    inputs.term.value = years;
+    inputs.rTerm.value = years;
+    lbls.term.textContent = formatTerm(years);
+    calculate();
+  });
+  inputs.rTerm.addEventListener('input', () => {
+    const years = +inputs.rTerm.value;
+    inputs.term.value = years;
+    lbls.term.textContent = formatTerm(years);
+    calculate();
+  });
+  inputs.frequency.addEventListener('change', calculate);
+
+  // ─── Tabs ─────────────────────────────────────────────────────
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loanType.current = btn.dataset.type;
+      applyLoanType(loanType.current);
+      calculate();
+    });
+  });
+
+  function applyLoanType(type) {
+    loanType.current = type;
+    setTabActive(type);
+
+    const mortgageOnly = ['field-down', 'field-pmi', 'field-tax', 'field-insurance'];
+    mortgageOnly.forEach(id => $(id).style.display = type === 'mortgage' ? '' : 'none');
+
+    const state = loadState(type);
+    inputs.amount.value    = state.amount;
+    inputs.rAmount.value   = state.amount;
+    inputs.term.value      = state.term;
+    inputs.rTerm.value     = state.term;
+    inputs.rate.value      = state.rate;
+    inputs.rRate.value     = state.rate;
+    inputs.frequency.value = state.frequency;
+
+    if (type === 'mortgage') {
+      inputs.down.value      = state.down;
+      inputs.rDown.value     = state.down;
+      inputs.pmi.value       = state.pmi;
+      inputs.rPmi.value      = state.pmi;
+      inputs.tax.value       = state.tax;
+      inputs.insurance.value = state.insurance;
+    }
+
+    lbls.amount.textContent   = fmtCurr(+inputs.amount.value);
+    lbls.rate.textContent     = fmtPct(+inputs.rate.value);
+    lbls.term.textContent     = formatTerm(+inputs.term.value);
+    lbls.down.textContent     = fmtCurr(+inputs.down.value);
+    lbls.pmi.textContent      = fmtPct(+inputs.pmi.value);
+    lbls.tax.textContent      = fmtCurr(+inputs.tax.value);
+    lbls.insurance.textContent= fmtCurr(+inputs.insurance.value);
+
+    persistCurrentState();
+  }
+
+  // ─── Core calculation ─────────────────────────────────────────
+  function calculate() {
+    const amount    = +inputs.amount.value;
+    const down      = loanType.current === 'mortgage' ? (+inputs.down.value || 0) : 0;
+    const principal = Math.max(amount - down, 0);
+    const annualRate= +inputs.rate.value / 100;
+    const years     = +inputs.term.value;
+    const freq      = +inputs.frequency.value;
+    const pmiRate   = loanType.current === 'mortgage' ? (+inputs.pmi.value / 100) : 0;
+    const annualTax = loanType.current === 'mortgage' ? +inputs.tax.value : 0;
+    const annualIns = loanType.current === 'mortgage' ? +inputs.insurance.value : 0;
+
+    // Validate
+    let valid = true;
+    if (!amount || amount < 1000) { $('err-amount').style.display = 'block'; valid = false; }
+    else $('err-amount').style.display = 'none';
+    if (!annualRate || annualRate <= 0 || annualRate > 0.5) { $('err-rate').style.display = 'block'; valid = false; }
+    else $('err-rate').style.display = 'none';
+    if (!valid) return;
+
+    const r = annualRate / freq;   // rate per period
+    const n = years * freq;        // total periods
+
+    // Standard amortisation
+    let payment;
+    if (r === 0) {
+      payment = principal / n;
+    } else {
+      payment = principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    }
+
+    const totalPrincipal = principal;
+    const totalPaid      = payment * n;
+    const totalInterest  = totalPaid - totalPrincipal;
+    const interestPct    = principal > 0 ? (totalInterest / totalPrincipal) * 100 : 0;
+
+    // Extras (mortgage only — spread per period)
+    const pmiPerPeriod  = (pmiRate * principal) / freq;
+    const taxPerPeriod  = annualTax / freq;
+    const insPerPeriod  = annualIns / freq;
+    const downPct = amount > 0 ? down / amount : 0;
+    const pmiActive = loanType.current === 'mortgage' && downPct < 0.2;
+    const extras = taxPerPeriod + insPerPeriod + (pmiActive ? pmiPerPeriod : 0);
+    const totalMonthly = payment + extras;
+
+    // Payoff date
+    const now = new Date();
+    const payoffDate = new Date(now);
+    const periodsPerMonth = freq / 12;
+    const totalMonths = Math.round(n / periodsPerMonth);
+    payoffDate.setMonth(payoffDate.getMonth() + totalMonths);
+    const payoffStr = payoffDate.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' });
+
+    // Update UI
+    const freqLabel = FREQ_LABELS[freq];
+    res.freqLabel.textContent = 'Principal & Interest';
+    res.monthly.textContent   = fmtCurr(payment);
+
+    if (loanType.current === 'mortgage' && extras > 0) {
+      res.totalItem.style.display = '';
+      res.totalMonthly.textContent = fmtCurr(totalMonthly);
+    } else {
+      res.totalItem.style.display = 'none';
+    }
+
+    res.principal.textContent   = fmtCurr(totalPrincipal);
+    res.loanAmtSub.textContent  = down > 0 ? `After $${(down/1000).toFixed(0)}K down` : 'Loan amount';
+    res.interest.textContent    = fmtCurr(totalInterest);
+    res.interestPct.textContent = interestPct.toFixed(1) + '% of principal';
+    res.totalCost.textContent   = fmtCurr(totalPaid);
+    res.payoff.textContent      = payoffStr;
+    res.payoffSub.textContent   = `${years} year${years > 1 ? 's' : ''}, ${freqLabel.toLowerCase()}`;
+
+    // Bar
+    const pPct = totalPaid > 0 ? (totalPrincipal / totalPaid) * 100 : 60;
+    const iPct = 100 - pPct;
+    $('bar-principal').style.width = pPct + '%';
+    $('bar-interest').style.width  = iPct + '%';
+    $('breakdown-pct-label').textContent = `${pPct.toFixed(1)}% principal · ${iPct.toFixed(1)}% interest`;
+
+    persistCurrentState();
+
+    // Pulse animation
+    document.querySelectorAll('.result-value').forEach(el => {
+      el.classList.remove('updating');
+      void el.offsetWidth;
+      el.classList.add('updating');
+    });
+
+    // Amortisation table
+    buildTable(principal, r, n, payment, freq);
+  }
+
+  function buildTable(principal, r, n, payment, freq) {
+    const tbody = $('amort-body');
+    tbody.innerHTML = '';
+    let balance = principal;
+    const freqLabel = FREQ_LABELS[freq] || 'Period';
+    const periodsPerYear = freq;
+
+    // Show yearly summary if > 24 periods, else show all
+    const showYearly = n > 24;
+
+    if (showYearly) {
+      let year = 1;
+      let yPrincipal = 0, yInterest = 0, yPayment = 0;
+      for (let i = 1; i <= n; i++) {
+        const interestPart = balance * r;
+        const principalPart = payment - interestPart;
+        balance = Math.max(balance - principalPart, 0);
+        yInterest  += interestPart;
+        yPrincipal += principalPart;
+        yPayment   += payment;
+
+        if (i % periodsPerYear === 0 || i === n) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>Year ${year}</td>
+            <td>${fmtCurr(yPayment)}</td>
+            <td>${fmtCurr(yPrincipal)}</td>
+            <td>${fmtCurr(yInterest)}</td>
+            <td>${fmtCurr(balance)}</td>`;
+          tbody.appendChild(tr);
+          year++;
+          yPrincipal = 0; yInterest = 0; yPayment = 0;
+        }
+      }
+    } else {
+      for (let i = 1; i <= n; i++) {
+        const interestPart = balance * r;
+        const principalPart = payment - interestPart;
+        balance = Math.max(balance - principalPart, 0);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>#${i}</td>
+          <td>${fmtCurr(payment)}</td>
+          <td>${fmtCurr(principalPart)}</td>
+          <td>${fmtCurr(interestPart)}</td>
+          <td>${fmtCurr(balance)}</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+  }
+
+  // ─── Schedule toggle ──────────────────────────────────────────
+  $('sched-toggle').addEventListener('click', () => {
+    const wrap = $('schedule-wrap');
+    const chevron = document.querySelector('.chevron');
+    wrap.classList.toggle('open');
+    chevron.classList.toggle('open');
+    $('sched-toggle').querySelector('span') &&
+      ($('sched-toggle').childNodes[2].textContent =
+        wrap.classList.contains('open') ? ' Hide Schedule' : ' View Amortization Schedule');
+  });
+
+  $('calc-btn').addEventListener('click', calculate);
+
+  // ─── Init ─────────────────────────────────────────────────────
+  const initState = getSavedState();
+  const initialLoanType = initState.activeType || 'mortgage';
+  applyLoanType(initialLoanType);
+  calculate();
+</script>
+</body>
+</html>
