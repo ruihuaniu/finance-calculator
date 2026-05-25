@@ -397,8 +397,8 @@
       <span class="logo-text">FinCalc</span>
       <div class="logo-dot"></div>
     </div>
-    <h1>Loan <em>Calculator</em></h1>
-    <p class="subtitle">Estimate your monthly payments and total cost of borrowing.</p>
+    <h1><em id="page-title">Loan</em> Calculator</h1>
+    <p class="subtitle" id="page-subtitle">Estimate your monthly payments and total cost of borrowing.</p>
   </header>
 
   <!-- Loan type tabs -->
@@ -407,12 +407,13 @@
     <button class="tab" data-type="auto">Auto Loan</button>
     <button class="tab" data-type="personal">Personal Loan</button>
     <button class="tab" data-type="student">Student Loan</button>
+    <button class="tab" data-type="investment">Investment</button>
   </div>
 
   <div class="main-grid">
 
     <!-- Left: Loan inputs -->
-    <div class="card">
+    <div class="card" id="loan-card">
       <p class="card-title">Loan Details</p>
 
       <div class="field">
@@ -462,8 +463,51 @@
       </div>
     </div>
 
+    <!-- Investment Card (hidden by default) -->
+    <div class="card" id="investment-card" style="display:none;">
+      <p class="card-title">Investment Details</p>
+    
+      <div class="field">
+        <label>Initial Investment <span id="lbl-invest-amount">$50,000</span></label>
+        <div class="input-wrap has-prefix">
+          <span class="prefix">$</span>
+          <input type="number" id="invest-amount" value="50000" min="100" max="10000000" step="100" />
+        </div>
+        <p class="error-msg" id="err-invest-amount">Enter a valid amount.</p>
+        <div class="range-group" style="margin-top:10px">
+          <input type="range" id="range-invest-amount" min="100" max="1000000" step="1000" value="50000" />
+          <div class="range-labels"><span>$100</span><span>$1M</span></div>
+        </div>
+      </div>
+    
+      <div class="field">
+        <label>Investment Period <span id="lbl-invest-years">10 years</span></label>
+        <div class="input-wrap has-suffix">
+          <input type="number" id="invest-years" value="10" min="1" max="50" step="1" />
+          <span class="suffix">yrs</span>
+        </div>
+        <div class="range-group" style="margin-top:10px">
+          <input type="range" id="range-invest-years" min="1" max="50" step="1" value="10" />
+          <div class="range-labels"><span>1 yr</span><span>50 yrs</span></div>
+        </div>
+      </div>
+    
+      <div class="field">
+        <label>Annual Return Rate <span id="lbl-annual-return">7.50%</span></label>
+        <div class="input-wrap has-suffix">
+          <input type="number" id="annual-return" value="7.5" min="0.01" max="100" step="0.05" />
+          <span class="suffix">%</span>
+        </div>
+        <p class="error-msg" id="err-annual-return">Enter a valid rate (0.01–100%).</p>
+        <div class="range-group" style="margin-top:10px">
+          <input type="range" id="range-annual-return" min="0.5" max="30" step="0.05" value="7.5" />
+          <div class="range-labels"><span>0.5%</span><span>30%</span></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Right: Rate inputs -->
-    <div class="card">
+    <div class="card" id="rate-card">
       <p class="card-title">Rate & Fees</p>
 
       <div class="field">
@@ -514,88 +558,170 @@
     <div class="results-card" id="results-card">
       <p class="card-title">Your Results</p>
 
-      <div class="results-grid">
-        <div class="result-item highlight">
-          <div class="result-label">Monthly Payment</div>
-          <div class="result-value" id="res-monthly">—</div>
-          <div class="result-sub" id="res-freq-label">Principal & Interest</div>
-        </div>
-        <div class="result-item highlight" id="res-total-item" style="display:none">
-          <div class="result-label" id="res-total-label">Total Monthly</div>
-          <div class="result-value" id="res-total-monthly">—</div>
-          <div class="result-sub">incl. tax, ins & PMI</div>
-        </div>
-        <div class="result-item green">
-          <div class="result-label">Total Principal</div>
-          <div class="result-value" id="res-principal">—</div>
-          <div class="result-sub" id="res-loan-amount-sub">Loan amount</div>
-        </div>
-        <div class="result-item red">
-          <div class="result-label">Total Interest</div>
-          <div class="result-value" id="res-interest">—</div>
-          <div class="result-sub" id="res-interest-pct">—% of loan</div>
-        </div>
-        <div class="result-item purple">
-          <div class="result-label">Total Cost</div>
-          <div class="result-value" id="res-total-cost">—</div>
-          <div class="result-sub">Principal + interest</div>
-        </div>
-        <div class="result-item">
-          <div class="result-label">Payoff Date</div>
-          <div class="result-value" id="res-payoff" style="font-size:1.3rem">—</div>
-          <div class="result-sub" id="res-payoff-sub">—</div>
-        </div>
-      </div>
-
-      <div class="breakdown">
-        <div class="breakdown-title">
-          <span>Cost Breakdown</span>
-          <span id="breakdown-pct-label"></span>
-        </div>
-        <div class="breakdown-bar">
-          <div class="breakdown-bar-fill" id="bar-fill">
-            <div class="bar-principal" id="bar-principal" style="width:60%"></div>
-            <div class="bar-interest"  id="bar-interest"  style="width:40%"></div>
+      <!-- Loan Results -->
+      <div id="loan-results">
+        <div class="results-grid">
+          <div class="result-item highlight">
+            <div class="result-label">Monthly Payment</div>
+            <div class="result-value" id="res-monthly">—</div>
+            <div class="result-sub" id="res-freq-label">Principal & Interest</div>
+          </div>
+          <div class="result-item highlight" id="res-total-item" style="display:none">
+            <div class="result-label" id="res-total-label">Total Monthly</div>
+            <div class="result-value" id="res-total-monthly">—</div>
+            <div class="result-sub">incl. tax, ins & PMI</div>
+          </div>
+          <div class="result-item green">
+            <div class="result-label">Total Principal</div>
+            <div class="result-value" id="res-principal">—</div>
+            <div class="result-sub" id="res-loan-amount-sub">Loan amount</div>
+          </div>
+          <div class="result-item red">
+            <div class="result-label">Total Interest</div>
+            <div class="result-value" id="res-interest">—</div>
+            <div class="result-sub" id="res-interest-pct">—% of loan</div>
+          </div>
+          <div class="result-item purple">
+            <div class="result-label">Total Cost</div>
+            <div class="result-value" id="res-total-cost">—</div>
+            <div class="result-sub">Principal + interest</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Payoff Date</div>
+            <div class="result-value" id="res-payoff" style="font-size:1.3rem">—</div>
+            <div class="result-sub" id="res-payoff-sub">—</div>
           </div>
         </div>
-        <div class="legend">
-          <div class="legend-item">
-            <div class="legend-dot" style="background:var(--accent2)"></div>
-            <span>Principal</span>
+
+        <div class="breakdown">
+          <div class="breakdown-title">
+            <span>Cost Breakdown</span>
+            <span id="breakdown-pct-label"></span>
           </div>
-          <div class="legend-item">
-            <div class="legend-dot" style="background:var(--danger)"></div>
-            <span>Interest</span>
+          <div class="breakdown-bar">
+            <div class="breakdown-bar-fill" id="bar-fill">
+              <div class="bar-principal" id="bar-principal" style="width:60%"></div>
+              <div class="bar-interest" id="bar-interest" style="width:40%"></div>
+              </div>
+              </div>
+              <div class="legend">
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--accent2)"></div>
+                  <span>Principal</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background:var(--danger)"></div>
+                  <span>Interest</span>
+                </div>
+              </div>
+              </div>
+
+        <button class="schedule-toggle" id="sched-toggle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            View Amortization Schedule
+            <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9" />
+            </svg>
+            </button>
+
+        <div class="schedule-wrap" id="schedule-wrap">
+          <table id="amort-table">
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th>Payment</th>
+                <th>Principal</th>
+                <th>Interest</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody id="amort-body"></tbody>
+          </table>
+        </div>
+        </div>
+
+      <!-- Investment Results -->
+      <div id="investment-results" style="display:none;">
+        <div class="results-grid">
+          <div class="result-item highlight">
+            <div class="result-label">Initial Investment</div>
+            <div class="result-value" id="res-invest-initial">—</div>
+            <div class="result-sub">Starting amount</div>
+          </div>
+          <div class="result-item green">
+            <div class="result-label">Final Amount (Annual)</div>
+            <div class="result-value" id="res-invest-final-annual">—</div>
+            <div class="result-sub">Compounded yearly</div>
+          </div>
+        </div>
+      
+        <p style="text-align: center; color: var(--muted); margin: 20px 0; font-size: 13px; font-weight: 500;">COMPARISON:
+          Same $<span id="comp-amount">50,000</span> Investment at <span id="comp-rate">7.5</span>% Annual Return</p>
+      
+        <div class="results-grid">
+          <div class="result-item purple">
+            <div class="result-label">Weekly Investment</div>
+            <div class="result-value" id="res-invest-final-weekly">—</div>
+            <div class="result-sub" id="res-weekly-gain">Gain: —</div>
+          </div>
+          <div class="result-item green">
+            <div class="result-label">Fortnightly Investment</div>
+            <div class="result-value" id="res-invest-final-fortnightly">—</div>
+            <div class="result-sub" id="res-fortnightly-gain">Gain: —</div>
+          </div>
+          <div class="result-item highlight">
+            <div class="result-label">Monthly Investment</div>
+            <div class="result-value" id="res-invest-final-monthly">—</div>
+            <div class="result-sub" id="res-monthly-gain">Gain: —</div>
+          </div>
+          <div class="result-item" style="border-top:2px solid var(--accent2)">
+            <div class="result-label">Yearly Investment</div>
+            <div class="result-value" id="res-invest-final-yearly">—</div>
+            <div class="result-sub" id="res-yearly-gain">Gain: —</div>
+          </div>
+        </div>
+      
+        <div class="breakdown" style="margin-top: 24px;">
+          <div class="breakdown-title">
+            <span>Final Returns Comparison</span>
+          </div>
+          <div id="investment-comparison-chart"
+            style="margin-top: 16px; padding: 16px; background: var(--surface2); border-radius: 10px;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+              <div style="text-align: center;">
+                <div
+                  style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
+                  Weekly</div>
+                <div style="font-size: 16px; font-weight: 700; color: var(--accent3);" id="chart-weekly">—</div>
+              </div>
+              <div style="text-align: center;">
+                <div
+                  style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
+                  Fortnightly</div>
+                <div style="font-size: 16px; font-weight: 700; color: var(--accent2);" id="chart-fortnightly">—</div>
+              </div>
+              <div style="text-align: center;">
+                <div
+                  style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
+                  Monthly</div>
+                <div style="font-size: 16px; font-weight: 700; color: var(--accent);" id="chart-monthly">—</div>
+              </div>
+              <div style="text-align: center;">
+                <div
+                  style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
+                  Yearly</div>
+                <div style="font-size: 16px; font-weight: 700; color: #999;" id="chart-yearly">—</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      <button class="schedule-toggle" id="sched-toggle">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
-        View Amortization Schedule
-        <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-
-      <div class="schedule-wrap" id="schedule-wrap">
-        <table id="amort-table">
-          <thead>
-            <tr>
-              <th>Period</th>
-              <th>Payment</th>
-              <th>Principal</th>
-              <th>Interest</th>
-              <th>Balance</th>
-            </tr>
-          </thead>
-          <tbody id="amort-body"></tbody>
-        </table>
       </div>
-    </div>
 
   </div><!-- end main-grid -->
 </div><!-- end wrapper -->
@@ -639,6 +765,11 @@
       rate: 5.5,
       frequency: 12,
     },
+    investment: {
+      amount: 50000,
+      years: 10,
+      rate: 7.5,
+    },
   };
 
   function loadStorage() {
@@ -666,21 +797,30 @@
       auto: { ...DEFAULTS.auto, ...stored.auto },
       personal: { ...DEFAULTS.personal, ...stored.personal },
       student: { ...DEFAULTS.student, ...stored.student },
+      investment: { ...DEFAULTS.investment, ...stored.investment },
     };
   }
 
   function persistCurrentState() {
     const saved = getSavedState();
-    saved[loanType.current] = {
-      amount: +inputs.amount.value,
-      down: +inputs.down.value,
-      term: +inputs.term.value,
-      rate: +inputs.rate.value,
-      pmi: +inputs.pmi.value,
-      tax: +inputs.tax.value,
-      insurance: +inputs.insurance.value,
-      frequency: +inputs.frequency.value,
-    };
+    if (loanType.current === 'investment') {
+      saved.investment = {
+        amount: +inputs.investAmount.value,
+        years: +inputs.investYears.value,
+        rate: +inputs.annualReturn.value,
+      };
+    } else {
+      saved[loanType.current] = {
+        amount: +inputs.amount.value,
+        down: +inputs.down.value,
+        term: +inputs.term.value,
+        rate: +inputs.rate.value,
+        pmi: +inputs.pmi.value,
+        tax: +inputs.tax.value,
+        insurance: +inputs.insurance.value,
+        frequency: +inputs.frequency.value,
+      };
+    }
     saved.activeType = loanType.current;
     saveStorage(saved);
   }
@@ -713,285 +853,426 @@
     }
   });
 
-  // ─── DOM refs ─────────────────────────────────────────────────
-  const $ = id => document.getElementById(id);
-  const inputs = {
-    amount:    $('amount'),    rAmount:   $('range-amount'),
-    down:      $('down'),      rDown:     $('range-down'),
-    rate:      $('rate'),      rRate:     $('range-rate'),
-    pmi:       $('pmi'),       rPmi:      $('range-pmi'),
-    tax:       $('tax'),
-    insurance: $('insurance'),
-    term:      $('term'),    rTerm:     $('range-term'),
-    frequency: $('frequency'),
-  };
-  const lbls = {
-    amount: $('lbl-amount'), down: $('lbl-down'), rate: $('lbl-rate'),
-    pmi: $('lbl-pmi'), tax: $('lbl-tax'), insurance: $('lbl-insurance'),
-    term: $('lbl-term'),
-  };
-  const res = {
-    monthly:       $('res-monthly'),
-    totalMonthly:  $('res-total-monthly'),
-    totalItem:     $('res-total-item'),
-    principal:     $('res-principal'),
-    loanAmtSub:    $('res-loan-amount-sub'),
-    interest:      $('res-interest'),
-    interestPct:   $('res-interest-pct'),
-    totalCost:     $('res-total-cost'),
-    payoff:        $('res-payoff'),
-    payoffSub:     $('res-payoff-sub'),
-    freqLabel:     $('res-freq-label'),
-  };
+      // ─── DOM refs ─────────────────────────────────────────────────
+      const $ = id => document.getElementById(id);
+      const inputs = {
+      amount: $('amount'), rAmount: $('range-amount'),
+      down: $('down'), rDown: $('range-down'),
+      rate: $('rate'), rRate: $('range-rate'),
+      pmi: $('pmi'), rPmi: $('range-pmi'),
+      tax: $('tax'),
+      insurance: $('insurance'),
+      term: $('term'), rTerm: $('range-term'),
+      frequency: $('frequency'),
+      investAmount: $('invest-amount'), rInvestAmount: $('range-invest-amount'),
+      investYears: $('invest-years'), rInvestYears: $('range-invest-years'),
+      annualReturn: $('annual-return'), rAnnualReturn: $('range-annual-return'),
+      };
+      const lbls = {
+        amount: $('lbl-amount'), down: $('lbl-down'), rate: $('lbl-rate'),
+        pmi: $('lbl-pmi'), tax: $('lbl-tax'), insurance: $('lbl-insurance'),
+        term: $('lbl-term'),
+      investAmount: $('lbl-invest-amount'),
+      investYears: $('lbl-invest-years'),
+      annualReturn: $('lbl-annual-return'),
+      };
+      const res = {
+      monthly: $('res-monthly'),
+      totalMonthly: $('res-total-monthly'),
+      totalItem: $('res-total-item'),
+      principal: $('res-principal'),
+      loanAmtSub: $('res-loan-amount-sub'),
+      interest: $('res-interest'),
+      interestPct: $('res-interest-pct'),
+      totalCost: $('res-total-cost'),
+      payoff: $('res-payoff'),
+      payoffSub: $('res-payoff-sub'),
+      freqLabel: $('res-freq-label'),
+      // Investment results
+      investInitial: $('res-invest-initial'),
+      investFinalAnnual: $('res-invest-final-annual'),
+      investFinalWeekly: $('res-invest-final-weekly'),
+      investFinalFortnightly: $('res-invest-final-fortnightly'),
+      investFinalMonthly: $('res-invest-final-monthly'),
+      investFinalYearly: $('res-invest-final-yearly'),
+      weeklyGain: $('res-weekly-gain'),
+      fortnightlyGain: $('res-fortnightly-gain'),
+      monthlyGain: $('res-monthly-gain'),
+      yearlyGain: $('res-yearly-gain'),
+      compAmount: $('comp-amount'),
+      compRate: $('comp-rate'),
+      chartWeekly: $('chart-weekly'),
+      chartFortnightly: $('chart-fortnightly'),
+      chartMonthly: $('chart-monthly'),
+      chartYearly: $('chart-yearly'),
+    };
 
-  // ─── Formatters ───────────────────────────────────────────────
-  const fmtCurr = n => '$' + n.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-  const fmtPct  = n => n.toFixed(2) + '%';
+      // ─── Formatters ───────────────────────────────────────────────
+      const fmtCurr = n => '$' + n.toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+      const fmtPct = n => n.toFixed(2) + '%';
 
-  // ─── Sync range ↔ number inputs ───────────────────────────────
-  function syncPair(numEl, rangeEl, lbl, fmtFn) {
-    numEl.addEventListener('input', () => {
-      rangeEl.value = numEl.value;
-      lbl.textContent = fmtFn(+numEl.value);
-      calculate();
-    });
-    rangeEl.addEventListener('input', () => {
-      numEl.value = rangeEl.value;
-      lbl.textContent = fmtFn(+rangeEl.value);
-      calculate();
-    });
-  }
-  syncPair(inputs.amount,    inputs.rAmount,   lbls.amount,    n => fmtCurr(n));
-  syncPair(inputs.down,      inputs.rDown,     lbls.down,      n => fmtCurr(n));
-  syncPair(inputs.rate,      inputs.rRate,     lbls.rate,      n => fmtPct(n));
-  syncPair(inputs.pmi,       inputs.rPmi,      lbls.pmi,       n => fmtPct(n));
+      // ─── Sync range ↔ number inputs ───────────────────────────────
+      function syncPair(numEl, rangeEl, lbl, fmtFn) {
+        numEl.addEventListener('input', () => {
+          rangeEl.value = numEl.value;
+          lbl.textContent = fmtFn(+numEl.value);
+          calculate();
+        });
+        rangeEl.addEventListener('input', () => {
+          numEl.value = rangeEl.value;
+          lbl.textContent = fmtFn(+rangeEl.value);
+          calculate();
+        });
+      }
+      syncPair(inputs.amount, inputs.rAmount, lbls.amount, n => fmtCurr(n));
+      syncPair(inputs.down, inputs.rDown, lbls.down, n => fmtCurr(n));
+      syncPair(inputs.rate, inputs.rRate, lbls.rate, n => fmtPct(n));
+      syncPair(inputs.pmi, inputs.rPmi, lbls.pmi, n => fmtPct(n));
+      syncPair(inputs.investAmount, inputs.rInvestAmount, lbls.investAmount, n => fmtCurr(n));
+      syncPair(inputs.annualReturn, inputs.rAnnualReturn, lbls.annualReturn, n => fmtPct(n));
 
-  inputs.tax.addEventListener('input',       () => { lbls.tax.textContent = fmtCurr(+inputs.tax.value); calculate(); });
-  inputs.insurance.addEventListener('input', () => { lbls.insurance.textContent = fmtCurr(+inputs.insurance.value); calculate(); });
-  inputs.term.addEventListener('input', () => {
-    const years = Math.max(1, Math.min(40, Math.round(+inputs.term.value || 1)));
-    inputs.term.value = years;
-    inputs.rTerm.value = years;
-    lbls.term.textContent = formatTerm(years);
-    calculate();
-  });
-  inputs.rTerm.addEventListener('input', () => {
-    const years = +inputs.rTerm.value;
-    inputs.term.value = years;
-    lbls.term.textContent = formatTerm(years);
-    calculate();
-  });
-  inputs.frequency.addEventListener('change', calculate);
+      inputs.tax.addEventListener('input', () => { lbls.tax.textContent = fmtCurr(+inputs.tax.value); calculate(); });
+      inputs.insurance.addEventListener('input', () => { lbls.insurance.textContent = fmtCurr(+inputs.insurance.value); calculate(); });
+      inputs.term.addEventListener('input', () => {
+        const years = Math.max(1, Math.min(40, Math.round(+inputs.term.value || 1)));
+        inputs.term.value = years;
+        inputs.rTerm.value = years;
+        lbls.term.textContent = formatTerm(years);
+        calculate();
+      });
+      inputs.rTerm.addEventListener('input', () => {
+        const years = +inputs.rTerm.value;
+        inputs.term.value = years;
+        lbls.term.textContent = formatTerm(years);
+        calculate();
+      });
+      inputs.investYears.addEventListener('input', () => {
+        const years = Math.max(1, Math.min(50, Math.round(+inputs.investYears.value || 1)));
+        inputs.investYears.value = years;
+        inputs.rInvestYears.value = years;
+        lbls.investYears.textContent = formatTerm(years);
+        calculate();
+      });
+      inputs.rInvestYears.addEventListener('input', () => {
+        const years = +inputs.rInvestYears.value;
+        inputs.investYears.value = years;
+        lbls.investYears.textContent = formatTerm(years);
+        calculate();
+      });
+      inputs.frequency.addEventListener('change', calculate);
 
-  // ─── Tabs ─────────────────────────────────────────────────────
-  document.querySelectorAll('.tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      loanType.current = btn.dataset.type;
-      applyLoanType(loanType.current);
-      calculate();
-    });
-  });
+      // ─── Tabs ─────────────────────────────────────────────────────
+      document.querySelectorAll('.tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          loanType.current = btn.dataset.type;
+          applyLoanType(loanType.current);
+          calculate();
+        });
+      });
 
-  function applyLoanType(type) {
-    loanType.current = type;
-    setTabActive(type);
+      function applyLoanType(type) {
+        loanType.current = type;
+        setTabActive(type);
 
-    const mortgageOnly = ['field-down', 'field-pmi', 'field-tax', 'field-insurance'];
-    mortgageOnly.forEach(id => $(id).style.display = type === 'mortgage' ? '' : 'none');
+      // Update page title
+      const pageTitle = $('page-title');
+      const pageSubtitle = $('page-subtitle');
+      if (type === 'investment') {
+        pageTitle.textContent = 'Investment';
+        pageSubtitle.textContent = 'Calculate investment returns with different compounding periods.';
+        $('loan-card').style.display = 'none';
+        $('rate-card').style.display = 'none';
+        $('investment-card').style.display = '';
+        $('loan-results').style.display = 'none';
+        $('investment-results').style.display = '';
+      } else {
+        pageTitle.textContent = 'Loan';
+        pageSubtitle.textContent = 'Estimate your monthly payments and total cost of borrowing.';
+        $('loan-card').style.display = '';
+        $('rate-card').style.display = '';
+        $('investment-card').style.display = 'none';
+        $('loan-results').style.display = '';
+        $('investment-results').style.display = 'none';
 
-    const state = loadState(type);
-    inputs.amount.value    = state.amount;
-    inputs.rAmount.value   = state.amount;
-    inputs.term.value      = state.term;
-    inputs.rTerm.value     = state.term;
-    inputs.rate.value      = state.rate;
-    inputs.rRate.value     = state.rate;
-    inputs.frequency.value = state.frequency;
+      // Update loan-specific UI
+        const mortgageOnly = ['field-down', 'field-pmi', 'field-tax', 'field-insurance'];
+        mortgageOnly.forEach(id => $(id).style.display = type === 'mortgage' ? '' : 'none');
+      }
 
-    if (type === 'mortgage') {
-      inputs.down.value      = state.down;
-      inputs.rDown.value     = state.down;
-      inputs.pmi.value       = state.pmi;
-      inputs.rPmi.value      = state.pmi;
-      inputs.tax.value       = state.tax;
-      inputs.insurance.value = state.insurance;
+      const state = loadState(type);
+      if (type === 'investment') {
+        inputs.investAmount.value = state.amount;
+        inputs.rInvestAmount.value = state.amount;
+        inputs.investYears.value = state.years;
+        inputs.rInvestYears.value = state.years;
+        inputs.annualReturn.value = state.rate;
+        inputs.rAnnualReturn.value = state.rate;
+        lbls.investAmount.textContent = fmtCurr(+inputs.investAmount.value);
+        lbls.investYears.textContent = formatTerm(+inputs.investYears.value);
+        lbls.annualReturn.textContent = fmtPct(+inputs.annualReturn.value);
+      } else {
+        inputs.amount.value = state.amount;
+        inputs.rAmount.value = state.amount;
+        inputs.term.value = state.term;
+        inputs.rTerm.value = state.term;
+        inputs.rate.value = state.rate;
+        inputs.rRate.value = state.rate;
+        inputs.frequency.value = state.frequency;
+
+        if (type === 'mortgage') {
+          inputs.down.value = state.down;
+          inputs.rDown.value = state.down;
+          inputs.pmi.value = state.pmi;
+          inputs.rPmi.value = state.pmi;
+          inputs.tax.value = state.tax;
+          inputs.insurance.value = state.insurance;
+        }
+
+        lbls.amount.textContent = fmtCurr(+inputs.amount.value);
+        lbls.rate.textContent = fmtPct(+inputs.rate.value);
+        lbls.term.textContent = formatTerm(+inputs.term.value);
+        lbls.down.textContent = fmtCurr(+inputs.down.value);
+        lbls.pmi.textContent = fmtPct(+inputs.pmi.value);
+        lbls.tax.textContent = fmtCurr(+inputs.tax.value);
+        lbls.insurance.textContent = fmtCurr(+inputs.insurance.value);
+      }
+
+      persistCurrentState();
     }
 
-    lbls.amount.textContent   = fmtCurr(+inputs.amount.value);
-    lbls.rate.textContent     = fmtPct(+inputs.rate.value);
-    lbls.term.textContent     = formatTerm(+inputs.term.value);
-    lbls.down.textContent     = fmtCurr(+inputs.down.value);
-    lbls.pmi.textContent      = fmtPct(+inputs.pmi.value);
-    lbls.tax.textContent      = fmtCurr(+inputs.tax.value);
-    lbls.insurance.textContent= fmtCurr(+inputs.insurance.value);
+      // ─── Investment calculation ───────────────────────────────────
+      function calculateInvestment() {
+        const principal = +inputs.investAmount.value;
+        const years = +inputs.investYears.value;
+        const annualRate = +inputs.annualReturn.value / 100;
 
-    persistCurrentState();
-  }
+        // Validate
+        let valid = true;
+        if (!principal || principal < 100) { $('err-invest-amount').style.display = 'block'; valid = false; }
+        else $('err-invest-amount').style.display = 'none';
+        if (!annualRate || annualRate <= 0 || annualRate > 1) { $('err-annual-return').style.display = 'block'; valid = false; }
+        else $('err-annual-return').style.display = 'none';
+        if (!valid) return;
 
-  // ─── Core calculation ─────────────────────────────────────────
-  function calculate() {
-    const amount    = +inputs.amount.value;
-    const down      = loanType.current === 'mortgage' ? (+inputs.down.value || 0) : 0;
-    const principal = Math.max(amount - down, 0);
-    const annualRate= +inputs.rate.value / 100;
-    const years     = +inputs.term.value;
-    const freq      = +inputs.frequency.value;
-    const pmiRate   = loanType.current === 'mortgage' ? (+inputs.pmi.value / 100) : 0;
-    const annualTax = loanType.current === 'mortgage' ? +inputs.tax.value : 0;
-    const annualIns = loanType.current === 'mortgage' ? +inputs.insurance.value : 0;
+        // Compound interest formula: A = P(1 + r/n)^(nt)
+        // where P = principal, r = annual rate, n = compounds per year, t = years
 
-    // Validate
-    let valid = true;
-    if (!amount || amount < 1000) { $('err-amount').style.display = 'block'; valid = false; }
-    else $('err-amount').style.display = 'none';
-    if (!annualRate || annualRate <= 0 || annualRate > 0.5) { $('err-rate').style.display = 'block'; valid = false; }
-    else $('err-rate').style.display = 'none';
-    if (!valid) return;
+        const compoundAtFrequency = (frequency) => {
+          return principal * Math.pow(1 + annualRate / frequency, frequency * years);
+        };
 
-    const r = annualRate / freq;   // rate per period
-    const n = years * freq;        // total periods
+        const finalAnnual = compoundAtFrequency(1);
+        const finalWeekly = compoundAtFrequency(52);
+        const finalFortnightly = compoundAtFrequency(26);
+        const finalMonthly = compoundAtFrequency(12);
+        const finalYearly = finalAnnual; // Same as annual
 
-    // Standard amortisation
-    let payment;
-    if (r === 0) {
-      payment = principal / n;
-    } else {
-      payment = principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+        const gainWeekly = finalWeekly - principal;
+        const gainFortnightly = finalFortnightly - principal;
+        const gainMonthly = finalMonthly - principal;
+        const gainYearly = finalYearly - principal;
+
+        // Update UI
+        res.investInitial.textContent = fmtCurr(principal);
+        res.investFinalAnnual.textContent = fmtCurr(finalAnnual);
+        res.investFinalWeekly.textContent = fmtCurr(finalWeekly);
+        res.investFinalFortnightly.textContent = fmtCurr(finalFortnightly);
+        res.investFinalMonthly.textContent = fmtCurr(finalMonthly);
+        res.investFinalYearly.textContent = fmtCurr(finalYearly);
+
+        res.weeklyGain.textContent = `Gain: ${fmtCurr(gainWeekly)} (+${(gainWeekly / principal * 100).toFixed(1)}%)`;
+        res.fortnightlyGain.textContent = `Gain: ${fmtCurr(gainFortnightly)} (+${(gainFortnightly / principal * 100).toFixed(1)}%)`;
+        res.monthlyGain.textContent = `Gain: ${fmtCurr(gainMonthly)} (+${(gainMonthly / principal * 100).toFixed(1)}%)`;
+        res.yearlyGain.textContent = `Gain: ${fmtCurr(gainYearly)} (+${(gainYearly / principal * 100).toFixed(1)}%)`;
+
+        res.compAmount.textContent = (principal / 1000).toFixed(0) + 'K';
+        res.compRate.textContent = (+inputs.annualReturn.value).toFixed(2);
+
+        // Chart display
+        res.chartWeekly.textContent = fmtCurr(finalWeekly);
+        res.chartFortnightly.textContent = fmtCurr(finalFortnightly);
+        res.chartMonthly.textContent = fmtCurr(finalMonthly);
+        res.chartYearly.textContent = fmtCurr(finalYearly);
+
+      persistCurrentState();
+
+      // Pulse animation
+      document.querySelectorAll('.result-value').forEach(el => {
+        el.classList.remove('updating');
+        void el.offsetWidth;
+        el.classList.add('updating');
+      });
     }
 
-    const totalPrincipal = principal;
-    const totalPaid      = payment * n;
-    const totalInterest  = totalPaid - totalPrincipal;
-    const interestPct    = principal > 0 ? (totalInterest / totalPrincipal) * 100 : 0;
+      // ─── Core calculation ─────────────────────────────────────────
+      function calculate() {
+      if (loanType.current === 'investment') {
+        calculateInvestment();
+        return;
+      }
 
-    // Extras (mortgage only — spread per period)
-    const pmiPerPeriod  = (pmiRate * principal) / freq;
-    const taxPerPeriod  = annualTax / freq;
-    const insPerPeriod  = annualIns / freq;
-    const downPct = amount > 0 ? down / amount : 0;
-    const pmiActive = loanType.current === 'mortgage' && downPct < 0.2;
-    const extras = taxPerPeriod + insPerPeriod + (pmiActive ? pmiPerPeriod : 0);
-    const totalMonthly = payment + extras;
+      const amount = +inputs.amount.value;
+      const down = loanType.current === 'mortgage' ? (+inputs.down.value || 0) : 0;
+      const principal = Math.max(amount - down, 0);
+      const annualRate = +inputs.rate.value / 100;
+      const years = +inputs.term.value;
+      const freq = +inputs.frequency.value;
+      const pmiRate = loanType.current === 'mortgage' ? (+inputs.pmi.value / 100) : 0;
+      const annualTax = loanType.current === 'mortgage' ? +inputs.tax.value : 0;
+      const annualIns = loanType.current === 'mortgage' ? +inputs.insurance.value : 0;
 
-    // Payoff date
-    const now = new Date();
-    const payoffDate = new Date(now);
-    const periodsPerMonth = freq / 12;
-    const totalMonths = Math.round(n / periodsPerMonth);
-    payoffDate.setMonth(payoffDate.getMonth() + totalMonths);
-    const payoffStr = payoffDate.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' });
+      // Validate
+      let valid = true;
+      if (!amount || amount < 1000) { $('err-amount').style.display = 'block'; valid = false; }
+      else $('err-amount').style.display = 'none';
+      if (!annualRate || annualRate <= 0 || annualRate > 0.5) { $('err-rate').style.display = 'block'; valid = false; }
+      else $('err-rate').style.display = 'none';
+      if (!valid) return;
 
-    // Update UI
-    const freqLabel = FREQ_LABELS[freq];
-    res.freqLabel.textContent = 'Principal & Interest';
-    res.monthly.textContent   = fmtCurr(payment);
+      const r = annualRate / freq;   // rate per period
+      const n = years * freq;        // total periods
 
-    if (loanType.current === 'mortgage' && extras > 0) {
-      res.totalItem.style.display = '';
-      res.totalMonthly.textContent = fmtCurr(totalMonthly);
-    } else {
-      res.totalItem.style.display = 'none';
+      // Standard amortisation
+      let payment;
+      if (r === 0) {
+        payment = principal / n;
+      } else {
+        payment = principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+      }
+
+      const totalPrincipal = principal;
+      const totalPaid = payment * n;
+      const totalInterest = totalPaid - totalPrincipal;
+      const interestPct = principal > 0 ? (totalInterest / totalPrincipal) * 100 : 0;
+
+      // Extras (mortgage only — spread per period)
+      const pmiPerPeriod = (pmiRate * principal) / freq;
+      const taxPerPeriod = annualTax / freq;
+      const insPerPeriod = annualIns / freq;
+      const downPct = amount > 0 ? down / amount : 0;
+      const pmiActive = loanType.current === 'mortgage' && downPct < 0.2;
+      const extras = taxPerPeriod + insPerPeriod + (pmiActive ? pmiPerPeriod : 0);
+      const totalMonthly = payment + extras;
+
+      // Payoff date
+      const now = new Date();
+      const payoffDate = new Date(now);
+      const periodsPerMonth = freq / 12;
+      const totalMonths = Math.round(n / periodsPerMonth);
+      payoffDate.setMonth(payoffDate.getMonth() + totalMonths);
+      const payoffStr = payoffDate.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' });
+
+      // Update UI
+      const freqLabel = FREQ_LABELS[freq];
+      res.freqLabel.textContent = 'Principal & Interest';
+      res.monthly.textContent = fmtCurr(payment);
+
+      if (loanType.current === 'mortgage' && extras > 0) {
+        res.totalItem.style.display = '';
+        res.totalMonthly.textContent = fmtCurr(totalMonthly);
+      } else {
+        res.totalItem.style.display = 'none';
+      }
+
+      res.principal.textContent = fmtCurr(totalPrincipal);
+      res.loanAmtSub.textContent = down > 0 ? `After $${(down / 1000).toFixed(0)}K down` : 'Loan amount';
+      res.interest.textContent = fmtCurr(totalInterest);
+      res.interestPct.textContent = interestPct.toFixed(1) + '% of principal';
+      res.totalCost.textContent = fmtCurr(totalPaid);
+      res.payoff.textContent = payoffStr;
+      res.payoffSub.textContent = `${years} year${years > 1 ? 's' : ''}, ${freqLabel.toLowerCase()}`;
+
+      // Bar
+      const pPct = totalPaid > 0 ? (totalPrincipal / totalPaid) * 100 : 60;
+      const iPct = 100 - pPct;
+      $('bar-principal').style.width = pPct + '%';
+      $('bar-interest').style.width = iPct + '%';
+      $('breakdown-pct-label').textContent = `${pPct.toFixed(1)}% principal · ${iPct.toFixed(1)}% interest`;
+
+      persistCurrentState();
+
+      // Pulse animation
+      document.querySelectorAll('.result-value').forEach(el => {
+        el.classList.remove('updating');
+        void el.offsetWidth;
+        el.classList.add('updating');
+      });
+
+      // Amortisation table
+      buildTable(principal, r, n, payment, freq);
     }
 
-    res.principal.textContent   = fmtCurr(totalPrincipal);
-    res.loanAmtSub.textContent  = down > 0 ? `After $${(down/1000).toFixed(0)}K down` : 'Loan amount';
-    res.interest.textContent    = fmtCurr(totalInterest);
-    res.interestPct.textContent = interestPct.toFixed(1) + '% of principal';
-    res.totalCost.textContent   = fmtCurr(totalPaid);
-    res.payoff.textContent      = payoffStr;
-    res.payoffSub.textContent   = `${years} year${years > 1 ? 's' : ''}, ${freqLabel.toLowerCase()}`;
+      function buildTable(principal, r, n, payment, freq) {
+        const tbody = $('amort-body');
+        tbody.innerHTML = '';
+        let balance = principal;
+        const freqLabel = FREQ_LABELS[freq] || 'Period';
+        const periodsPerYear = freq;
 
-    // Bar
-    const pPct = totalPaid > 0 ? (totalPrincipal / totalPaid) * 100 : 60;
-    const iPct = 100 - pPct;
-    $('bar-principal').style.width = pPct + '%';
-    $('bar-interest').style.width  = iPct + '%';
-    $('breakdown-pct-label').textContent = `${pPct.toFixed(1)}% principal · ${iPct.toFixed(1)}% interest`;
+      // Show yearly summary if > 24 periods, else show all
+      const showYearly = n > 24;
 
-    persistCurrentState();
+      if (showYearly) {
+        let year = 1;
+        let yPrincipal = 0, yInterest = 0, yPayment = 0;
+        for (let i = 1; i <= n; i++) {
+          const interestPart = balance * r;
+          const principalPart = payment - interestPart;
+          balance = Math.max(balance - principalPart, 0);
+          yInterest += interestPart;
+          yPrincipal += principalPart;
+          yPayment += payment;
 
-    // Pulse animation
-    document.querySelectorAll('.result-value').forEach(el => {
-      el.classList.remove('updating');
-      void el.offsetWidth;
-      el.classList.add('updating');
-    });
-
-    // Amortisation table
-    buildTable(principal, r, n, payment, freq);
-  }
-
-  function buildTable(principal, r, n, payment, freq) {
-    const tbody = $('amort-body');
-    tbody.innerHTML = '';
-    let balance = principal;
-    const freqLabel = FREQ_LABELS[freq] || 'Period';
-    const periodsPerYear = freq;
-
-    // Show yearly summary if > 24 periods, else show all
-    const showYearly = n > 24;
-
-    if (showYearly) {
-      let year = 1;
-      let yPrincipal = 0, yInterest = 0, yPayment = 0;
-      for (let i = 1; i <= n; i++) {
-        const interestPart = balance * r;
-        const principalPart = payment - interestPart;
-        balance = Math.max(balance - principalPart, 0);
-        yInterest  += interestPart;
-        yPrincipal += principalPart;
-        yPayment   += payment;
-
-        if (i % periodsPerYear === 0 || i === n) {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
+          if (i % periodsPerYear === 0 || i === n) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
             <td>Year ${year}</td>
             <td>${fmtCurr(yPayment)}</td>
             <td>${fmtCurr(yPrincipal)}</td>
             <td>${fmtCurr(yInterest)}</td>
             <td>${fmtCurr(balance)}</td>`;
-          tbody.appendChild(tr);
-          year++;
-          yPrincipal = 0; yInterest = 0; yPayment = 0;
+            tbody.appendChild(tr);
+            year++;
+            yPrincipal = 0; yInterest = 0; yPayment = 0;
+          }
         }
-      }
-    } else {
-      for (let i = 1; i <= n; i++) {
-        const interestPart = balance * r;
-        const principalPart = payment - interestPart;
-        balance = Math.max(balance - principalPart, 0);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
+      } else {
+        for (let i = 1; i <= n; i++) {
+          const interestPart = balance * r;
+          const principalPart = payment - interestPart;
+          balance = Math.max(balance - principalPart, 0);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
           <td>#${i}</td>
           <td>${fmtCurr(payment)}</td>
           <td>${fmtCurr(principalPart)}</td>
           <td>${fmtCurr(interestPart)}</td>
           <td>${fmtCurr(balance)}</td>`;
-        tbody.appendChild(tr);
+          tbody.appendChild(tr);
+        }
       }
     }
-  }
 
-  // ─── Schedule toggle ──────────────────────────────────────────
-  $('sched-toggle').addEventListener('click', () => {
-    const wrap = $('schedule-wrap');
-    const chevron = document.querySelector('.chevron');
-    wrap.classList.toggle('open');
-    chevron.classList.toggle('open');
-    $('sched-toggle').querySelector('span') &&
-      ($('sched-toggle').childNodes[2].textContent =
-        wrap.classList.contains('open') ? ' Hide Schedule' : ' View Amortization Schedule');
-  });
+      // ─── Schedule toggle ──────────────────────────────────────────
+      $('sched-toggle').addEventListener('click', () => {
+        const wrap = $('schedule-wrap');
+        const chevron = document.querySelector('.chevron');
+        wrap.classList.toggle('open');
+        chevron.classList.toggle('open');
+        $('sched-toggle').querySelector('span') &&
+          ($('sched-toggle').childNodes[2].textContent =
+            wrap.classList.contains('open') ? ' Hide Schedule' : ' View Amortization Schedule');
+      });
 
-  $('calc-btn').addEventListener('click', calculate);
+      $('calc-btn').addEventListener('click', calculate);
 
-  // ─── Init ─────────────────────────────────────────────────────
-  const initState = getSavedState();
-  const initialLoanType = initState.activeType || 'mortgage';
-  applyLoanType(initialLoanType);
-  calculate();
-</script>
+      // ─── Init ─────────────────────────────────────────────────────
+      const initState = getSavedState();
+      const initialLoanType = initState.activeType || 'mortgage';
+      applyLoanType(initialLoanType);
+      calculate();
+    </script>
 </body>
 </html>
