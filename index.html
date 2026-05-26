@@ -47,6 +47,11 @@
       position: relative;
       overflow-x: hidden;
     }
+    @media (max-width: 640px) {
+      body {
+        padding: 20px 16px 60px;
+      }
+    }
 
     /* Background aura */
     body::before {
@@ -73,6 +78,9 @@
 
     /* Header */
     header { text-align: center; margin-bottom: 48px; animation: fadeDown 0.7s ease both; }
+    @media (max-width: 640px) {
+      header { margin-bottom: 32px; }
+    }
     .logo-line {
       display: flex; align-items: center; justify-content: center; gap: 10px;
       margin-bottom: 10px;
@@ -106,12 +114,31 @@
       width: fit-content;
       margin: 0 auto 36px;
       animation: fadeDown 0.7s 0.1s ease both;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 100%;
+    }
+    @media (max-width: 640px) {
+      .tabs {
+        overflow-x: auto;
+        width: 100%;
+        padding: 8px;
+        border-radius: 14px;
+      }
     }
     .tab {
-      padding: 8px 22px; border-radius: 50px; border: none;
+      padding: 8px 16px; border-radius: 50px; border: none;
       background: transparent; color: var(--muted);
       font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
       cursor: pointer; transition: var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    @media (max-width: 640px) {
+      .tab {
+        padding: 8px 14px;
+        font-size: 12px;
+      }
     }
     .tab.active {
       background: var(--accent); color: #ffffff; font-weight: 600;
@@ -125,7 +152,12 @@
       gap: 20px;
       animation: fadeUp 0.7s 0.15s ease both;
     }
-    @media (max-width: 680px) { .main-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
 
     /* Cards */
     .card {
@@ -138,6 +170,11 @@
       backdrop-filter: blur(14px);
       overflow: hidden;
     }
+    @media (max-width: 640px) {
+      .card {
+        padding: 20px;
+      }
+    }
     .card::before {
       content: '';
       position: absolute;
@@ -145,10 +182,44 @@
       height: 4px;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
     }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 24px;
+      transition: var(--transition);
+    }
+    .card-header:hover {
+      opacity: 0.7;
+    }
     .card-title {
       font-size: 11px; font-weight: 700; letter-spacing: 0.24em;
       text-transform: uppercase; color: var(--muted);
-      margin-bottom: 24px;
+    }
+    .card-toggle {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      transition: transform 0.25s ease;
+      font-size: 18px;
+    }
+    .card-toggle.collapsed {
+      transform: rotate(-90deg);
+    }
+    .card-content {
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      max-height: 2000px;
+      opacity: 1;
+      overflow: hidden;
+    }
+    .card-content.collapsed {
+      max-height: 0;
+      opacity: 0;
     }
 
     /* Field groups */
@@ -157,6 +228,17 @@
     .field label {
       display: flex; justify-content: space-between;
       font-size: 13px; color: var(--muted); margin-bottom: 8px;
+    }
+    @media (max-width: 640px) {
+      .field label {
+        font-size: 12px;
+        flex-wrap: wrap;
+      }
+      .field label span {
+        flex-basis: 100%;
+        text-align: left;
+        margin-top: 4px;
+      }
     }
     .field label span { font-family: 'DM Mono', monospace; color: var(--accent); }
 
@@ -223,6 +305,12 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 28px;
+      position: relative;
+    }
+    @media (max-width: 640px) {
+      .results-card {
+        padding: 20px;
+      }
     }
 
     .results-grid {
@@ -230,6 +318,12 @@
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 16px;
       margin-bottom: 28px;
+    }
+    @media (max-width: 640px) {
+      .results-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 12px;
+      }
     }
 
     .result-item {
@@ -257,6 +351,11 @@
       font-family: 'DM Serif Display', serif;
       font-size: clamp(1.4rem, 2.5vw, 1.9rem);
       line-height: 1;
+    }
+    @media (max-width: 640px) {
+      .result-value {
+        font-size: clamp(1.2rem, 3vw, 1.6rem);
+      }
     }
     .result-item.highlight .result-value { color: var(--accent); }
     .result-item.green .result-value     { color: var(--accent2); }
@@ -386,6 +485,13 @@
       font-size: 12px; color: var(--muted);
       animation: fadeUp 0.7s 0.3s ease both;
     }
+    @media (max-width: 640px) {
+      footer {
+        margin-top: 32px;
+        font-size: 11px;
+        padding: 0 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -414,144 +520,162 @@
 
     <!-- Left: Loan inputs -->
     <div class="card" id="loan-card">
-      <p class="card-title">Loan Details</p>
+      <div class="card-header" data-card="loan">
+        <p class="card-title">Loan Details</p>
+        <button class="card-toggle" aria-label="Toggle Loan Details">
+          ▼
+        </button>
+        </div>
+        <div class="card-content">
+          <div class="field">
+            <label>Loan Amount <span id="lbl-amount">$250,000</span></label>
+            <div class="input-wrap has-prefix">
+              <span class="prefix">$</span>
+              <input type="number" id="amount" value="250000" min="1000" max="10000000" step="1000" />
+            </div>
+            <p class="error-msg" id="err-amount">Enter a valid amount.</p>
+            <div class="range-group" style="margin-top:10px">
+              <input type="range" id="range-amount" min="1000" max="1000000" step="1000" value="250000" />
+              <div class="range-labels"><span>$1K</span><span>$1M</span></div>
+            </div>
+          </div>
 
-      <div class="field">
-        <label>Loan Amount <span id="lbl-amount">$250,000</span></label>
-        <div class="input-wrap has-prefix">
-          <span class="prefix">$</span>
-          <input type="number" id="amount" value="250000" min="1000" max="10000000" step="1000" />
+        <div class="field" id="field-down">
+          <label>Down Payment <span id="lbl-down">$50,000</span></label>
+          <div class="input-wrap has-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="down" value="50000" min="0" step="1000" />
+          </div>
+          <div class="range-group" style="margin-top:10px">
+            <input type="range" id="range-down" min="0" max="500000" step="1000" value="50000" />
+            <div class="range-labels"><span>$0</span><span>$500K</span></div>
+          </div>
         </div>
-        <p class="error-msg" id="err-amount">Enter a valid amount.</p>
-        <div class="range-group" style="margin-top:10px">
-          <input type="range" id="range-amount" min="1000" max="1000000" step="1000" value="250000" />
-          <div class="range-labels"><span>$1K</span><span>$1M</span></div>
-        </div>
-      </div>
 
-      <div class="field" id="field-down">
-        <label>Down Payment <span id="lbl-down">$50,000</span></label>
-        <div class="input-wrap has-prefix">
-          <span class="prefix">$</span>
-          <input type="number" id="down" value="50000" min="0" step="1000" />
+        <div class="field">
+          <label>Loan Term <span id="lbl-term">30 years</span></label>
+          <div class="input-wrap has-suffix">
+            <input type="number" id="term" value="30" min="1" max="40" step="1" />
+            <span class="suffix">yrs</span>
+          </div>
+          <div class="range-group" style="margin-top:10px">
+            <input type="range" id="range-term" min="1" max="40" step="1" value="30" />
+            <div class="range-labels"><span>1 yr</span><span>40 yrs</span></div>
+          </div>
         </div>
-        <div class="range-group" style="margin-top:10px">
-          <input type="range" id="range-down" min="0" max="500000" step="1000" value="50000" />
-          <div class="range-labels"><span>$0</span><span>$500K</span></div>
-        </div>
-      </div>
 
-      <div class="field">
-        <label>Loan Term <span id="lbl-term">30 years</span></label>
-        <div class="input-wrap has-suffix">
-          <input type="number" id="term" value="30" min="1" max="40" step="1" />
-          <span class="suffix">yrs</span>
+        <div class="field">
+          <label>Payment Frequency</label>
+          <select id="frequency">
+            <option value="12" selected>Monthly</option>
+            <option value="26">Bi-weekly</option>
+            <option value="52">Weekly</option>
+          </select>
         </div>
-        <div class="range-group" style="margin-top:10px">
-          <input type="range" id="range-term" min="1" max="40" step="1" value="30" />
-          <div class="range-labels"><span>1 yr</span><span>40 yrs</span></div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Payment Frequency</label>
-        <select id="frequency">
-          <option value="12" selected>Monthly</option>
-          <option value="26">Bi-weekly</option>
-          <option value="52">Weekly</option>
-        </select>
       </div>
     </div>
 
     <!-- Investment Card (hidden by default) -->
     <div class="card" id="investment-card" style="display:none;">
-      <p class="card-title">Investment Details</p>
-    
-      <div class="field">
-        <label>Initial Investment <span id="lbl-invest-amount">$50,000</span></label>
-        <div class="input-wrap has-prefix">
-          <span class="prefix">$</span>
-          <input type="number" id="invest-amount" value="50000" min="100" max="10000000" step="100" />
+      <div class="card-header" data-card="investment">
+        <p class="card-title">Investment Details</p>
+        <button class="card-toggle" aria-label="Toggle Investment Details">
+          ▼
+        </button>
         </div>
-        <p class="error-msg" id="err-invest-amount">Enter a valid amount.</p>
-        <div class="range-group" style="margin-top:10px">
-          <input type="range" id="range-invest-amount" min="100" max="1000000" step="1000" value="50000" />
-          <div class="range-labels"><span>$100</span><span>$1M</span></div>
-        </div>
-      </div>
-    
-      <div class="field">
-        <label>Investment Period <span id="lbl-invest-years">10 years</span></label>
-        <div class="input-wrap has-suffix">
-          <input type="number" id="invest-years" value="10" min="1" max="50" step="1" />
-          <span class="suffix">yrs</span>
-        </div>
-        <div class="range-group" style="margin-top:10px">
-          <input type="range" id="range-invest-years" min="1" max="50" step="1" value="10" />
-          <div class="range-labels"><span>1 yr</span><span>50 yrs</span></div>
-        </div>
-      </div>
-    
-      <div class="field">
-        <label>Annual Return Rate <span id="lbl-annual-return">7.50%</span></label>
-        <div class="input-wrap has-suffix">
-          <input type="number" id="annual-return" value="7.5" min="0.01" max="100" step="0.05" />
-          <span class="suffix">%</span>
-        </div>
-        <p class="error-msg" id="err-annual-return">Enter a valid rate (0.01–100%).</p>
-        <div class="range-group" style="margin-top:10px">
-          <input type="range" id="range-annual-return" min="0.5" max="30" step="0.05" value="7.5" />
-          <div class="range-labels"><span>0.5%</span><span>30%</span></div>
+        <div class="card-content">
+          <div class="field">
+            <label>Initial Investment <span id="lbl-invest-amount">$50,000</span></label>
+            <div class="input-wrap has-prefix">
+              <span class="prefix">$</span>
+              <input type="number" id="invest-amount" value="50000" min="100" max="10000000" step="100" />
+            </div>
+            <p class="error-msg" id="err-invest-amount">Enter a valid amount.</p>
+            <div class="range-group" style="margin-top:10px">
+              <input type="range" id="range-invest-amount" min="100" max="1000000" step="1000" value="50000" />
+              <div class="range-labels"><span>$100</span><span>$1M</span></div>
+            </div>
+          </div>
+        
+          <div class="field">
+            <label>Investment Period <span id="lbl-invest-years">10 years</span></label>
+            <div class="input-wrap has-suffix">
+              <input type="number" id="invest-years" value="10" min="1" max="50" step="1" />
+              <span class="suffix">yrs</span>
+            </div>
+            <div class="range-group" style="margin-top:10px">
+              <input type="range" id="range-invest-years" min="1" max="50" step="1" value="10" />
+              <div class="range-labels"><span>1 yr</span><span>50 yrs</span></div>
+            </div>
+          </div>
+        
+          <div class="field">
+            <label>Annual Return Rate <span id="lbl-annual-return">7.50%</span></label>
+            <div class="input-wrap has-suffix">
+              <input type="number" id="annual-return" value="7.5" min="0.01" max="100" step="0.05" />
+              <span class="suffix">%</span>
+            </div>
+            <p class="error-msg" id="err-annual-return">Enter a valid rate (0.01–100%).</p>
+            <div class="range-group" style="margin-top:10px">
+              <input type="range" id="range-annual-return" min="0.5" max="30" step="0.05" value="7.5" />
+              <div class="range-labels"><span>0.5%</span><span>30%</span></div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Right: Rate inputs -->
     <div class="card" id="rate-card">
-      <p class="card-title">Rate & Fees</p>
+      <div class="card-header" data-card="rate">
+        <p class="card-title">Rate & Fees</p>
+        <button class="card-toggle" aria-label="Toggle Rate & Fees">
+          ▼
+        </button>
+        </div>
+        <div class="card-content">
+          <div class="field">
+            <label>Annual Interest Rate <span id="lbl-rate">6.50%</span></label>
+            <div class="input-wrap has-suffix">
+              <input type="number" id="rate" value="6.5" min="0.01" max="50" step="0.05" />
+              <span class="suffix">%</span>
+            </div>
+            <p class="error-msg" id="err-rate">Enter a valid rate (0.01–50%).</p>
+            <div class="range-group" style="margin-top:10px">
+              <input type="range" id="range-rate" min="0.5" max="20" step="0.05" value="6.5" />
+              <div class="range-labels"><span>0.5%</span><span>20%</span></div>
+            </div>
+          </div>
 
-      <div class="field">
-        <label>Annual Interest Rate <span id="lbl-rate">6.50%</span></label>
-        <div class="input-wrap has-suffix">
-          <input type="number" id="rate" value="6.5" min="0.01" max="50" step="0.05" />
-          <span class="suffix">%</span>
+        <div class="field" id="field-pmi">
+          <label>PMI Rate (annual) <span id="lbl-pmi">0.50%</span></label>
+          <div class="input-wrap has-suffix">
+            <input type="number" id="pmi" value="0.5" min="0" max="5" step="0.05" />
+            <span class="suffix">%</span>
+          </div>
+          <div class="range-group" style="margin-top:10px">
+            <input type="range" id="range-pmi" min="0" max="3" step="0.05" value="0.5" />
+            <div class="range-labels"><span>0%</span><span>3%</span></div>
+          </div>
         </div>
-        <p class="error-msg" id="err-rate">Enter a valid rate (0.01–50%).</p>
-        <div class="range-group" style="margin-top:10px">
-          <input type="range" id="range-rate" min="0.5" max="20" step="0.05" value="6.5" />
-          <div class="range-labels"><span>0.5%</span><span>20%</span></div>
+
+        <div class="field" id="field-tax">
+          <label>Annual Property Tax <span id="lbl-tax">$3,000</span></label>
+          <div class="input-wrap has-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="tax" value="3000" min="0" step="100" />
+          </div>
         </div>
+
+        <div class="field" id="field-insurance">
+          <label>Annual Home Insurance <span id="lbl-insurance">$1,200</span></label>
+          <div class="input-wrap has-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="insurance" value="1200" min="0" step="100" />
+          </div>
+        </div>
+
+        <button class="calc-btn" id="calc-btn">Calculate</button>
       </div>
-
-      <div class="field" id="field-pmi">
-        <label>PMI Rate (annual) <span id="lbl-pmi">0.50%</span></label>
-        <div class="input-wrap has-suffix">
-          <input type="number" id="pmi" value="0.5" min="0" max="5" step="0.05" />
-          <span class="suffix">%</span>
-        </div>
-        <div class="range-group" style="margin-top:10px">
-          <input type="range" id="range-pmi" min="0" max="3" step="0.05" value="0.5" />
-          <div class="range-labels"><span>0%</span><span>3%</span></div>
-        </div>
-      </div>
-
-      <div class="field" id="field-tax">
-        <label>Annual Property Tax <span id="lbl-tax">$3,000</span></label>
-        <div class="input-wrap has-prefix">
-          <span class="prefix">$</span>
-          <input type="number" id="tax" value="3000" min="0" step="100" />
-        </div>
-      </div>
-
-      <div class="field" id="field-insurance">
-        <label>Annual Home Insurance <span id="lbl-insurance">$1,200</span></label>
-        <div class="input-wrap has-prefix">
-          <span class="prefix">$</span>
-          <input type="number" id="insurance" value="1200" min="0" step="100" />
-        </div>
-      </div>
-
-      <button class="calc-btn" id="calc-btn">Calculate</button>
     </div>
 
     <!-- Results -->
@@ -961,6 +1085,55 @@
       });
       inputs.frequency.addEventListener('change', calculate);
 
+        // ─── Collapsible cards ────────────────────────────────────────
+        const cardCollapsed = { current: {} };
+
+        function initCardCollapsible() {
+          document.querySelectorAll('.card-header').forEach(header => {
+            header.addEventListener('click', () => {
+              const card = header.closest('.card');
+              const cardId = header.dataset.card;
+              const content = card.querySelector('.card-content');
+              const toggle = header.querySelector('.card-toggle');
+
+              if (content) {
+                content.classList.toggle('collapsed');
+                toggle.classList.toggle('collapsed');
+                cardCollapsed.current[cardId] = content.classList.contains('collapsed');
+                saveCardStates();
+              }
+            });
+          });
+        }
+
+        function saveCardStates() {
+          try {
+            localStorage.setItem('cardCollapsedStates', JSON.stringify(cardCollapsed.current));
+          } catch (error) {
+            console.warn('Unable to save card states.', error);
+          }
+        }
+
+        function loadCardStates() {
+          try {
+            const saved = JSON.parse(localStorage.getItem('cardCollapsedStates')) || {};
+            cardCollapsed.current = saved;
+            Object.keys(saved).forEach(cardId => {
+              const card = document.querySelector(`[data-card="${cardId}"]`)?.closest('.card');
+              if (card) {
+                const content = card.querySelector('.card-content');
+                const toggle = card.querySelector('.card-toggle');
+                if (saved[cardId]) {
+                  content?.classList.add('collapsed');
+                  toggle?.classList.add('collapsed');
+                }
+              }
+            });
+          } catch (error) {
+            console.warn('Unable to load card states.', error);
+          }
+        }
+
       // ─── Tabs ─────────────────────────────────────────────────────
       document.querySelectorAll('.tab').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1269,6 +1442,8 @@
       $('calc-btn').addEventListener('click', calculate);
 
       // ─── Init ─────────────────────────────────────────────────────
+        loadCardStates();
+        initCardCollapsible();
       const initState = getSavedState();
       const initialLoanType = initState.activeType || 'mortgage';
       applyLoanType(initialLoanType);
