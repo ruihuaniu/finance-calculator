@@ -588,12 +588,12 @@
             <label>Initial Investment <span id="lbl-invest-amount">$50,000</span></label>
             <div class="input-wrap has-prefix">
               <span class="prefix">$</span>
-              <input type="number" id="invest-amount" value="50000" min="100" max="10000000" step="100" />
+              <input type="number" id="invest-amount" value="50000" min="0" max="10000000" step="100" />
             </div>
             <p class="error-msg" id="err-invest-amount">Enter a valid amount.</p>
             <div class="range-group" style="margin-top:10px">
-              <input type="range" id="range-invest-amount" min="100" max="1000000" step="1000" value="50000" />
-              <div class="range-labels"><span>$100</span><span>$1M</span></div>
+              <input type="range" id="range-invest-amount" min="0" max="1000000" step="1000" value="50000" />
+              <div class="range-labels"><span>$0</span><span>$1M</span></div>
             </div>
           </div>
         
@@ -812,23 +812,24 @@
 
       <!-- Investment Results -->
       <div id="investment-results" style="display:none;">
-        <div class="results-grid">
-          <div class="result-item highlight">
+        <div class="results-grid" id="investment-amount-results">
+          <div class="result-item highlight" id="investment-card-initial">
             <div class="result-label">Initial Investment</div>
             <div class="result-value" id="res-invest-initial">—</div>
             <div class="result-sub">Starting amount</div>
           </div>
-          <div class="result-item green">
+          <div class="result-item green" id="investment-card-final-annual">
             <div class="result-label">Final Amount (Annual)</div>
             <div class="result-value" id="res-invest-final-annual">—</div>
             <div class="result-sub">Compounded yearly</div>
           </div>
         </div>
       
-        <p style="text-align: center; color: var(--muted); margin: 20px 0; font-size: 13px; font-weight: 500;">COMPARISON:
+        <p id="investment-comparison-intro"
+          style="text-align: center; color: var(--muted); margin: 20px 0; font-size: 13px; font-weight: 500;">COMPARISON:
           Same $<span id="comp-amount">50,000</span> Investment at <span id="comp-rate">7.5</span>% Annual Return</p>
       
-        <div class="results-grid">
+        <div class="results-grid" id="investment-comparison-grid">
           <div class="result-item purple">
             <div class="result-label">Weekly Investment</div>
             <div class="result-value" id="res-invest-final-weekly">—</div>
@@ -851,7 +852,7 @@
           </div>
         </div>
       
-        <div class="breakdown" style="margin-top: 24px;">
+        <div class="breakdown" style="margin-top: 24px;" id="investment-comparison-chart-wrap">
           <div class="breakdown-title">
             <span>Final Returns Comparison</span>
           </div>
@@ -1129,6 +1130,11 @@
       chartFortnightly: $('chart-fortnightly'),
       chartMonthly: $('chart-monthly'),
       chartYearly: $('chart-yearly'),
+        investmentCardInitial: $('investment-card-initial'),
+        investmentCardFinalAnnual: $('investment-card-final-annual'),
+        investmentComparisonIntro: $('investment-comparison-intro'),
+        investmentComparisonGrid: $('investment-comparison-grid'),
+        investmentComparisonChart: $('investment-comparison-chart-wrap'),
         // DCA results
         dcaFinal: $('res-dca-final'),
         dcaContributed: $('res-dca-contributed'),
@@ -1340,7 +1346,7 @@
 
         // Validate
         let valid = true;
-        if (!principal || principal < 100) { $('err-invest-amount').style.display = 'block'; valid = false; }
+        if (principal < 0) { $('err-invest-amount').style.display = 'block'; valid = false; }
         else $('err-invest-amount').style.display = 'none';
         if (!annualRate || annualRate <= 0 || annualRate > 1) { $('err-annual-return').style.display = 'block'; valid = false; }
         else $('err-annual-return').style.display = 'none';
@@ -1372,10 +1378,11 @@
         res.investFinalMonthly.textContent = fmtCurr(finalMonthly);
         res.investFinalYearly.textContent = fmtCurr(finalYearly);
 
-        res.weeklyGain.textContent = `Gain: ${fmtCurr(gainWeekly)} (+${(gainWeekly / principal * 100).toFixed(1)}%)`;
-        res.fortnightlyGain.textContent = `Gain: ${fmtCurr(gainFortnightly)} (+${(gainFortnightly / principal * 100).toFixed(1)}%)`;
-        res.monthlyGain.textContent = `Gain: ${fmtCurr(gainMonthly)} (+${(gainMonthly / principal * 100).toFixed(1)}%)`;
-        res.yearlyGain.textContent = `Gain: ${fmtCurr(gainYearly)} (+${(gainYearly / principal * 100).toFixed(1)}%)`;
+        const pctFmt = principal > 0 ? value => (value / principal * 100).toFixed(1) : () => '0.0';
+        res.weeklyGain.textContent = `Gain: ${fmtCurr(gainWeekly)} (+${pctFmt(gainWeekly)}%)`;
+        res.fortnightlyGain.textContent = `Gain: ${fmtCurr(gainFortnightly)} (+${pctFmt(gainFortnightly)}%)`;
+        res.monthlyGain.textContent = `Gain: ${fmtCurr(gainMonthly)} (+${pctFmt(gainMonthly)}%)`;
+        res.yearlyGain.textContent = `Gain: ${fmtCurr(gainYearly)} (+${pctFmt(gainYearly)}%)`;
 
         res.compAmount.textContent = (principal / 1000).toFixed(0) + 'K';
         res.compRate.textContent = (+inputs.annualReturn.value).toFixed(2);
@@ -1414,7 +1421,7 @@
 
         res.dcaFinal.textContent = fmtCurr(dcaFinalTotal);
         res.dcaContributed.textContent = fmtCurr(totalMoneyIn);
-        res.dcaContributedSub.textContent = `$${(principal / 1000).toFixed(0)}K principal + deposits`;
+        res.dcaContributedSub.textContent = principal > 0 ? `$${(principal / 1000).toFixed(0)}K principal + deposits` : 'Deposits only';
         res.dcaDeposits.textContent = fmtCurr(totalDeposits);
         const dcaFreqLabel = { 52: 'Weekly', 26: 'Fortnightly', 12: 'Monthly', 1: 'Yearly' }[dcaFreq] || 'Periodic';
         res.dcaDepositsSub.textContent = `${dcaFreqLabel} @ ${fmtCurr(dcaContrib)} each`;
@@ -1430,6 +1437,11 @@
           res.dcaBarDeposits.style.width = dPct + '%';
           res.dcaBarInterest.style.width = iPct + '%';
           res.dcaBreakdownLabel.textContent = `${pPct}% principal · ${dPct}% deposits · ${iPct}% interest`;
+        } else {
+          res.dcaBarPrincipal.style.width = '0%';
+          res.dcaBarDeposits.style.width = '0%';
+          res.dcaBarInterest.style.width = '0%';
+          res.dcaBreakdownLabel.textContent = '0% principal · 0% deposits · 0% interest';
         }
 
       // Pulse animation
