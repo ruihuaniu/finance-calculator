@@ -14,9 +14,7 @@
   <meta name="twitter:description" content="Finance.niuruihua.com loan calculator for mortgages, auto loans, personal and student loans with instant payment and cost estimates." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <title>FinCalc — Loan Calculator</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -67,7 +65,7 @@
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -171,7 +169,7 @@
       font-size: 15px;
       margin-top: 12px;
       font-weight: 400;
-      font-family: 'Syne', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     /* ── Tab switcher ──────────────────────────────────────────────── */
@@ -188,15 +186,18 @@
       justify-content: center;
       max-width: 100%;
       box-shadow: var(--shadow-sm);
+      overflow: visible;
     }
     @media (max-width: 640px) { .tabs { width: 100%; border-radius: 12px; padding: 4px; } }
 
     .tab {
       padding: 8px 15px; border-radius: 10px; border: none;
       background: transparent; color: var(--muted);
-      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 500;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 500;
+      line-height: 1.5;
       cursor: pointer; transition: var(--transition);
       white-space: nowrap; flex-shrink: 0; letter-spacing: 0.01em;
+      overflow: visible;
     }
     @media (max-width: 640px) { .tab { padding: 7px 11px; font-size: 12px; } }
 
@@ -225,13 +226,12 @@
       border-radius: var(--radius);
       padding: 28px;
       box-shadow: var(--shadow-md);
-      overflow: hidden;
       transition: border-color var(--transition);
     }
     .card:hover { border-color: var(--border-hi); }
     @media (max-width: 640px) { .card { padding: 20px; } }
 
-    /* Subtle left accent stripe instead of top bar */
+    /* Subtle left accent stripe */
     .card::before {
       content: '';
       position: absolute;
@@ -240,6 +240,7 @@
       border-radius: 0 3px 3px 0;
       background: linear-gradient(180deg, var(--accent), var(--accent2));
       opacity: 0.7;
+      pointer-events: none;
     }
 
     .card-header {
@@ -250,7 +251,8 @@
 
     .card-title {
       font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--muted); font-family: 'Syne', sans-serif;
+      text-transform: uppercase; color: var(--muted); font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.5;
     }
     .card-toggle {
       background: var(--surface2); border: 1px solid var(--border);
@@ -274,7 +276,7 @@
     .field label {
       display: flex; justify-content: space-between; align-items: baseline;
       font-size: 12px; color: var(--muted); margin-bottom: 7px;
-      font-family: 'Syne', sans-serif; font-weight: 500; letter-spacing: 0.01em;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; letter-spacing: 0.01em;
     }
     @media (max-width: 640px) {
       .field label { font-size: 11px; flex-wrap: wrap; }
@@ -374,8 +376,8 @@
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 16px 14px;
-      position: relative; overflow: hidden;
+      padding: 16px 14px 18px;
+      position: relative;
       transition: var(--transition);
     }
     .result-item:hover { border-color: var(--border-hi); transform: translateY(-1px); }
@@ -412,7 +414,8 @@
     .result-value {
       font-family: 'DM Serif Display', serif;
       font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-      line-height: 1; letter-spacing: -0.01em;
+      line-height: 1.2; letter-spacing: -0.01em;
+      padding-bottom: 2px;
     }
     @media (max-width: 640px) { .result-value { font-size: clamp(1.15rem, 4vw, 1.5rem); } }
     .result-item.highlight .result-value { color: var(--accent); }
@@ -454,7 +457,7 @@
     /* ── Schedule toggle ───────────────────────────────────────────── */
     .schedule-toggle {
       background: var(--surface2); border: 1px solid var(--border);
-      color: var(--muted); font-family: 'Syne', sans-serif;
+      color: var(--muted); font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 12px; font-weight: 600; padding: 8px 16px; border-radius: 9px;
       cursor: pointer; transition: var(--transition);
       display: flex; align-items: center; gap: 7px; margin-top: 18px;
@@ -503,7 +506,7 @@
       background: var(--accent);
       color: #fff;
       border: none; border-radius: 11px;
-      font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700;
       cursor: pointer; letter-spacing: 0.03em;
       transition: var(--transition);
       margin-top: 18px;
@@ -526,7 +529,7 @@
     /* ── Error ─────────────────────────────────────────────────────── */
     .error-msg {
       color: var(--danger); font-size: 11px; margin-top: 5px; display: none;
-      font-family: 'Syne', sans-serif; font-weight: 500;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500;
     }
 
     /* ── Animations ────────────────────────────────────────────────── */
@@ -548,70 +551,11 @@
     }
     .updating { animation: pulse 0.35s ease; }
 
-    /* ── Support bar ───────────────────────────────────────────────── */
-    .support-bar {
-      text-align: center;
-      margin-top: 36px;
-      padding: 28px 24px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-md);
-      animation: fadeUp 0.6s 0.2s cubic-bezier(0.2,0,0,1) both;
-    }
-
-    .support-label {
-      font-size: 13.5px;
-      color: var(--muted);
-      margin-bottom: 16px;
-      font-weight: 400;
-      font-family: 'Syne', sans-serif;
-    }
-
-    .support-btns {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .support-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      padding: 11px 22px;
-      border-radius: 10px;
-      font-family: 'Syne', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: transform 0.15s, box-shadow 0.15s;
-      cursor: pointer;
-      border: none;
-    }
-
-    .support-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-    }
-
-    .support-btn:active { transform: translateY(0); }
-
-    .support-btn.bmc {
-      background: #FFDD00;
-      color: #1a1a1a;
-    }
-
-    .support-btn.paypal {
-      background: #003087;
-      color: #fff;
-    }
-
     /* ── Footer ────────────────────────────────────────────────────── */
     footer {
       text-align: center; margin-top: 52px;
       font-size: 11px; color: var(--muted);
-      font-family: 'Syne', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       animation: fadeUp 0.6s 0.25s cubic-bezier(0.2,0,0,1) both;
     }
     @media (max-width: 640px) { footer { margin-top: 36px; padding: 0 16px; } }
@@ -636,20 +580,22 @@
       padding: 24px;
       box-shadow: var(--shadow-md);
       margin-bottom: 16px;
-      position: relative; overflow: hidden;
+      position: relative;
       transition: border-color var(--transition);
     }
     .sc-card:hover { border-color: var(--border-hi); }
     .sc-card::before {
       content: '';
       position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      border-radius: var(--radius) var(--radius) 0 0;
       background: linear-gradient(90deg, var(--accent), var(--accent2), var(--gold));
+      pointer-events: none;
     }
 
     .sc-card-title {
       font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
       text-transform: uppercase; color: var(--muted); margin-bottom: 18px;
-      font-family: 'Syne', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.5;
     }
 
     /* ── Strategy result cards ─────────────────────────────────────── */
@@ -665,9 +611,9 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 22px;
+      padding: 22px 22px 24px;
       box-shadow: var(--shadow-sm);
-      position: relative; overflow: hidden;
+      position: relative;
       transition: var(--transition);
     }
     .sc-strat-card:hover { box-shadow: var(--shadow-md); border-color: var(--border-hi); transform: translateY(-2px); }
@@ -682,30 +628,32 @@
       pointer-events: none;
     }
 
-    /* Top accent */
+    /* Top accent bar — use clip on just the pseudo, not the card */
     .sc-strat-card::before {
       content: '';
       position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      pointer-events: none;
     }
     .sc-strat-card.etf::before    { background: linear-gradient(90deg, #5b4fff, #818cf8); }
     .sc-strat-card.offset::before { background: linear-gradient(90deg, #00c98d, #34d399); }
     .sc-strat-card.super::before  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
 
     .sc-strat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-    .sc-strat-name { font-size: 13px; font-weight: 700; color: var(--text); font-family: 'Syne', sans-serif; letter-spacing: 0.01em; }
+    .sc-strat-name { font-size: 13px; font-weight: 700; color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0.01em; }
     .sc-strat-icon { font-size: 20px; }
     .sc-winner-badge {
       display: inline-flex; align-items: center; gap: 4px;
       background: var(--accent2); color: #fff;
       font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
       padding: 3px 8px; border-radius: 100px; text-transform: uppercase;
-      margin-top: 5px; font-family: 'Syne', sans-serif;
+      margin-top: 5px; font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     .sc-metric { margin-bottom: 12px; }
-    .sc-metric-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 3px; font-family: 'Syne', sans-serif; font-weight: 600; }
-    .sc-metric-value { font-family: 'Instrument Serif', serif; font-size: 1.7rem; line-height: 1; letter-spacing: -0.01em; }
-    .sc-metric-sub { font-size: 11px; color: var(--muted); margin-top: 3px; font-family: 'Syne', sans-serif; }
+    .sc-metric-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 3px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; }
+    .sc-metric-value { font-family: 'Instrument Serif', serif; font-size: 1.7rem; line-height: 1.25; letter-spacing: -0.01em; padding-bottom: 2px; }
+    .sc-metric-sub { font-size: 11px; color: var(--muted); margin-top: 3px; font-family: 'Plus Jakarta Sans', sans-serif; }
 
     .sc-strat-card.etf .sc-metric-value    { color: var(--accent); }
     .sc-strat-card.offset .sc-metric-value { color: var(--accent2); }
@@ -720,7 +668,7 @@
       transition: var(--transition);
     }
     .sc-mini:hover { background: var(--surface3); }
-    .sc-mini-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-family: 'Syne', sans-serif; font-weight: 600; }
+    .sc-mini-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; }
     .sc-mini-val { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--text); margin-top: 3px; }
 
     /* ── Chart area ────────────────────────────────────────────────── */
@@ -731,7 +679,7 @@
     .sc-toggle-btn {
       padding: 6px 13px; border-radius: 8px; border: 1px solid var(--border);
       background: var(--surface2); color: var(--muted);
-      font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600;
       cursor: pointer; transition: var(--transition); letter-spacing: 0.01em;
     }
     .sc-toggle-btn:hover { color: var(--text); border-color: var(--border-hi); }
@@ -746,7 +694,7 @@
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 9px; padding: 12px 14px; margin-top: 14px; line-height: 1.65;
-      font-family: 'Syne', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .sc-assumption-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-top: 4px;
@@ -757,7 +705,7 @@
       transition: var(--transition);
     }
     .sc-assumption:hover { background: var(--surface3); }
-    .sc-assumption-lbl { font-size: 11px; color: var(--muted); font-family: 'Syne', sans-serif; }
+    .sc-assumption-lbl { font-size: 11px; color: var(--muted); font-family: 'Plus Jakarta Sans', sans-serif; }
     .sc-assumption-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--accent); }
 
     /* ── AI card ───────────────────────────────────────────────────── */
@@ -772,7 +720,7 @@
       display: inline-flex; align-items: center; gap: 9px;
       padding: 12px 22px; border-radius: 11px; border: none;
       background: var(--accent);
-      color: #fff; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+      color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700;
       cursor: pointer; transition: var(--transition); margin-top: 12px;
       box-shadow: 0 4px 16px rgba(91,79,255,0.35);
       position: relative; overflow: hidden; letter-spacing: 0.02em;
@@ -788,14 +736,14 @@
     .sc-ai-output {
       margin-top: 16px; line-height: 1.75; color: var(--text2); font-size: 13px;
       white-space: pre-wrap; display: none;
-      font-family: 'Syne', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 10px; padding: 16px;
     }
     .sc-ai-output.visible { display: block; }
 
-    .sc-ai-spinner { display: none; align-items: center; gap: 10px; margin-top: 14px; color: var(--muted); font-size: 12px; font-family: 'Syne', sans-serif; }
+    .sc-ai-spinner { display: none; align-items: center; gap: 10px; margin-top: 14px; color: var(--muted); font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; }
     .sc-ai-spinner.visible { display: flex; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner-dot {
@@ -1275,8 +1223,8 @@
             </div><!-- end main-grid -->
             
             <!-- ════════════════════════════════════════════════════════════
-                               STRATEGY COMPARE SECTION
-                          ═════════════════════════════════════════════════════════════ -->
+                   STRATEGY COMPARE SECTION
+              ═════════════════════════════════════════════════════════════ -->
             <div id="strategy-section" style="display:none; width:100%">
             
               <!-- Inputs -->
@@ -1306,11 +1254,9 @@
                     </div>
                   </div>
                   <div class="field">
-                    <label>Starting Year <span id="sc-lbl-start-year"
-                        style="font-family:'JetBrains Mono',monospace;color:var(--accent)">2025</span></label>
+                    <label>Starting Year <span id="sc-lbl-start-year" style="font-family:'JetBrains Mono',monospace;color:var(--accent)">2025</span></label>
                     <div class="input-wrap">
-                      <input type="number" id="sc-start-year" value="2025" min="2000" max="2060" step="1"
-                        style="font-family:'JetBrains Mono',monospace" />
+                      <input type="number" id="sc-start-year" value="2025" min="2000" max="2060" step="1" style="font-family:'JetBrains Mono',monospace" />
                     </div>
                   </div>
                   <div class="field">
@@ -1412,13 +1358,9 @@
             
               <!-- Results: 3 strategy cards -->
               <div class="sc-strategy-cards" id="sc-results" style="display:none">
-                <div
-                  style="grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:4px; padding-bottom:12px; border-bottom:1px solid var(--border);">
-                  <span
-                    style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);">Strategy
-                    Results</span>
-                  <span id="sc-period-badge"
-                    style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(91,79,255,0.08);border:1px solid rgba(91,79,255,0.2);border-radius:20px;padding:4px 12px;color:var(--accent);font-weight:600;"></span>
+                <div style="grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:4px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+                  <span style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);">Strategy Results</span>
+                  <span id="sc-period-badge" style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(91,79,255,0.08);border:1px solid rgba(91,79,255,0.2);border-radius:20px;padding:4px 12px;color:var(--accent);font-weight:600;"></span>
                 </div>
                 <!-- ETF Card -->
                 <div class="sc-strat-card etf" id="sc-card-etf">
@@ -1452,72 +1394,72 @@
                       <div class="sc-mini-val" id="sc-etf-cagr">—</div>
                     </div>
                   </div>
-                  </div>
-                  
-                  <!-- Offset Card -->
-                  <div class="sc-strat-card offset" id="sc-card-offset">
-                    <div class="sc-strat-header">
-                      <div>
-                        <div class="sc-strat-name">🏠 Home Loan Offset</div>
-                        <div class="sc-winner-badge" id="sc-badge-offset" style="display:none">⭐ Best Outcome</div>
-                      </div>
-                    </div>
-                    <div class="sc-metric">
-                      <div class="sc-metric-label">Interest Saved (Equivalent Wealth)</div>
-                      <div class="sc-metric-value" id="sc-offset-final">—</div>
-                      <div class="sc-metric-sub" id="sc-offset-real">—</div>
-                    </div>
-                    <div class="sc-mini-metrics">
-                      <div class="sc-mini">
-                        <div class="sc-mini-lbl">Total Deposited</div>
-                        <div class="sc-mini-val" id="sc-offset-invested">—</div>
-                      </div>
-                      <div class="sc-mini">
-                        <div class="sc-mini-lbl">Interest Saved</div>
-                        <div class="sc-mini-val" id="sc-offset-gain">—</div>
-                      </div>
-                      <div class="sc-mini">
-                        <div class="sc-mini-lbl">Tax on Savings</div>
-                        <div class="sc-mini-val" id="sc-offset-tax">$0 (tax-free)</div>
-                      </div>
-                      <div class="sc-mini">
-                        <div class="sc-mini-lbl">Tax-Free Return</div>
-                        <div class="sc-mini-val" id="sc-offset-cagr">—</div>
-                      </div>
+                </div>
+            
+                <!-- Offset Card -->
+                <div class="sc-strat-card offset" id="sc-card-offset">
+                  <div class="sc-strat-header">
+                    <div>
+                      <div class="sc-strat-name">🏠 Home Loan Offset</div>
+                      <div class="sc-winner-badge" id="sc-badge-offset" style="display:none">⭐ Best Outcome</div>
                     </div>
                   </div>
-                  <!-- Super Card -->
-                  <div class="sc-strat-card super" id="sc-card-super">
-                    <div class="sc-strat-header">
-                      <div>
-                        <div class="sc-strat-name">🦘 Super (Concessional)</div>
-                        <div class="sc-winner-badge" id="sc-badge-super" style="display:none">⭐ Best Outcome</div>
-                      </div>
+                  <div class="sc-metric">
+                    <div class="sc-metric-label">Interest Saved (Equivalent Wealth)</div>
+                    <div class="sc-metric-value" id="sc-offset-final">—</div>
+                    <div class="sc-metric-sub" id="sc-offset-real">—</div>
+                  </div>
+                  <div class="sc-mini-metrics">
+                    <div class="sc-mini">
+                      <div class="sc-mini-lbl">Total Deposited</div>
+                      <div class="sc-mini-val" id="sc-offset-invested">—</div>
                     </div>
-                    <div class="sc-metric">
-                      <div class="sc-metric-label">Final Super Balance</div>
-                      <div class="sc-metric-value" id="sc-super-final">—</div>
-                      <div class="sc-metric-sub" id="sc-super-real">—</div>
+                    <div class="sc-mini">
+                      <div class="sc-mini-lbl">Interest Saved</div>
+                      <div class="sc-mini-val" id="sc-offset-gain">—</div>
                     </div>
-                    <div class="sc-mini-metrics">
-                      <div class="sc-mini">
-                        <div class="sc-mini-lbl">Net Contributed</div>
-                        <div class="sc-mini-val" id="sc-super-invested">—</div>
-                      </div>
-                      <div class="sc-mini">
-                        <div class="sc-mini-lbl">Net Gain</div>
-                        <div class="sc-mini-val" id="sc-super-gain">—</div>
-                      </div>
-                      <div class="sc-mini">
-                        <div class="sc-mini-lbl">Contributions Tax</div>
-                        <div class="sc-mini-val" id="sc-super-tax">—</div>
-                      </div>
+                    <div class="sc-mini">
+                      <div class="sc-mini-lbl">Tax on Savings</div>
+                      <div class="sc-mini-val" id="sc-offset-tax">$0 (tax-free)</div>
+                    </div>
+                    <div class="sc-mini">
+                      <div class="sc-mini-lbl">Tax-Free Return</div>
+                      <div class="sc-mini-val" id="sc-offset-cagr">—</div>
+                    </div>
+                  </div>
+                </div>
+<!-- Super Card -->
+<div class="sc-strat-card super" id="sc-card-super">
+  <div class="sc-strat-header">
+    <div>
+      <div class="sc-strat-name">🦘 Super (Concessional)</div>
+      <div class="sc-winner-badge" id="sc-badge-super" style="display:none">⭐ Best Outcome</div>
+    </div>
+        </div>
+        <div class="sc-metric">
+          <div class="sc-metric-label">Final Super Balance</div>
+          <div class="sc-metric-value" id="sc-super-final">—</div>
+          <div class="sc-metric-sub" id="sc-super-real">—</div>
+        </div>
+        <div class="sc-mini-metrics">
+          <div class="sc-mini">
+            <div class="sc-mini-lbl">Net Contributed</div>
+            <div class="sc-mini-val" id="sc-super-invested">—</div>
+          </div>
+          <div class="sc-mini">
+            <div class="sc-mini-lbl">Net Gain</div>
+            <div class="sc-mini-val" id="sc-super-gain">—</div>
+          </div>
+          <div class="sc-mini">
+            <div class="sc-mini-lbl">Contributions Tax</div>
+            <div class="sc-mini-val" id="sc-super-tax">—</div>
+          </div>
           <div class="sc-mini">
             <div class="sc-mini-lbl">Eff. Annual Return</div>
             <div class="sc-mini-val" id="sc-super-cagr">—</div>
           </div>
         </div>
-        </div>
+      </div>
     </div>
 <!-- Charts -->
 <div class="sc-card" id="sc-charts-card" style="display:none">
@@ -1526,33 +1468,33 @@
     <button class="sc-toggle-btn active" data-chart="growth">📈 Portfolio Growth</button>
     <button class="sc-toggle-btn" data-chart="bar">📊 Final Comparison</button>
     <button class="sc-toggle-btn" data-chart="real">💰 Inflation-Adjusted</button>
-  </div>
+      </div>
       <div class="sc-chart-wrap">
         <canvas id="sc-chart-canvas"></canvas>
       </div>
       <div class="legend" style="justify-content:center; gap:24px; margin-top:4px">
         <div class="legend-item">
           <div class="legend-dot" style="background:#5b4fff"></div><span>ETF Portfolio</span>
-          </div>
-          <div class="legend-item">
+        </div>
+        <div class="legend-item">
           <div class="legend-dot" style="background:#00c98d"></div><span>Offset Savings</span>
-          </div>
-          <div class="legend-item">
+        </div>
+        <div class="legend-item">
           <div class="legend-dot" style="background:#f59e0b"></div><span>Super Balance</span>
-          </div>
-          </div>
-          <!-- Assumptions -->
-          <div style="margin-top:20px">
-            <p class="sc-card-title">Key Assumptions</p>
-            <div class="sc-assumption-grid" id="sc-assumptions"></div>
-          </div>
-          <div class="sc-disclaimer">
-            ⚠️ <strong>General information only — not financial advice.</strong> This comparison uses simplified modelling.
-            Returns are not guaranteed. Tax treatment depends on individual circumstances. Super has preservation rules
-            (accessible from age 60). ETF returns are historical averages in USD; AUD returns may differ. Consult a licensed
-            financial adviser before making investment decisions. Super concessional cap is $30,000/yr for FY2025.
-          </div>
-          </div>
+        </div>
+      </div>
+<!-- Assumptions -->
+<div style="margin-top:20px">
+  <p class="sc-card-title">Key Assumptions</p>
+  <div class="sc-assumption-grid" id="sc-assumptions"></div>
+</div>
+      <div class="sc-disclaimer">
+        ⚠️ <strong>General information only — not financial advice.</strong> This comparison uses simplified modelling.
+        Returns are not guaranteed. Tax treatment depends on individual circumstances. Super has preservation rules
+        (accessible from age 60). ETF returns are historical averages in USD; AUD returns may differ. Consult a licensed
+        financial adviser before making investment decisions. Super concessional cap is $30,000/yr for FY2025.
+      </div>
+      </div>
 <!-- AI Analysis -->
 <div class="sc-card sc-ai-card" id="sc-ai-card" style="display:none">
   <p class="sc-card-title">✨ AI Strategy Analysis</p>
@@ -2292,370 +2234,380 @@
             wrap.classList.contains('open') ? ' Hide Schedule' : ' View Amortization Schedule');
       });
 
-          // ─── Strategy Compare ─────────────────────────────────────────
-          (function () {
-            // Load Chart.js
-            const chartScript = document.createElement('script');
-            chartScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
-            document.head.appendChild(chartScript);
+        // ─── Strategy Compare ─────────────────────────────────────────
+        (function () {
+          // Load Chart.js
+          const chartScript = document.createElement('script');
+          chartScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
+          document.head.appendChild(chartScript);
 
-            const SC = id => document.getElementById(id);
-            let scChart = null;
-            let scLastData = null;
-            let scActiveChart = 'growth';
+          const SC = id => document.getElementById(id);
+          let scChart = null;
+          let scLastData = null;
+          let scActiveChart = 'growth';
 
-            const scFmt = n => '$' + Math.round(n).toLocaleString('en-AU');
-            const scFmtPct = n => n.toFixed(2) + '%';
+          const scFmt = n => '$' + Math.round(n).toLocaleString('en-AU');
+          const scFmtPct = n => n.toFixed(2) + '%';
 
-            // ── Sync inputs ──────────────────────────────────────────────
-            function scSync(numId, rangeId, lblId, fmtFn) {
-              const num = SC(numId), range = SC(rangeId), lbl = SC(lblId);
-              if (!num) return;
-              const upd = () => { if (lbl) lbl.textContent = fmtFn(+num.value); if (range) range.value = num.value; };
-              num.addEventListener('input', upd);
-              if (range) range.addEventListener('input', () => { num.value = range.value; upd(); });
-              upd();
-            }
-            scSync('sc-amount', 'sc-range-amount', 'sc-lbl-amount', n => scFmt(n));
-            scSync('sc-years', 'sc-range-years', 'sc-lbl-years', n => {
-              const sy = +(SC('sc-start-year') ? SC('sc-start-year').value : new Date().getFullYear());
-              return n + ' yrs → ' + (sy + n);
-            });
-            scSync('sc-loan-balance', 'sc-range-loan', 'sc-lbl-loan', n => scFmt(n));
-            scSync('sc-loan-rate', 'sc-range-loan-rate', 'sc-lbl-loan-rate', n => scFmtPct(n));
-            scSync('sc-inflation', 'sc-range-inflation', 'sc-lbl-inflation', n => scFmtPct(n));
-            scSync('sc-sp500', null, 'sc-lbl-sp500', n => scFmtPct(n));
-            scSync('sc-ndq', null, 'sc-lbl-ndq', n => scFmtPct(n));
-            scSync('sc-super-rate', null, 'sc-lbl-super', n => scFmtPct(n));
-            scSync('sc-div-yield', null, 'sc-lbl-div', n => scFmtPct(n));
-            scSync('sc-fx-drag', null, 'sc-lbl-fx', n => scFmtPct(n));
-            // Start year sync
-            const scStartYearEl = SC('sc-start-year');
-            const scStartYearLbl = SC('sc-lbl-start-year');
-            if (scStartYearEl) {
-              scStartYearEl.value = new Date().getFullYear();
+          // ── Sync inputs ──────────────────────────────────────────────
+          function scSync(numId, rangeId, lblId, fmtFn) {
+            const num = SC(numId), range = SC(rangeId), lbl = SC(lblId);
+            if (!num) return;
+            const upd = () => { if (lbl) lbl.textContent = fmtFn(+num.value); if (range) range.value = num.value; };
+            num.addEventListener('input', upd);
+            if (range) range.addEventListener('input', () => { num.value = range.value; upd(); });
+            upd();
+          }
+          scSync('sc-amount', 'sc-range-amount', 'sc-lbl-amount', n => scFmt(n));
+          scSync('sc-years', 'sc-range-years', 'sc-lbl-years', n => {
+            const sy = +(SC('sc-start-year') ? SC('sc-start-year').value : new Date().getFullYear());
+            return n + ' yrs → ' + (sy + n);
+          });
+          scSync('sc-loan-balance', 'sc-range-loan', 'sc-lbl-loan', n => scFmt(n));
+          scSync('sc-loan-rate', 'sc-range-loan-rate', 'sc-lbl-loan-rate', n => scFmtPct(n));
+          scSync('sc-inflation', 'sc-range-inflation', 'sc-lbl-inflation', n => scFmtPct(n));
+          scSync('sc-sp500', null, 'sc-lbl-sp500', n => scFmtPct(n));
+          scSync('sc-ndq', null, 'sc-lbl-ndq', n => scFmtPct(n));
+          scSync('sc-super-rate', null, 'sc-lbl-super', n => scFmtPct(n));
+          scSync('sc-div-yield', null, 'sc-lbl-div', n => scFmtPct(n));
+          scSync('sc-fx-drag', null, 'sc-lbl-fx', n => scFmtPct(n));
+          // Start year sync
+          const scStartYearEl = SC('sc-start-year');
+          const scStartYearLbl = SC('sc-lbl-start-year');
+          if (scStartYearEl) {
+            scStartYearEl.value = new Date().getFullYear();
+            if (scStartYearLbl) scStartYearLbl.textContent = scStartYearEl.value;
+            scStartYearEl.addEventListener('input', () => {
               if (scStartYearLbl) scStartYearLbl.textContent = scStartYearEl.value;
-              scStartYearEl.addEventListener('input', () => {
-                if (scStartYearLbl) scStartYearLbl.textContent = scStartYearEl.value;
-                if (scLastData) { scLastData = calcStrategies(); renderResults(scLastData); }
-              });
-            }
-
-            SC('sc-tax-rate').addEventListener('change', () => {
-              SC('sc-lbl-tax').textContent = SC('sc-tax-rate').value + '%';
-            });
-            SC('sc-etf-split').addEventListener('input', function () {
-              const sp = 100 - this.value, ndq = +this.value;
-              SC('sc-lbl-split').textContent = sp + ' / ' + ndq;
-            });
-
-            // ── Core calculation ─────────────────────────────────────────
-            function calcStrategies() {
-              const annual = +SC('sc-amount').value;
-              const years = Math.max(1, Math.min(50, +SC('sc-years').value));
-              const startYear = +SC('sc-start-year').value || new Date().getFullYear();
-              const taxRate = +SC('sc-tax-rate').value / 100;
-              const loanBal = +SC('sc-loan-balance').value;
-              const loanRate = +SC('sc-loan-rate').value / 100;
-              const inflation = +SC('sc-inflation').value / 100;
-              const rSP500 = +SC('sc-sp500').value / 100;
-              const rNDQ = +SC('sc-ndq').value / 100;
-              const rSuper = +SC('sc-super-rate').value / 100;
-              const divYield = +SC('sc-div-yield').value / 100;
-              const fxDrag = +SC('sc-fx-drag').value / 100;
-              const ndqPct = +SC('sc-etf-split').value / 100;
-              const sp500Pct = 1 - ndqPct;
-
-              // Blended ETF return after FX drag
-              const blendedReturn = sp500Pct * rSP500 + ndqPct * (rNDQ - fxDrag);
-              // After-tax dividend each year reduces effective compounding (paid annually)
-              const afterTaxDiv = divYield * (1 - taxRate);
-              const etfGrowthRate = blendedReturn - divYield + afterTaxDiv;
-
-              // ── Strategy 1: ETF (monthly DCA, then 50% CGT discount at end) ──
-              const etfYearlyData = [];
-              let etfBal = 0;
-              let etfTotalInvested = 0;
-              let etfDivTaxPaid = 0;
-              const monthlyContrib = annual / 12;
-              const monthlyRate = etfGrowthRate / 12;
-
-              for (let y = 1; y <= years; y++) {
-                for (let m = 0; m < 12; m++) {
-                  etfBal = etfBal * (1 + monthlyRate) + monthlyContrib;
-                  etfTotalInvested += monthlyContrib;
-                }
-                const divTax = etfBal * divYield * taxRate;
-                etfDivTaxPaid += divTax;
-                etfBal -= divTax;
-                etfYearlyData.push(etfBal);
-              }
-              const etfCapGain = Math.max(0, etfBal - etfTotalInvested);
-              const etfCGT = etfCapGain * 0.5 * taxRate;
-              const etfFinal = etfBal - etfCGT;
-              const etfTotalTax = etfDivTaxPaid + etfCGT;
-              const etfCAGR = etfTotalInvested > 0 ? Math.pow(etfFinal / etfTotalInvested, 1 / years) - 1 : 0;
-
-              // ── Strategy 2: Offset account (proper compound model) ──────
-              // Model: money deposited into offset reduces interest charged on loan each year.
-              // The offset balance itself is the "wealth" (principal + interest saved equals
-              // money you didn't have to pay the bank). We track the offset balance growing
-              // as deposits accumulate and interest is saved (compounding effect: saved interest
-              // reduces balance further, saving more interest next year).
-              const offsetYearlyData = [];
-              let offsetBalance = 0;          // cumulative money in offset account
-              let remainingLoan = loanBal;    // outstanding loan balance not covered by offset
-              let totalInterestSaved = 0;
-              let totalOffsetDeposited = 0;
-
-              for (let y = 1; y <= years; y++) {
-                // Deposit this year's contribution
-                offsetBalance += annual;
-                totalOffsetDeposited += annual;
-                // Effective loan balance = original loan minus offset balance (floor 0)
-                const effectiveLoan = Math.max(0, loanBal - offsetBalance);
-                // Interest saved vs having no offset = effectiveLoan reduction × rate
-                const interestSavedThisYear = Math.min(offsetBalance, loanBal) * loanRate;
-                totalInterestSaved += interestSavedThisYear;
-                // The "equivalent wealth" is the offset balance plus cumulative interest saved
-                // (since interest saved = equivalent return on the offset money, tax-free)
-                const wealth = offsetBalance + totalInterestSaved;
-                offsetYearlyData.push(wealth);
-              }
-              const offsetFinal = offsetYearlyData[years - 1] || 0;
-              const offsetEffReturn = totalOffsetDeposited > 0
-                ? Math.pow(offsetFinal / totalOffsetDeposited, 1 / years) - 1
-                : 0;
-
-              // ── Strategy 3: Super (concessional contributions) ──────────
-              const superYearlyData = [];
-              let superBal = 0;
-              let superTotalContribTax = 0;
-              let superTotalContributed = 0;
-              const SUPER_CAP = 30000;
-
-              for (let y = 1; y <= years; y++) {
-                const contrib = Math.min(annual, SUPER_CAP);
-                const contribTax = contrib * 0.15;
-                const netContrib = contrib - contribTax;
-                superTotalContribTax += contribTax;
-                superTotalContributed += netContrib;
-                superBal = (superBal + netContrib) * (1 + rSuper);
-                superYearlyData.push(superBal);
-              }
-              const superFinal = superBal;
-              const superTotal = superTotalContributed + superTotalContribTax;
-              const superCAGR = superTotal > 0 ? Math.pow(superFinal / superTotal, 1 / years) - 1 : 0;
-
-              // ── Inflation-adjusted finals ────────────────────────────────
-              const inflAdj = val => val / Math.pow(1 + inflation, years);
-              const etfRealFinal = inflAdj(etfFinal);
-              const offsetRealFinal = inflAdj(offsetFinal);
-              const superRealFinal = inflAdj(superFinal);
-              const realYearlyETF = etfYearlyData.map((v, i) => v / Math.pow(1 + inflation, i + 1));
-              const realYearlyOffset = offsetYearlyData.map((v, i) => v / Math.pow(1 + inflation, i + 1));
-              const realYearlySuper = superYearlyData.map((v, i) => v / Math.pow(1 + inflation, i + 1));
-
-              return {
-                annual, years, startYear, taxRate, loanRate, inflation, blendedReturn,
-                etf: { final: etfFinal, invested: etfTotalInvested, gain: etfFinal - etfTotalInvested, tax: etfTotalTax, cagr: etfCAGR, yearly: etfYearlyData, realFinal: etfRealFinal, realYearly: realYearlyETF },
-                offset: { final: offsetFinal, invested: totalOffsetDeposited, gain: totalInterestSaved, tax: 0, cagr: offsetEffReturn, yearly: offsetYearlyData, realFinal: offsetRealFinal, realYearly: realYearlyOffset },
-                super: { final: superFinal, invested: superTotal, gain: superFinal - superTotal, tax: superTotalContribTax, cagr: superCAGR, yearly: superYearlyData, realFinal: superRealFinal, realYearly: realYearlySuper },
-              };
-            }
-
-            // ── Render results ───────────────────────────────────────────
-            function renderResults(d) {
-              SC('sc-results').style.display = '';
-              SC('sc-charts-card').style.display = '';
-              SC('sc-ai-card').style.display = '';
-              SC('sc-ai-output').className = 'sc-ai-output';
-              SC('sc-ai-output').textContent = '';
-              const endYear = (d.startYear || new Date().getFullYear()) + d.years;
-              const badge = SC('sc-period-badge');
-              if (badge) badge.textContent = d.startYear + ' → ' + endYear + ' (' + d.years + ' yrs)';
-
-              const winner = d.etf.final >= d.offset.final && d.etf.final >= d.super.final ? 'etf'
-                : d.offset.final >= d.super.final ? 'offset' : 'super';
-
-              // ETF
-              SC('sc-etf-final').textContent = scFmt(d.etf.final);
-              SC('sc-etf-real').textContent = scFmt(d.etf.realFinal) + ' in today\'s dollars · by ' + endYear;
-              SC('sc-etf-invested').textContent = scFmt(d.etf.invested);
-              SC('sc-etf-gain').textContent = scFmt(d.etf.gain);
-              SC('sc-etf-tax').textContent = scFmt(d.etf.tax);
-              SC('sc-etf-cagr').textContent = scFmtPct(d.etf.cagr * 100);
-              SC('sc-badge-etf').style.display = winner === 'etf' ? '' : 'none';
-              SC('sc-card-etf').classList.toggle('winner', winner === 'etf');
-
-              // Offset
-              SC('sc-offset-final').textContent = scFmt(d.offset.final);
-              SC('sc-offset-real').textContent = scFmt(d.offset.realFinal) + ' in today\'s dollars · by ' + endYear;
-              SC('sc-offset-invested').textContent = scFmt(d.offset.invested);
-              SC('sc-offset-gain').textContent = scFmt(d.offset.gain);
-              SC('sc-offset-cagr').textContent = scFmtPct(d.offset.cagr * 100);
-              SC('sc-badge-offset').style.display = winner === 'offset' ? '' : 'none';
-              SC('sc-card-offset').classList.toggle('winner', winner === 'offset');
-
-              // Super
-              SC('sc-super-final').textContent = scFmt(d.super.final);
-              SC('sc-super-real').textContent = scFmt(d.super.realFinal) + ' in today\'s dollars · by ' + endYear;
-              SC('sc-super-invested').textContent = scFmt(d.super.invested);
-              SC('sc-super-gain').textContent = scFmt(d.super.gain);
-              SC('sc-super-tax').textContent = scFmt(d.super.tax);
-              SC('sc-super-cagr').textContent = scFmtPct(d.super.cagr * 100);
-              SC('sc-badge-super').style.display = winner === 'super' ? '' : 'none';
-              SC('sc-card-super').classList.toggle('winner', winner === 'super');
-
-              // Assumptions
-              SC('sc-assumptions').innerHTML = [
-                ['Period', d.startYear + ' → ' + endYear + ' (' + d.years + ' yrs)'],
-                ['ETF Return (blended)', scFmtPct(d.blendedReturn * 100)],
-                ['Super Return', SC('sc-super-rate').value + '%'],
-                ['Home Loan Rate', scFmtPct(d.loanRate * 100)],
-                ['Inflation', scFmtPct(d.inflation * 100)],
-                ['Marginal Tax Rate', scFmtPct(d.taxRate * 100)],
-                ['CGT Discount', '50% (AU, >12mo)'],
-                ['Super Contributions Tax', '15%'],
-                ['Super Concessional Cap', '$30,000/yr'],
-              ].map(([l, v]) => `<div class="sc-assumption"><span class="sc-assumption-lbl">${l}</span><span class="sc-assumption-val">${v}</span></div>`).join('');
-
-              renderChart(d, scActiveChart);
-              window.scLastDataRef = d;
-              window.scActiveChartRef = scActiveChart;
-            }
-
-            // ── Chart rendering ──────────────────────────────────────────
-            function renderChart(d, type) {
-              if (typeof Chart === 'undefined') return;
-              const canvas = SC('sc-chart-canvas');
-              if (scChart) { scChart.destroy(); scChart = null; }
-
-              const startYear = d.startYear || new Date().getFullYear();
-              // For many years, show every 5th year label to avoid crowding
-              const labels = Array.from({ length: d.years }, (_, i) => {
-                const yr = startYear + i + 1;
-                if (d.years <= 15) return String(yr);
-                if (d.years <= 30) return (i + 1) % 5 === 0 || i === 0 ? String(yr) : '';
-                return (i + 1) % 10 === 0 || i === 0 ? String(yr) : '';
-              });
-
-              if (type === 'bar') {
-                scChart = new Chart(canvas, {
-                  type: 'bar',
-                  data: {
-                    labels: ['ETF Portfolio', 'Offset Savings', 'Super Balance'],
-                    datasets: [
-                      { label: 'Total Contributed', data: [d.etf.invested, d.offset.invested, d.super.invested], backgroundColor: 'rgba(91,79,255,0.2)', borderColor: 'rgba(91,79,255,0.6)', borderWidth: 1.5, borderRadius: 6 },
-                      { label: 'Final Value', data: [d.etf.final, d.offset.final, d.super.final], backgroundColor: ['rgba(91,79,255,0.75)', 'rgba(0,201,141,0.75)', 'rgba(245,158,11,0.75)'], borderColor: ['#5b4fff', '#00c98d', '#f59e0b'], borderWidth: 0, borderRadius: 6 },
-                    ]
-                  },
-                  options: chartOpts('Final Value vs Contribution', true)
-                });
-              } else {
-                const isReal = type === 'real';
-                const etfData = isReal ? d.etf.realYearly : d.etf.yearly;
-                const offsetData = isReal ? d.offset.realYearly : d.offset.yearly;
-                const superData = isReal ? d.super.realYearly : d.super.yearly;
-                scChart = new Chart(canvas, {
-                  type: 'line',
-                  data: {
-                    labels,
-                    datasets: [
-                      { label: 'ETF Portfolio', data: etfData, borderColor: '#5b4fff', backgroundColor: 'rgba(91,79,255,0.07)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2.5 },
-                      { label: 'Offset Savings', data: offsetData, borderColor: '#00c98d', backgroundColor: 'rgba(0,201,141,0.07)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2.5 },
-                      { label: 'Super Balance', data: superData, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.07)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2.5 },
-                    ]
-                  },
-                  options: chartOpts(isReal ? 'Inflation-Adjusted Growth (' + d.startYear + '–' + ((d.startYear || 2025) + d.years) + ')' : 'Nominal Growth ' + d.startYear + '–' + ((d.startYear || 2025) + d.years), false)
-                });
-              }
-            }
-
-            function chartOpts(title, isBar) {
-              const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-              const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
-              const tickColor = isDark ? '#78716c' : '#78716c';
-              return {
-                responsive: true, maintainAspectRatio: false,
-                plugins: {
-                  legend: { position: 'top', labels: { font: { family: 'Syne', size: 11, weight: '600' }, color: tickColor, padding: 16, usePointStyle: true, pointStyleWidth: 8 } },
-                  tooltip: {
-                    backgroundColor: isDark ? '#1c1b1a' : '#ffffff',
-                    borderColor: isDark ? '#333230' : '#ddd9d2',
-                    borderWidth: 1,
-                    titleColor: isDark ? '#f5f4f0' : '#1c1917',
-                    bodyColor: isDark ? '#a8a29e' : '#78716c',
-                    titleFont: { family: 'Syne', size: 12, weight: '700' },
-                    bodyFont: { family: 'JetBrains Mono', size: 12 },
-                    padding: 12, cornerRadius: 10,
-                    callbacks: {
-                      label: ctx => '  ' + ctx.dataset.label + ': ' + scFmt(ctx.parsed.y || ctx.raw)
-                    }
-                  }
-                },
-                scales: {
-                  x: { grid: { color: gridColor }, border: { display: false }, ticks: { color: tickColor, font: { family: 'JetBrains Mono', size: 10 }, maxTicksLimit: 12, autoSkip: true } },
-                  y: { grid: { color: gridColor }, border: { display: false }, ticks: { color: tickColor, font: { family: 'JetBrains Mono', size: 10 }, callback: v => '$' + (v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v >= 1e3 ? (v / 1e3).toFixed(0) + 'K' : v) } }
-                }
-              };
-            }
-
-            // ── Chart toggle buttons ─────────────────────────────────────
-            document.querySelectorAll('.sc-toggle-btn').forEach(btn => {
-              btn.addEventListener('click', function () {
-                document.querySelectorAll('.sc-toggle-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                scActiveChart = this.dataset.chart;
-                if (scLastData) renderChart(scLastData, scActiveChart);
-              });
-            });
-            // Expose for theme toggle
-            window.scLastDataRef = null;
-            window.scActiveChartRef = 'growth';
-            window.renderChartRef = renderChart;
-
-            // ── Calculate button ─────────────────────────────────────────
-            SC('sc-calc-btn').addEventListener('click', () => {
-              scLastData = calcStrategies();
-              renderResults(scLastData);
-              // Scroll to results
-              SC('sc-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-
-            // ── Live recalculation when results already shown ────────────
-            const scLiveInputs = ['sc-amount', 'sc-years', 'sc-loan-balance', 'sc-loan-rate', 'sc-inflation', 'sc-sp500', 'sc-ndq', 'sc-super-rate', 'sc-div-yield', 'sc-fx-drag', 'sc-etf-split', 'sc-tax-rate'];
-            const scLiveRanges = ['sc-range-amount', 'sc-range-years', 'sc-range-loan', 'sc-range-loan-rate', 'sc-range-inflation'];
-            [...scLiveInputs, ...scLiveRanges].forEach(id => {
-              const el = SC(id);
-              if (el) el.addEventListener('input', () => {
-                if (scLastData) {
-                  scLastData = calcStrategies();
-                  renderResults(scLastData);
-                }
-              });
-            });
-            const scTaxEl = SC('sc-tax-rate');
-            if (scTaxEl) scTaxEl.addEventListener('change', () => {
               if (scLastData) { scLastData = calcStrategies(); renderResults(scLastData); }
             });
+          }
 
-            // ── AI Analysis ──────────────────────────────────────────────
-            SC('sc-ai-btn').addEventListener('click', async () => {
-              if (!scLastData) return;
-              const d = scLastData;
-              const btn = SC('sc-ai-btn');
-              const spinner = SC('sc-ai-spinner');
-              const output = SC('sc-ai-output');
+          SC('sc-tax-rate').addEventListener('change', () => {
+            SC('sc-lbl-tax').textContent = SC('sc-tax-rate').value + '%';
+          });
+          SC('sc-etf-split').addEventListener('input', function () {
+            const sp = 100 - this.value, ndq = +this.value;
+            SC('sc-lbl-split').textContent = sp + ' / ' + ndq;
+          });
 
-              btn.disabled = true;
-              spinner.className = 'sc-ai-spinner visible';
-              output.className = 'sc-ai-output';
-              output.textContent = '';
+          // ── Core calculation ─────────────────────────────────────────
+          function calcStrategies() {
+            const annual = +SC('sc-amount').value;
+            const years = Math.max(1, Math.min(50, +SC('sc-years').value));
+            const startYear = +SC('sc-start-year').value || new Date().getFullYear();
+            const taxRate = +SC('sc-tax-rate').value / 100;
+            const loanBal = +SC('sc-loan-balance').value;
+            const loanRate = +SC('sc-loan-rate').value / 100;
+            const inflation = +SC('sc-inflation').value / 100;
+            const rSP500 = +SC('sc-sp500').value / 100;
+            const rNDQ = +SC('sc-ndq').value / 100;
+            const rSuper = +SC('sc-super-rate').value / 100;
+            const divYield = +SC('sc-div-yield').value / 100;
+            const fxDrag = +SC('sc-fx-drag').value / 100;
+            const ndqPct = +SC('sc-etf-split').value / 100;
+            const sp500Pct = 1 - ndqPct;
 
-              const prompt = `You are an Australian financial educator providing general information (not personal financial advice).
+            // Blended ETF return after FX drag
+            const blendedReturn = sp500Pct * rSP500 + ndqPct * (rNDQ - fxDrag);
+            // After-tax dividend each year reduces effective compounding (paid annually)
+            const afterTaxDiv = divYield * (1 - taxRate);
+            const etfGrowthRate = blendedReturn - divYield + afterTaxDiv;
 
-An Australian investor is comparing 3 investment strategies over ${d.years} years (${d.startYear} to ${(d.startYear || 2025) + d.years}), investing $${d.annual.toLocaleString()} per year.
+            // ── Strategy 1: ETF (monthly DCA, then 50% CGT discount at end) ──
+            const etfYearlyData = [];
+            let etfBal = 0;
+            let etfTotalInvested = 0;
+            let etfDivTaxPaid = 0;
+            const monthlyContrib = annual / 12;
+            const monthlyRate = etfGrowthRate / 12;
+
+            for (let y = 1; y <= years; y++) {
+              for (let m = 0; m < 12; m++) {
+                etfBal = etfBal * (1 + monthlyRate) + monthlyContrib;
+                etfTotalInvested += monthlyContrib;
+              }
+              const divTax = etfBal * divYield * taxRate;
+              etfDivTaxPaid += divTax;
+              etfBal -= divTax;
+              etfYearlyData.push(etfBal);
+            }
+            const etfCapGain = Math.max(0, etfBal - etfTotalInvested);
+            const etfCGT = etfCapGain * 0.5 * taxRate;
+            const etfFinal = etfBal - etfCGT;
+            const etfTotalTax = etfDivTaxPaid + etfCGT;
+            const etfCAGR = etfTotalInvested > 0 ? Math.pow(etfFinal / etfTotalInvested, 1 / years) - 1 : 0;
+
+            // ── Strategy 2: Offset account (proper compound model) ──────
+            // Model: money deposited into offset reduces interest charged on loan each year.
+            // The offset balance itself is the "wealth" (principal + interest saved equals
+            // money you didn't have to pay the bank). We track the offset balance growing
+            // as deposits accumulate and interest is saved (compounding effect: saved interest
+            // reduces balance further, saving more interest next year).
+            const offsetYearlyData = [];
+            let offsetBalance = 0;          // cumulative money in offset account
+            let remainingLoan = loanBal;    // outstanding loan balance not covered by offset
+            let totalInterestSaved = 0;
+            let totalOffsetDeposited = 0;
+
+            for (let y = 1; y <= years; y++) {
+              // Deposit this year's contribution
+              offsetBalance += annual;
+              totalOffsetDeposited += annual;
+              // Effective loan balance = original loan minus offset balance (floor 0)
+              const effectiveLoan = Math.max(0, loanBal - offsetBalance);
+              // Interest saved vs having no offset = effectiveLoan reduction × rate
+              const interestSavedThisYear = Math.min(offsetBalance, loanBal) * loanRate;
+              totalInterestSaved += interestSavedThisYear;
+              // The "equivalent wealth" is the offset balance plus cumulative interest saved
+              // (since interest saved = equivalent return on the offset money, tax-free)
+              const wealth = offsetBalance + totalInterestSaved;
+              offsetYearlyData.push(wealth);
+            }
+            const offsetFinal = offsetYearlyData[years - 1] || 0;
+            const offsetEffReturn = totalOffsetDeposited > 0
+              ? Math.pow(offsetFinal / totalOffsetDeposited, 1 / years) - 1
+              : 0;
+
+            // ── Strategy 3: Super (concessional contributions) ──────────
+            const superYearlyData = [];
+            let superBal = 0;
+            let superTotalContribTax = 0;
+            let superTotalContributed = 0;
+            const SUPER_CAP = 30000;
+
+            for (let y = 1; y <= years; y++) {
+              const contrib = Math.min(annual, SUPER_CAP);
+              const contribTax = contrib * 0.15;
+              const netContrib = contrib - contribTax;
+              superTotalContribTax += contribTax;
+              superTotalContributed += netContrib;
+              superBal = (superBal + netContrib) * (1 + rSuper);
+              superYearlyData.push(superBal);
+            }
+            const superFinal = superBal;
+            const superTotal = superTotalContributed + superTotalContribTax;
+            const superCAGR = superTotal > 0 ? Math.pow(superFinal / superTotal, 1 / years) - 1 : 0;
+
+            // ── Inflation-adjusted finals ────────────────────────────────
+            const inflAdj = val => val / Math.pow(1 + inflation, years);
+            const etfRealFinal = inflAdj(etfFinal);
+            const offsetRealFinal = inflAdj(offsetFinal);
+            const superRealFinal = inflAdj(superFinal);
+            const realYearlyETF = etfYearlyData.map((v, i) => v / Math.pow(1 + inflation, i + 1));
+            const realYearlyOffset = offsetYearlyData.map((v, i) => v / Math.pow(1 + inflation, i + 1));
+            const realYearlySuper = superYearlyData.map((v, i) => v / Math.pow(1 + inflation, i + 1));
+
+            return {
+              annual, years, startYear, taxRate, loanRate, inflation, blendedReturn,
+              etf: { final: etfFinal, invested: etfTotalInvested, gain: etfFinal - etfTotalInvested, tax: etfTotalTax, cagr: etfCAGR, yearly: etfYearlyData, realFinal: etfRealFinal, realYearly: realYearlyETF },
+              offset: { final: offsetFinal, invested: totalOffsetDeposited, gain: totalInterestSaved, tax: 0, cagr: offsetEffReturn, yearly: offsetYearlyData, realFinal: offsetRealFinal, realYearly: realYearlyOffset },
+              super: { final: superFinal, invested: superTotal, gain: superFinal - superTotal, tax: superTotalContribTax, cagr: superCAGR, yearly: superYearlyData, realFinal: superRealFinal, realYearly: realYearlySuper },
+            };
+          }
+
+          // ── Claude.ai environment detection ──────────────────────────
+          // The API key is auto-injected only when running inside claude.ai.
+          // We detect this by checking the hostname — if not claude.ai, hide the AI card entirely.
+          const isClaudeAI = (function() {
+            try {
+              const h = window.location.hostname;
+              return h === 'claude.ai' || h.endsWith('.claude.ai');
+            } catch(e) { return false; }
+          })();
+
+          // ── Render results ───────────────────────────────────────────
+          function renderResults(d) {
+            SC('sc-results').style.display = '';
+            SC('sc-charts-card').style.display = '';
+            SC('sc-ai-card').style.display = isClaudeAI ? '' : 'none';
+            SC('sc-ai-output').className = 'sc-ai-output';
+            SC('sc-ai-output').textContent = '';
+            const endYear = (d.startYear || new Date().getFullYear()) + d.years;
+            const badge = SC('sc-period-badge');
+            if (badge) badge.textContent = d.startYear + ' → ' + endYear + ' (' + d.years + ' yrs)';
+
+            const winner = d.etf.final >= d.offset.final && d.etf.final >= d.super.final ? 'etf'
+              : d.offset.final >= d.super.final ? 'offset' : 'super';
+
+            // ETF
+            SC('sc-etf-final').textContent = scFmt(d.etf.final);
+            SC('sc-etf-real').textContent = scFmt(d.etf.realFinal) + ' in today\'s dollars · by ' + endYear;
+            SC('sc-etf-invested').textContent = scFmt(d.etf.invested);
+            SC('sc-etf-gain').textContent = scFmt(d.etf.gain);
+            SC('sc-etf-tax').textContent = scFmt(d.etf.tax);
+            SC('sc-etf-cagr').textContent = scFmtPct(d.etf.cagr * 100);
+            SC('sc-badge-etf').style.display = winner === 'etf' ? '' : 'none';
+            SC('sc-card-etf').classList.toggle('winner', winner === 'etf');
+
+            // Offset
+            SC('sc-offset-final').textContent = scFmt(d.offset.final);
+            SC('sc-offset-real').textContent = scFmt(d.offset.realFinal) + ' in today\'s dollars · by ' + endYear;
+            SC('sc-offset-invested').textContent = scFmt(d.offset.invested);
+            SC('sc-offset-gain').textContent = scFmt(d.offset.gain);
+            SC('sc-offset-cagr').textContent = scFmtPct(d.offset.cagr * 100);
+            SC('sc-badge-offset').style.display = winner === 'offset' ? '' : 'none';
+            SC('sc-card-offset').classList.toggle('winner', winner === 'offset');
+
+            // Super
+            SC('sc-super-final').textContent = scFmt(d.super.final);
+            SC('sc-super-real').textContent = scFmt(d.super.realFinal) + ' in today\'s dollars · by ' + endYear;
+            SC('sc-super-invested').textContent = scFmt(d.super.invested);
+            SC('sc-super-gain').textContent = scFmt(d.super.gain);
+            SC('sc-super-tax').textContent = scFmt(d.super.tax);
+            SC('sc-super-cagr').textContent = scFmtPct(d.super.cagr * 100);
+            SC('sc-badge-super').style.display = winner === 'super' ? '' : 'none';
+            SC('sc-card-super').classList.toggle('winner', winner === 'super');
+
+            // Assumptions
+            SC('sc-assumptions').innerHTML = [
+              ['Period', d.startYear + ' → ' + endYear + ' (' + d.years + ' yrs)'],
+              ['ETF Return (blended)', scFmtPct(d.blendedReturn * 100)],
+              ['Super Return', SC('sc-super-rate').value + '%'],
+              ['Home Loan Rate', scFmtPct(d.loanRate * 100)],
+              ['Inflation', scFmtPct(d.inflation * 100)],
+              ['Marginal Tax Rate', scFmtPct(d.taxRate * 100)],
+              ['CGT Discount', '50% (AU, >12mo)'],
+              ['Super Contributions Tax', '15%'],
+              ['Super Concessional Cap', '$30,000/yr'],
+            ].map(([l, v]) => `<div class="sc-assumption"><span class="sc-assumption-lbl">${l}</span><span class="sc-assumption-val">${v}</span></div>`).join('');
+
+            renderChart(d, scActiveChart);
+            window.scLastDataRef = d;
+            window.scActiveChartRef = scActiveChart;
+          }
+
+          // ── Chart rendering ──────────────────────────────────────────
+          function renderChart(d, type) {
+            if (typeof Chart === 'undefined') return;
+            const canvas = SC('sc-chart-canvas');
+            if (scChart) { scChart.destroy(); scChart = null; }
+
+            const startYear = d.startYear || new Date().getFullYear();
+            // For many years, show every 5th year label to avoid crowding
+            const labels = Array.from({ length: d.years }, (_, i) => {
+              const yr = startYear + i + 1;
+              if (d.years <= 15) return String(yr);
+              if (d.years <= 30) return (i + 1) % 5 === 0 || i === 0 ? String(yr) : '';
+              return (i + 1) % 10 === 0 || i === 0 ? String(yr) : '';
+            });
+
+            if (type === 'bar') {
+              scChart = new Chart(canvas, {
+                type: 'bar',
+                data: {
+                  labels: ['ETF Portfolio', 'Offset Savings', 'Super Balance'],
+                  datasets: [
+                    { label: 'Total Contributed', data: [d.etf.invested, d.offset.invested, d.super.invested], backgroundColor: 'rgba(91,79,255,0.2)', borderColor: 'rgba(91,79,255,0.6)', borderWidth: 1.5, borderRadius: 6 },
+                    { label: 'Final Value', data: [d.etf.final, d.offset.final, d.super.final], backgroundColor: ['rgba(91,79,255,0.75)', 'rgba(0,201,141,0.75)', 'rgba(245,158,11,0.75)'], borderColor: ['#5b4fff', '#00c98d', '#f59e0b'], borderWidth: 0, borderRadius: 6 },
+                  ]
+                },
+                options: chartOpts('Final Value vs Contribution', true)
+              });
+            } else {
+              const isReal = type === 'real';
+              const etfData = isReal ? d.etf.realYearly : d.etf.yearly;
+              const offsetData = isReal ? d.offset.realYearly : d.offset.yearly;
+              const superData = isReal ? d.super.realYearly : d.super.yearly;
+              scChart = new Chart(canvas, {
+                type: 'line',
+                data: {
+                  labels,
+                  datasets: [
+                    { label: 'ETF Portfolio', data: etfData, borderColor: '#5b4fff', backgroundColor: 'rgba(91,79,255,0.07)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2.5 },
+                    { label: 'Offset Savings', data: offsetData, borderColor: '#00c98d', backgroundColor: 'rgba(0,201,141,0.07)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2.5 },
+                    { label: 'Super Balance', data: superData, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.07)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2.5 },
+                  ]
+                },
+                options: chartOpts(isReal ? 'Inflation-Adjusted Growth (' + d.startYear + '–' + ((d.startYear||2025)+d.years) + ')' : 'Nominal Growth ' + d.startYear + '–' + ((d.startYear||2025)+d.years), false)
+              });
+            }
+          }
+
+          function chartOpts(title, isBar) {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+            const tickColor = isDark ? '#78716c' : '#78716c';
+            return {
+              responsive: true, maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' }, color: tickColor, padding: 16, usePointStyle: true, pointStyleWidth: 8 } },
+                tooltip: {
+                  backgroundColor: isDark ? '#1c1b1a' : '#ffffff',
+                  borderColor: isDark ? '#333230' : '#ddd9d2',
+                  borderWidth: 1,
+                  titleColor: isDark ? '#f5f4f0' : '#1c1917',
+                  bodyColor: isDark ? '#a8a29e' : '#78716c',
+                  titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: '700' },
+                  bodyFont: { family: 'JetBrains Mono', size: 12 },
+                  padding: 12, cornerRadius: 10,
+                  callbacks: {
+                    label: ctx => '  ' + ctx.dataset.label + ': ' + scFmt(ctx.parsed.y || ctx.raw)
+                  }
+                }
+              },
+              scales: {
+                x: { grid: { color: gridColor }, border: { display: false }, ticks: { color: tickColor, font: { family: 'JetBrains Mono', size: 10 }, maxTicksLimit: 12, autoSkip: true } },
+                y: { grid: { color: gridColor }, border: { display: false }, ticks: { color: tickColor, font: { family: 'JetBrains Mono', size: 10 }, callback: v => '$' + (v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v >= 1e3 ? (v / 1e3).toFixed(0) + 'K' : v) } }
+              }
+            };
+          }
+
+          // ── Chart toggle buttons ─────────────────────────────────────
+          document.querySelectorAll('.sc-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+              document.querySelectorAll('.sc-toggle-btn').forEach(b => b.classList.remove('active'));
+              this.classList.add('active');
+              scActiveChart = this.dataset.chart;
+              if (scLastData) renderChart(scLastData, scActiveChart);
+            });
+          });
+          // Expose for theme toggle
+          window.scLastDataRef = null;
+          window.scActiveChartRef = 'growth';
+          window.renderChartRef = renderChart;
+
+          // ── Calculate button ─────────────────────────────────────────
+          SC('sc-calc-btn').addEventListener('click', () => {
+            scLastData = calcStrategies();
+            renderResults(scLastData);
+            // Scroll to results
+            SC('sc-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+
+          // ── Live recalculation when results already shown ────────────
+          const scLiveInputs = ['sc-amount','sc-years','sc-loan-balance','sc-loan-rate','sc-inflation','sc-sp500','sc-ndq','sc-super-rate','sc-div-yield','sc-fx-drag','sc-etf-split','sc-tax-rate'];
+          const scLiveRanges = ['sc-range-amount','sc-range-years','sc-range-loan','sc-range-loan-rate','sc-range-inflation'];
+          [...scLiveInputs, ...scLiveRanges].forEach(id => {
+            const el = SC(id);
+            if (el) el.addEventListener('input', () => {
+              if (scLastData) {
+                scLastData = calcStrategies();
+                renderResults(scLastData);
+              }
+            });
+          });
+          const scTaxEl = SC('sc-tax-rate');
+          if (scTaxEl) scTaxEl.addEventListener('change', () => {
+            if (scLastData) { scLastData = calcStrategies(); renderResults(scLastData); }
+          });
+
+          // ── AI Analysis ──────────────────────────────────────────────
+          SC('sc-ai-btn').addEventListener('click', async () => {
+            if (!scLastData) return;
+            const d = scLastData;
+            const btn = SC('sc-ai-btn');
+            const spinner = SC('sc-ai-spinner');
+            const output = SC('sc-ai-output');
+
+            btn.disabled = true;
+            spinner.className = 'sc-ai-spinner visible';
+            output.className = 'sc-ai-output';
+            output.textContent = '';
+
+            const prompt = `You are an Australian financial educator providing general information (not personal financial advice).
+
+An Australian investor is comparing 3 investment strategies over ${d.years} years (${d.startYear} to ${(d.startYear||2025)+d.years}), investing $${d.annual.toLocaleString()} per year.
 
 Results (after tax):
 1. ETF Portfolio (S&P 500 + Nasdaq 100, monthly DCA): Final value = ${scFmt(d.etf.final)}, Total invested = ${scFmt(d.etf.invested)}, Net gain = ${scFmt(d.etf.gain)}, Total tax paid = ${scFmt(d.etf.tax)}, Effective CAGR = ${scFmtPct(d.etf.cagr * 100)}, Real value (inflation-adj) = ${scFmt(d.etf.realFinal)}
@@ -2673,30 +2625,30 @@ Please provide:
 
 Keep it plain English, concrete, and AU-specific. Use actual dollar figures from the results above. Do not give personal financial advice.`;
 
-              try {
-                const response = await fetch('https://api.anthropic.com/v1/messages', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    model: 'claude-sonnet-4-20250514',
-                    max_tokens: 1000,
-                    messages: [{ role: 'user', content: prompt }]
-                  })
-                });
-                const data = await response.json();
-                const text = data.content?.map(b => b.text || '').join('') || 'No response received.';
-                output.textContent = text;
-                output.className = 'sc-ai-output visible';
-              } catch (err) {
-                output.textContent = 'Error fetching analysis. Please try again.';
-                output.className = 'sc-ai-output visible';
-              } finally {
-                btn.disabled = false;
-                spinner.className = 'sc-ai-spinner';
-              }
-            });
+            try {
+              const response = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  model: 'claude-sonnet-4-20250514',
+                  max_tokens: 1000,
+                  messages: [{ role: 'user', content: prompt }]
+                })
+              });
+              const data = await response.json();
+              const text = data.content?.map(b => b.text || '').join('') || 'No response received.';
+              output.textContent = text;
+              output.className = 'sc-ai-output visible';
+            } catch (err) {
+              output.textContent = 'Error fetching analysis. Please try again.';
+              output.className = 'sc-ai-output visible';
+            } finally {
+              btn.disabled = false;
+              spinner.className = 'sc-ai-spinner';
+            }
+          });
 
-          })(); // end strategy compare IIFE
+        })(); // end strategy compare IIFE
             $('invest-calc-btn').addEventListener('click', calculate);
 
       // ─── Init ─────────────────────────────────────────────────────
@@ -2707,24 +2659,24 @@ Keep it plain English, concrete, and AU-specific. Use actual dollar figures from
       applyLoanType(initialLoanType);
       calculate();
 
-  // ─── Dark mode toggle ──────────────────────────────────────────
-  (function () {
-    const root = document.documentElement;
-    const btn = document.getElementById('theme-toggle');
-    const saved = localStorage.getItem('finCalcTheme');
-    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      root.setAttribute('data-theme', 'dark');
-    }
-    btn.addEventListener('click', () => {
-      const isDark = root.getAttribute('data-theme') === 'dark';
-      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
-      localStorage.setItem('finCalcTheme', isDark ? 'light' : 'dark');
-      // Re-render strategy chart to pick up new theme colors
-      if (window.scLastDataRef && window.scActiveChartRef) {
-        setTimeout(() => renderChartRef(window.scLastDataRef, window.scActiveChartRef), 50);
-      }
-    });
-  })();
+      // ─── Dark mode toggle ──────────────────────────────────────────
+      (function () {
+        const root = document.documentElement;
+        const btn = document.getElementById('theme-toggle');
+        const saved = localStorage.getItem('finCalcTheme');
+        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          root.setAttribute('data-theme', 'dark');
+        }
+        btn.addEventListener('click', () => {
+          const isDark = root.getAttribute('data-theme') === 'dark';
+          root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+          localStorage.setItem('finCalcTheme', isDark ? 'light' : 'dark');
+          // Re-render strategy chart to pick up new theme colors
+          if (window.scLastDataRef && window.scActiveChartRef) {
+            setTimeout(() => renderChartRef(window.scLastDataRef, window.scActiveChartRef), 50);
+          }
+        });
+      })();
     </script>
 </body>
 </html>
