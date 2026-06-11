@@ -551,6 +551,63 @@
     }
     .updating { animation: pulse 0.35s ease; }
 
+
+      /* ── Support bar ── */
+  .support-bar {
+    text-align: center;
+    margin-top: 36px;
+    padding: 28px 24px;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(45,74,62,0.06);
+    animation: fadeUp 0.5s ease 0.45s both;
+  }
+
+  .support-label {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+
+  .support-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .support-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+  }
+
+  .support-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }
+
+  .support-btn:active { transform: translateY(0); }
+
+  .support-btn.bmc {
+    background: #FFDD00;
+    color: #1a1a1a;
+  }
+
+  .support-btn.paypal {
+    background: #003087;
+    color: #fff;
+  }
+
     /* ── Footer ────────────────────────────────────────────────────── */
     footer {
       text-align: center; margin-top: 52px;
