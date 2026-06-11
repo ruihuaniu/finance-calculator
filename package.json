@@ -1,0 +1,10 @@
+{
+  "name": "finance-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FinCalc — a zero-dependency loan & investment calculator. This package.json only covers the unit tests; the app itself is the standalone index.html.",
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}
