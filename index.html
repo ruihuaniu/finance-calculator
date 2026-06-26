@@ -1559,7 +1559,7 @@
                       <div class="sc-mini-val" id="sc-etf-tax">—</div>
                     </div>
                     <div class="sc-mini">
-                      <div class="sc-mini-lbl">Eff. Annual Return</div>
+                      <div class="sc-mini-lbl">Gross Market Return</div>
                       <div class="sc-mini-val" id="sc-etf-cagr">—</div>
                     </div>
                   </div>
@@ -1624,7 +1624,7 @@
             <div class="sc-mini-val" id="sc-super-tax">—</div>
           </div>
           <div class="sc-mini">
-            <div class="sc-mini-lbl">Eff. Annual Return</div>
+            <div class="sc-mini-lbl">Gross Fund Return</div>
             <div class="sc-mini-val" id="sc-super-cagr">—</div>
           </div>
         </div>
@@ -2605,7 +2605,42 @@
             // Capital growth component = total return minus dividend yield
             const capitalGrowthRate = blendedReturn - divYield;
 
-            // ── Helper: build ETF balance year-by-year ───────────────────
+            // ── IRR solver for DCA cash flows ────────────────────────────
+            // cashFlows: array of { t: year (0-based fraction), amount: + for inflow to investor }
+            // Outflows = contributions (negative), inflow = final value (positive).
+            // Uses Newton-Raphson. Falls back to bisection if Newton diverges.
+            function calcIRR(annualContrib, finalValue, numYears) {
+              // Monthly contributions: 12 per year, at end of each month
+              // Build cash flow array: outflows then terminal inflow
+              // For IRR we treat contributions as outflows (negative) and final as inflow.
+              // NPV(r) = -sum(contrib / (1+r)^t) + final / (1+r)^years = 0
+              // Solve annual r via bisection (safe & robust for this shape).
+              const monthly = annualContrib / 12;
+              function npv(r) {
+                const mr = r / 12; // monthly rate
+                let pv = 0;
+                for (let y = 0; y < numYears; y++) {
+                  for (let m = 0; m < 12; m++) {
+                    const t = (y * 12 + m + 1) / 12; // time in years
+                    pv -= monthly / Math.pow(1 + r, t);
+                  }
+                }
+                pv += finalValue / Math.pow(1 + r, numYears);
+                return pv;
+              }
+              // Bisection between 0% and 100%
+              let lo = -0.5, hi = 5.0;
+              if (npv(lo) * npv(hi) > 0) {
+                // fallback: approximate with lump-sum CAGR
+                return Math.pow(finalValue / (annualContrib * numYears), 1 / numYears) - 1;
+              }
+              for (let i = 0; i < 60; i++) {
+                const mid = (lo + hi) / 2;
+                if (npv(mid) > 0) lo = mid; else hi = mid;
+                if (hi - lo < 0.00001) break;
+              }
+              return (lo + hi) / 2;
+            }
             // Uses monthly DCA. Dividends taxed annually at effectiveTax.
             // Franking credits reduce tax on dividends (imputation).
             // At exit: 50% CGT discount applied, taxed at retireTax.
@@ -2646,8 +2681,11 @@
               const cgt = capitalGain * 0.5 * retireTax;
               const finalAfterTax = bal - cgt;
               const totalTax = totalDivTax + cgt;
-              const cagr = totalInvested > 0 ? Math.pow(finalAfterTax / (annualContrib * years), 1 / years) - 1 : 0;
-              return { final: finalAfterTax, invested: annualContrib * years, gain: finalAfterTax - annualContrib * years, tax: totalTax, cagr, yearly: yearlyData, divTax: totalDivTax, cgt };
+              // IRR: the annual rate that makes NPV of contributions + final value = 0
+              const cagr = calcIRR(annualContrib, finalAfterTax, years);
+              // Gross return = blendedReturn (before any tax) — for display on the card
+              const grossReturn = blendedReturn;
+              return { final: finalAfterTax, invested: annualContrib * years, gain: finalAfterTax - annualContrib * years, tax: totalTax, cagr, grossReturn, yearly: yearlyData, divTax: totalDivTax, cgt };
             }
 
             // ── Strategy 1: Plain ETFs ───────────────────────────────────
@@ -2671,8 +2709,8 @@
               offsetYearlyData.push(wealth);
             }
             const offsetFinal = offsetYearlyData[years - 1] || 0;
-            const offsetEffReturn = totalOffsetDeposited > 0
-              ? Math.pow(offsetFinal / totalOffsetDeposited, 1 / years) - 1 : 0;
+            // Offset return = exactly the loan interest rate, tax-free (that's the definition of offset)
+            const offsetEffReturn = loanRate;
 
             // ── Strategy 3: Super (concessional contributions) ───────────
             // Contributions taxed at 15% (not MTR). Earnings inside super taxed at 15%/yr.
@@ -2697,7 +2735,8 @@
             }
             const superFinal = superBal;
             const superTotal = superTotalContributed + superTotalContribTax;
-            const superCAGR = superTotal > 0 ? Math.pow(superFinal / superTotal, 1 / years) - 1 : 0;
+            // IRR on pre-tax contributions: what annual rate on the gross $ in → final balance?
+            const superCAGR = calcIRR(annual, superFinal, years);
 
             // ── Strategy 4: Debt Recycled ETFs ───────────────────────────
             const drResult = buildETF(annual, true);
@@ -2729,10 +2768,10 @@
             return {
               annual, years, startYear, taxRate, effectiveTax, retireTax, loanRate, inflation, blendedReturn,
               frankingYield, medicareLevy,
-              etf:    { final: etfResult.final, invested: etfResult.invested, gain: etfResult.gain, tax: etfResult.tax, cagr: atrETF, yearly: etfYearlyData, realFinal: etfRealFinal, realYearly: realYearlyETF },
+              etf:    { final: etfResult.final, invested: etfResult.invested, gain: etfResult.gain, tax: etfResult.tax, cagr: atrETF, grossReturn: etfResult.grossReturn, yearly: etfYearlyData, realFinal: etfRealFinal, realYearly: realYearlyETF },
               offset: { final: offsetFinal, invested: totalOffsetDeposited, gain: totalInterestSaved, tax: 0, cagr: offsetEffReturn, yearly: offsetYearlyData, realFinal: offsetRealFinal, realYearly: realYearlyOffset },
               super:  { final: superFinal, invested: superTotal, gain: superFinal - superTotal, tax: superTotalContribTax, cagr: atrSuper, yearly: superYearlyData, realFinal: superRealFinal, realYearly: realYearlySuper },
-              dr:     { final: drResult.final, invested: drResult.invested, gain: drResult.gain, tax: drResult.tax, taxSaved: Math.max(0, drTaxSaved), cagr: atrDR, yearly: drYearlyData, realFinal: drRealFinal, realYearly: realYearlyDR },
+              dr:     { final: drResult.final, invested: drResult.invested, gain: drResult.gain, tax: drResult.tax, taxSaved: Math.max(0, drTaxSaved), cagr: atrDR, grossReturn: drResult.grossReturn, yearly: drYearlyData, realFinal: drRealFinal, realYearly: realYearlyDR },
               atr:    { offset: atrOffset, etf: atrETF, dr: atrDR, super: atrSuper },
             };
           }
@@ -2770,7 +2809,7 @@
             SC('sc-etf-invested').textContent = scFmt(d.etf.invested);
             SC('sc-etf-gain').textContent = scFmt(d.etf.gain);
             SC('sc-etf-tax').textContent = scFmt(d.etf.tax);
-            SC('sc-etf-cagr').textContent = scFmtPct(d.etf.cagr * 100);
+            SC('sc-etf-cagr').textContent = scFmtPct(d.etf.grossReturn * 100);
             SC('sc-badge-etf').style.display = winner === 'etf' ? '' : 'none';
             SC('sc-card-etf').classList.toggle('winner', winner === 'etf');
 
@@ -2789,7 +2828,7 @@
             SC('sc-super-invested').textContent = scFmt(d.super.invested);
             SC('sc-super-gain').textContent = scFmt(d.super.gain);
             SC('sc-super-tax').textContent = scFmt(d.super.tax);
-            SC('sc-super-cagr').textContent = scFmtPct(d.super.cagr * 100);
+            SC('sc-super-cagr').textContent = scFmtPct(+SC('sc-super-rate').value);
             SC('sc-badge-super').style.display = winner === 'super' ? '' : 'none';
             SC('sc-card-super').classList.toggle('winner', winner === 'super');
 
@@ -2799,7 +2838,7 @@
             SC('sc-dr-invested').textContent = scFmt(d.dr.invested);
             SC('sc-dr-gain').textContent = scFmt(d.dr.gain);
             SC('sc-dr-taxsaved').textContent = '+' + scFmt(d.dr.taxSaved) + ' vs plain ETFs';
-            SC('sc-dr-cagr').textContent = scFmtPct(d.dr.cagr * 100);
+            SC('sc-dr-cagr').textContent = scFmtPct(d.dr.grossReturn * 100);
             SC('sc-badge-dr').style.display = winner === 'dr' ? '' : 'none';
             SC('sc-card-dr').classList.toggle('winner', winner === 'dr');
 
