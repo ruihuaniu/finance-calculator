@@ -1286,6 +1286,7 @@
   </div>
 </div>
 
+        <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; font-family: 'Plus Jakarta Sans', sans-serif;">Lump Sum Growth — Without Periodic Investment</p>
         <div class="results-grid" id="investment-amount-results">
           <div class="result-item highlight" id="investment-card-initial">
             <div class="result-label">Initial Investment</div>
@@ -1329,6 +1330,7 @@
         <div class="breakdown" style="margin-top: 24px;" id="investment-comparison-chart-wrap">
           <div class="breakdown-title">
             <span>Final Returns Comparison</span>
+            <span id="chart-avg-return-label" style="font-size:11px; color:var(--muted); font-weight:500;"></span>
           </div>
           <div id="investment-comparison-chart"
             style="margin-top: 16px; padding: 16px; background: var(--surface2); border-radius: 10px;">
@@ -1338,24 +1340,28 @@
                   style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
                   Weekly</div>
                 <div style="font-size: 16px; font-weight: 700; color: var(--accent3);" id="chart-weekly">—</div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 4px;" id="chart-weekly-avg">—/yr avg</div>
               </div>
               <div style="text-align: center;">
                 <div
                   style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
                   Fortnightly</div>
                 <div style="font-size: 16px; font-weight: 700; color: var(--accent2);" id="chart-fortnightly">—</div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 4px;" id="chart-fortnightly-avg">—/yr avg</div>
               </div>
               <div style="text-align: center;">
                 <div
                   style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
                   Monthly</div>
                 <div style="font-size: 16px; font-weight: 700; color: var(--accent);" id="chart-monthly">—</div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 4px;" id="chart-monthly-avg">—/yr avg</div>
               </div>
               <div style="text-align: center;">
                 <div
                   style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
                   Yearly</div>
                 <div style="font-size: 16px; font-weight: 700; color: #999;" id="chart-yearly">—</div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 4px;" id="chart-yearly-avg">—/yr avg</div>
               </div>
             </div>
           </div>
@@ -2014,6 +2020,11 @@
       chartFortnightly: $('chart-fortnightly'),
       chartMonthly: $('chart-monthly'),
       chartYearly: $('chart-yearly'),
+      chartWeeklyAvg: $('chart-weekly-avg'),
+      chartFortnightlyAvg: $('chart-fortnightly-avg'),
+      chartMonthlyAvg: $('chart-monthly-avg'),
+      chartYearlyAvg: $('chart-yearly-avg'),
+      chartAvgReturnLabel: $('chart-avg-return-label'),
         investmentCardInitial: $('investment-card-initial'),
         investmentCardFinalAnnual: $('investment-card-final-annual'),
         investmentComparisonIntro: $('investment-comparison-intro'),
@@ -2280,11 +2291,22 @@
         res.compAmount.textContent = (principal / 1000).toFixed(0) + 'K';
         res.compRate.textContent = (+inputs.annualReturn.value).toFixed(2);
 
+        // Average annual return rate = (finalValue / principal)^(1/years) - 1 (CAGR)
+        const avgRateWeekly      = principal > 0 ? (Math.pow(finalWeekly / principal, 1 / years) - 1) * 100 : 0;
+        const avgRateFortnightly = principal > 0 ? (Math.pow(finalFortnightly / principal, 1 / years) - 1) * 100 : 0;
+        const avgRateMonthly     = principal > 0 ? (Math.pow(finalMonthly / principal, 1 / years) - 1) * 100 : 0;
+        const avgRateYearly      = principal > 0 ? (Math.pow(finalYearly / principal, 1 / years) - 1) * 100 : 0;
+
         // Chart display
         res.chartWeekly.textContent = fmtCurr(finalWeekly);
         res.chartFortnightly.textContent = fmtCurr(finalFortnightly);
         res.chartMonthly.textContent = fmtCurr(finalMonthly);
         res.chartYearly.textContent = fmtCurr(finalYearly);
+        res.chartWeeklyAvg.textContent      = avgRateWeekly.toFixed(2) + '% avg/yr';
+        res.chartFortnightlyAvg.textContent = avgRateFortnightly.toFixed(2) + '% avg/yr';
+        res.chartMonthlyAvg.textContent     = avgRateMonthly.toFixed(2) + '% avg/yr';
+        res.chartYearlyAvg.textContent      = avgRateYearly.toFixed(2) + '% avg/yr';
+        res.chartAvgReturnLabel.textContent = `Avg yearly rate: ${avgRateYearly.toFixed(2)}% – ${avgRateWeekly.toFixed(2)}% depending on frequency`;
 
       persistCurrentState();
 
