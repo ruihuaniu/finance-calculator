@@ -99,28 +99,42 @@
 
     .wrapper { width: 100%; max-width: 920px; position: relative; z-index: 1; }
 
-    /* ── Theme toggle ──────────────────────────────────────────────── */
-    .theme-toggle {
-      position: fixed; top: 20px; right: 20px; z-index: 200;
-      width: 42px; height: 42px; border-radius: 12px;
+    /* ── Header toolbar (lang + theme) ────────────────────────────── */
+    .header-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .toolbar-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 36px; padding: 0 14px;
+      border-radius: 100px;
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: var(--shadow-md);
+      font-size: 12px; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      white-space: nowrap;
       transition: var(--transition);
-      font-size: 17px;
+      box-shadow: var(--shadow-sm);
+      letter-spacing: 0.02em;
     }
-    .theme-toggle:hover {
+    .toolbar-btn:hover {
       border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 4px 14px rgba(91,79,255,0.15);
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(91,79,255,0.2);
     }
-    .theme-toggle .icon-sun  { display: none; }
-    .theme-toggle .icon-moon { display: block; }
-    [data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
-    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+    .toolbar-btn .icon-sun  { display: none; }
+    .toolbar-btn .icon-moon { display: inline; }
+    [data-theme="dark"] .toolbar-btn .icon-sun  { display: inline; }
+    [data-theme="dark"] .toolbar-btn .icon-moon { display: none; }
+    @media (max-width: 400px) {
+      .toolbar-btn { font-size: 11px; padding: 0 11px; height: 32px; }
+    }
 
     /* ── Header ────────────────────────────────────────────────────── */
     header {
@@ -906,20 +920,23 @@
   </style>
 </head>
 <body>
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-  <span class="icon-moon">🌙</span>
-  <span class="icon-sun">☀️</span>
-</button>
 <div class="wrapper">
 
   <header>
+    <div class="header-toolbar">
+      <button class="toolbar-btn" id="lang-toggle" aria-label="Toggle language">🌐 <span id="lang-label">中文</span></button>
+      <button class="toolbar-btn" id="theme-toggle" aria-label="Toggle dark mode">
+        <span class="icon-moon">🌙 <span data-i18n="lbl-dark-mode">Dark</span></span>
+        <span class="icon-sun">☀️ <span data-i18n="lbl-light-mode">Light</span></span>
+      </button>
+    </div>
     <div class="logo-line">
       <div class="logo-dot"></div>
       <span class="logo-text">FinCalc</span>
       <div class="logo-dot"></div>
     </div>
-    <h1><em id="page-title">Loan</em> Calculator</h1>
-    <p class="subtitle" id="page-subtitle">Estimate your monthly payments and total cost of borrowing.</p>
+    <h1><em id="page-title" data-en="Loan" data-zh="贷款">Loan</em> <span data-en="Calculator" data-zh="计算器">Calculator</span></h1>
+    <p class="subtitle" id="page-subtitle" data-en="Estimate your monthly payments and total cost of borrowing." data-zh="估算您的每月还款额和总借贷成本。">Estimate your monthly payments and total cost of borrowing.</p>
   </header>
 
   <!-- Loan type tabs -->
@@ -937,14 +954,14 @@
     <!-- Left: Loan inputs -->
     <div class="card" id="loan-card">
       <div class="card-header" data-card="loan">
-        <p class="card-title">Loan Details</p>
+        <p class="card-title" data-i18n="title-loan-details">Loan Details</p>
         <button class="card-toggle" aria-label="Toggle Loan Details">
           ▼
         </button>
         </div>
         <div class="card-content">
           <div class="field">
-            <label>Loan Amount <span id="lbl-amount">$250,000</span></label>
+            <label><span data-i18n="lbl-loan-amount">Loan Amount</span> <span id="lbl-amount">$250,000</span></label>
             <div class="input-wrap has-prefix">
               <span class="prefix">$</span>
               <input type="number" id="amount" value="250000" min="1000" max="10000000" step="1000" />
@@ -957,7 +974,7 @@
           </div>
 
         <div class="field" id="field-down">
-          <label>Down Payment <span id="lbl-down">$50,000</span></label>
+          <label><span data-i18n="lbl-down-payment">Down Payment</span> <span id="lbl-down">$50,000</span></label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="down" value="50000" min="0" step="1000" />
@@ -969,7 +986,7 @@
         </div>
 
         <div class="field">
-          <label>Loan Term <span id="lbl-term">30 years</span></label>
+          <label><span data-i18n="lbl-loan-term">Loan Term</span> <span id="lbl-term">30 years</span></label>
           <div class="input-wrap has-suffix">
             <input type="number" id="term" value="30" min="1" max="40" step="1" />
             <span class="suffix">yrs</span>
@@ -981,11 +998,11 @@
         </div>
 
         <div class="field">
-          <label>Payment Frequency</label>
+          <label><span data-i18n="lbl-payment-frequency">Payment Frequency</span></label>
           <select id="frequency">
-            <option value="12" selected>Monthly</option>
-            <option value="26">Bi-weekly</option>
-            <option value="52">Weekly</option>
+            <option value="12" selected data-i18n-opt="opt-monthly">Monthly</option>
+            <option value="26" data-i18n-opt="opt-biweekly">Bi-weekly</option>
+            <option value="52" data-i18n-opt="opt-weekly">Weekly</option>
           </select>
         </div>
       </div>
@@ -994,14 +1011,14 @@
     <!-- Investment Card (hidden by default) -->
     <div class="card" id="investment-card" style="display:none;">
       <div class="card-header" data-card="investment">
-        <p class="card-title">Investment Details</p>
+        <p class="card-title" data-i18n="title-investment-details">Investment Details</p>
         <button class="card-toggle" aria-label="Toggle Investment Details">
           ▼
         </button>
         </div>
         <div class="card-content">
           <div class="field">
-            <label>Initial Investment <span id="lbl-invest-amount">$50,000</span></label>
+            <label><span data-i18n="lbl-initial-investment">Initial Investment</span> <span id="lbl-invest-amount">$50,000</span></label>
             <div class="input-wrap has-prefix">
               <span class="prefix">$</span>
               <input type="number" id="invest-amount" value="50000" min="0" max="10000000" step="100" />
@@ -1014,7 +1031,7 @@
           </div>
         
           <div class="field">
-            <label>Investment Period <span id="lbl-invest-years">10 years</span></label>
+            <label><span data-i18n="lbl-investment-period">Investment Period</span> <span id="lbl-invest-years">10 years</span></label>
             <div class="input-wrap has-suffix">
               <input type="number" id="invest-years" value="10" min="1" max="50" step="1" />
               <span class="suffix">yrs</span>
@@ -1026,7 +1043,7 @@
           </div>
         
           <div class="field">
-            <label>Annual Return Rate <span id="lbl-annual-return">7.50%</span></label>
+            <label><span data-i18n="lbl-annual-return">Annual Return Rate</span> <span id="lbl-annual-return">7.50%</span></label>
             <div class="input-wrap has-suffix">
               <input type="number" id="annual-return" value="7.5" min="0.01" max="100" step="0.05" />
               <span class="suffix">%</span>
@@ -1043,12 +1060,12 @@
     <!-- DCA Card (investment tab only) -->
     <div class="card" id="dca-card" style="display:none;">
       <div class="card-header" data-card="dca">
-        <p class="card-title">Periodic investing</p>
+        <p class="card-title" data-i18n="title-periodic-investing">Periodic investing</p>
         <button class="card-toggle" aria-label="Toggle DCA">▼</button>
       </div>
       <div class="card-content">
         <div class="field">
-          <label>Contribution Amount <span id="lbl-dca-amount">$500</span></label>
+          <label><span data-i18n="lbl-contribution-amount">Contribution Amount</span> <span id="lbl-dca-amount">$500</span></label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="dca-amount" value="500" min="0" max="100000" step="50" />
@@ -1061,37 +1078,37 @@
         </div>
     
         <div class="field">
-          <label>Contribution Frequency</label>
+          <label><span data-i18n="lbl-contribution-freq">Contribution Frequency</span></label>
           <select id="dca-frequency">
-            <option value="52">Weekly</option>
-            <option value="26">Fortnightly</option>
-            <option value="12" selected>Monthly</option>
-            <option value="1">Yearly</option>
+            <option value="52" data-i18n-opt="opt-weekly">Weekly</option>
+            <option value="26" data-i18n-opt="opt-fortnightly">Fortnightly</option>
+            <option value="12" selected data-i18n-opt="opt-monthly">Monthly</option>
+            <option value="1" data-i18n-opt="opt-yearly">Yearly</option>
           </select>
         </div>
     
         <div class="field">
-          <label>Contribution Timing</label>
+          <label><span data-i18n="lbl-contribution-timing">Contribution Timing</span></label>
           <select id="dca-timing">
-            <option value="end" selected>End of period (ordinary annuity)</option>
-            <option value="start">Start of period (annuity due)</option>
+            <option value="end" selected data-i18n-opt="opt-end-period">End of period (ordinary annuity)</option>
+            <option value="start" data-i18n-opt="opt-start-period">Start of period (annuity due)</option>
           </select>
         </div>
-        <button class="calc-btn" id="invest-calc-btn">Calculate</button>
+        <button class="calc-btn" id="invest-calc-btn" data-i18n="btn-calculate">Calculate</button>
       </div>
     </div>
 
     <!-- Right: Rate inputs -->
     <div class="card" id="rate-card">
       <div class="card-header" data-card="rate">
-        <p class="card-title">Rate & Fees</p>
+        <p class="card-title" data-i18n="title-rate-fees">Rate & Fees</p>
         <button class="card-toggle" aria-label="Toggle Rate & Fees">
           ▼
         </button>
         </div>
         <div class="card-content">
           <div class="field">
-            <label>Annual Interest Rate <span id="lbl-rate">6.50%</span></label>
+            <label><span data-i18n="lbl-interest-rate">Annual Interest Rate</span> <span id="lbl-rate">6.50%</span></label>
             <div class="input-wrap has-suffix">
               <input type="number" id="rate" value="6.5" min="0.01" max="50" step="0.05" />
               <span class="suffix">%</span>
@@ -1104,7 +1121,7 @@
           </div>
 
         <div class="field" id="field-pmi">
-          <label>PMI Rate (annual) <span id="lbl-pmi">0.50%</span></label>
+          <label><span data-i18n="lbl-pmi">PMI Rate (annual)</span> <span id="lbl-pmi">0.50%</span></label>
           <div class="input-wrap has-suffix">
             <input type="number" id="pmi" value="0.5" min="0" max="5" step="0.05" />
             <span class="suffix">%</span>
@@ -1116,7 +1133,7 @@
         </div>
 
         <div class="field" id="field-tax">
-          <label>Annual Property Tax <span id="lbl-tax">$3,000</span></label>
+          <label><span data-i18n="lbl-property-tax">Annual Property Tax</span> <span id="lbl-tax">$3,000</span></label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="tax" value="3000" min="0" step="100" />
@@ -1124,28 +1141,28 @@
         </div>
 
         <div class="field" id="field-insurance">
-          <label>Annual Home Insurance <span id="lbl-insurance">$1,200</span></label>
+          <label><span data-i18n="lbl-home-insurance">Annual Home Insurance</span> <span id="lbl-insurance">$1,200</span></label>
           <div class="input-wrap has-prefix">
             <span class="prefix">$</span>
             <input type="number" id="insurance" value="1200" min="0" step="100" />
           </div>
         </div>
 
-        <button class="calc-btn" id="calc-btn">Calculate</button>
+        <button class="calc-btn" id="calc-btn" data-i18n="btn-calculate">Calculate</button>
       </div>
     </div>
 
     <!-- Results -->
     <div class="results-card" id="results-card">
-      <p class="card-title">Your Results</p>
+      <p class="card-title" data-i18n="title-your-results">Your Results</p>
 
       <!-- Loan Results -->
       <div id="loan-results">
         <div class="results-grid">
           <div class="result-item highlight">
-            <div class="result-label">Monthly Payment</div>
+            <div class="result-label" data-i18n="lbl-monthly-payment">Monthly Payment</div>
             <div class="result-value" id="res-monthly">—</div>
-            <div class="result-sub" id="res-freq-label">Principal & Interest</div>
+            <div class="result-sub" id="res-freq-label" data-i18n="lbl-principal-interest">Principal & Interest</div>
           </div>
           <div class="result-item highlight" id="res-total-item" style="display:none">
             <div class="result-label" id="res-total-label">Total Monthly</div>
@@ -1153,22 +1170,22 @@
             <div class="result-sub">incl. tax, ins & PMI</div>
           </div>
           <div class="result-item green">
-            <div class="result-label">Total Principal</div>
+            <div class="result-label" data-i18n="lbl-total-principal">Total Principal</div>
             <div class="result-value" id="res-principal">—</div>
-            <div class="result-sub" id="res-loan-amount-sub">Loan amount</div>
+            <div class="result-sub" id="res-loan-amount-sub" data-i18n="lbl-loan-amount-sub">Loan amount</div>
           </div>
           <div class="result-item red">
-            <div class="result-label">Total Interest</div>
+            <div class="result-label" data-i18n="lbl-total-interest">Total Interest</div>
             <div class="result-value" id="res-interest">—</div>
             <div class="result-sub" id="res-interest-pct">—% of loan</div>
           </div>
           <div class="result-item purple">
-            <div class="result-label">Total Cost</div>
+            <div class="result-label" data-i18n="lbl-total-cost">Total Cost</div>
             <div class="result-value" id="res-total-cost">—</div>
-            <div class="result-sub">Principal + interest</div>
+            <div class="result-sub" data-i18n="lbl-principal-interest-sub">Principal + interest</div>
           </div>
           <div class="result-item">
-            <div class="result-label">Payoff Date</div>
+            <div class="result-label" data-i18n="lbl-payoff-date">Payoff Date</div>
             <div class="result-value" id="res-payoff" style="font-size:1.3rem">—</div>
             <div class="result-sub" id="res-payoff-sub">—</div>
           </div>
@@ -1176,7 +1193,7 @@
 
         <div class="breakdown">
           <div class="breakdown-title">
-            <span>Cost Breakdown</span>
+            <span data-i18n="lbl-cost-breakdown">Cost Breakdown</span>
             <span id="breakdown-pct-label"></span>
           </div>
           <div class="breakdown-bar">
@@ -1188,11 +1205,11 @@
               <div class="legend">
                 <div class="legend-item">
                   <div class="legend-dot" style="background:var(--accent2)"></div>
-                  <span>Principal</span>
+                  <span data-i18n="lbl-principal">Principal</span>
                 </div>
                 <div class="legend-item">
                   <div class="legend-dot" style="background:var(--danger)"></div>
-                  <span>Interest</span>
+                  <span data-i18n="lbl-interest">Interest</span>
                 </div>
               </div>
               </div>
@@ -1204,7 +1221,7 @@
             <line x1="8" y1="2" x2="8" y2="6" />
             <line x1="3" y1="10" x2="21" y2="10" />
             </svg>
-            View Amortization Schedule
+            <span data-i18n="btn-view-amortization">View Amortization Schedule</span>
             <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="6 9 12 15 18 9" />
             </svg>
@@ -1214,11 +1231,11 @@
           <table id="amort-table">
             <thead>
               <tr>
-                <th>Period</th>
-                <th>Payment</th>
-                <th>Principal</th>
-                <th>Interest</th>
-                <th>Balance</th>
+                <th data-i18n="th-period">Period</th>
+                <th data-i18n="th-payment">Payment</th>
+                <th data-i18n="th-principal">Principal</th>
+                <th data-i18n="th-interest">Interest</th>
+                <th data-i18n="th-balance">Balance</th>
               </tr>
             </thead>
             <tbody id="amort-body"></tbody>
@@ -1232,71 +1249,68 @@
 <div id="dca-results-section"
   style="display:none; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border);">
   <p style="text-align: center; color: var(--muted); margin-bottom: 20px; font-size: 13px; font-weight: 500;">
-    Periodic investing simulation — with periodic contributions
+    <span data-i18n="lbl-dca-simulation">Periodic investing simulation — with periodic contributions</span>
   </p>
   <div class="results-grid">
     <div class="result-item highlight">
-      <div class="result-label">Final Balance (Periodic Investing)</div>
+      <div class="result-label" data-i18n="lbl-final-balance-dca">Final Balance (Periodic Investing)</div>
       <div class="result-value" id="res-dca-final">—</div>
-      <div class="result-sub">Lump sum + contributions</div>
+      <div class="result-sub" data-i18n="lbl-lump-plus-contrib">Lump sum + contributions</div>
     </div>
     <div class="result-item green">
-      <div class="result-label">Total Contributed</div>
+      <div class="result-label" data-i18n="lbl-total-contributed">Total Contributed</div>
       <div class="result-value" id="res-dca-contributed">—</div>
-      <div class="result-sub" id="res-dca-contributed-sub">Principal + deposits</div>
+      <div class="result-sub" id="res-dca-contributed-sub" data-i18n="lbl-principal-deposits">Principal + deposits</div>
     </div>
     <div class="result-item purple">
-      <div class="result-label">Interest Earned</div>
+      <div class="result-label" data-i18n="lbl-interest-earned">Interest Earned</div>
       <div class="result-value" id="res-dca-interest">—</div>
       <div class="result-sub" id="res-dca-interest-pct">—% of total contributed</div>
     </div>
     <div class="result-item" style="border-top:2px solid var(--accent2)">
-      <div class="result-label">Total Deposits</div>
+      <div class="result-label" data-i18n="lbl-total-deposits">Total Deposits</div>
       <div class="result-value" id="res-dca-deposits">—</div>
-      <div class="result-sub" id="res-dca-deposits-sub">Periodic contributions</div>
+      <div class="result-sub" id="res-dca-deposits-sub" data-i18n="lbl-periodic-contributions">Periodic contributions</div>
     </div>
   </div>
   <!-- DCA Breakdown Bar -->
   <div class="breakdown" style="margin-top: 20px;">
     <div class="breakdown-title">
-      <span>Wealth Breakdown</span>
+      <span data-i18n="lbl-wealth-breakdown">Wealth Breakdown</span>
       <span id="dca-breakdown-label"></span>
     </div>
     <div class="breakdown-bar">
       <div class="breakdown-bar-fill" id="dca-bar-fill">
-        <div id="dca-bar-principal"
-          style="height:100%; background:var(--accent); transition:width 0.5s cubic-bezier(0.4,0,0.2,1);"></div>
-        <div id="dca-bar-deposits"
-          style="height:100%; background:var(--accent2); transition:width 0.5s cubic-bezier(0.4,0,0.2,1);"></div>
-        <div id="dca-bar-interest"
-          style="height:100%; background:var(--accent3); transition:width 0.5s cubic-bezier(0.4,0,0.2,1);"></div>
+        <div id="dca-bar-principal" style="height:100%; background:var(--accent); transition:width 0.5s cubic-bezier(0.4,0,0.2,1);"></div>
+        <div id="dca-bar-deposits" style="height:100%; background:var(--accent2); transition:width 0.5s cubic-bezier(0.4,0,0.2,1);"></div>
+        <div id="dca-bar-interest" style="height:100%; background:var(--accent3); transition:width 0.5s cubic-bezier(0.4,0,0.2,1);"></div>
       </div>
     </div>
     <div class="legend">
       <div class="legend-item">
-        <div class="legend-dot" style="background:var(--accent)"></div><span>Initial Principal</span>
+        <div class="legend-dot" style="background:var(--accent)"></div><span data-i18n="lbl-initial-principal">Initial Principal</span>
       </div>
       <div class="legend-item">
-        <div class="legend-dot" style="background:var(--accent2)"></div><span>Deposits</span>
+        <div class="legend-dot" style="background:var(--accent2)"></div><span data-i18n="lbl-deposits">Deposits</span>
       </div>
       <div class="legend-item">
-        <div class="legend-dot" style="background:var(--accent3)"></div><span>Interest</span>
+        <div class="legend-dot" style="background:var(--accent3)"></div><span data-i18n="lbl-interest">Interest</span>
       </div>
     </div>
   </div>
 </div>
 
-        <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; font-family: 'Plus Jakarta Sans', sans-serif;">Lump Sum Growth — Without Periodic Investment</p>
+        <p style="font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; font-family: 'Plus Jakarta Sans', sans-serif;" data-i18n="lbl-lump-sum-growth">Lump Sum Growth — Without Periodic Investment</p>
         <div class="results-grid" id="investment-amount-results">
           <div class="result-item highlight" id="investment-card-initial">
-            <div class="result-label">Initial Investment</div>
+            <div class="result-label" data-i18n="lbl-initial-investment">Initial Investment</div>
             <div class="result-value" id="res-invest-initial">—</div>
-            <div class="result-sub">Starting amount</div>
+            <div class="result-sub" data-i18n="lbl-starting-amount">Starting amount</div>
           </div>
           <div class="result-item green" id="investment-card-final-annual">
-            <div class="result-label">Final Amount (Annual)</div>
+            <div class="result-label" data-i18n="lbl-final-amount-annual">Final Amount (Annual)</div>
             <div class="result-value" id="res-invest-final-annual">—</div>
-            <div class="result-sub">Compounded yearly</div>
+            <div class="result-sub" data-i18n="lbl-compounded-yearly">Compounded yearly</div>
           </div>
         </div>
       
@@ -1306,22 +1320,22 @@
       
         <div class="results-grid" id="investment-comparison-grid">
           <div class="result-item purple">
-            <div class="result-label">Weekly Investment</div>
+            <div class="result-label" data-i18n="lbl-weekly-invest">Weekly Investment</div>
             <div class="result-value" id="res-invest-final-weekly">—</div>
             <div class="result-sub" id="res-weekly-gain">Gain: —</div>
           </div>
           <div class="result-item green">
-            <div class="result-label">Fortnightly Investment</div>
+            <div class="result-label" data-i18n="lbl-fortnightly-invest">Fortnightly Investment</div>
             <div class="result-value" id="res-invest-final-fortnightly">—</div>
             <div class="result-sub" id="res-fortnightly-gain">Gain: —</div>
           </div>
           <div class="result-item highlight">
-            <div class="result-label">Monthly Investment</div>
+            <div class="result-label" data-i18n="lbl-monthly-invest">Monthly Investment</div>
             <div class="result-value" id="res-invest-final-monthly">—</div>
             <div class="result-sub" id="res-monthly-gain">Gain: —</div>
           </div>
           <div class="result-item" style="border-top:2px solid var(--accent2)">
-            <div class="result-label">Yearly Investment</div>
+            <div class="result-label" data-i18n="lbl-yearly-invest">Yearly Investment</div>
             <div class="result-value" id="res-invest-final-yearly">—</div>
             <div class="result-sub" id="res-yearly-gain">Gain: —</div>
           </div>
@@ -1329,37 +1343,28 @@
       
         <div class="breakdown" style="margin-top: 24px;" id="investment-comparison-chart-wrap">
           <div class="breakdown-title">
-            <span>Final Returns Comparison</span>
+            <span data-i18n="lbl-final-returns">Final Returns Comparison</span>
             <span id="chart-avg-return-label" style="font-size:11px; color:var(--muted); font-weight:500;"></span>
           </div>
-          <div id="investment-comparison-chart"
-            style="margin-top: 16px; padding: 16px; background: var(--surface2); border-radius: 10px;">
+          <div id="investment-comparison-chart" style="margin-top: 16px; padding: 16px; background: var(--surface2); border-radius: 10px;">
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
               <div style="text-align: center;">
-                <div
-                  style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
-                  Weekly</div>
+                <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;" data-i18n="lbl-chart-weekly">Weekly</div>
                 <div style="font-size: 16px; font-weight: 700; color: var(--accent3);" id="chart-weekly">—</div>
                 <div style="font-size: 11px; color: var(--muted); margin-top: 4px;" id="chart-weekly-avg">—/yr avg</div>
               </div>
               <div style="text-align: center;">
-                <div
-                  style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
-                  Fortnightly</div>
+                <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;" data-i18n="lbl-chart-fortnightly">Fortnightly</div>
                 <div style="font-size: 16px; font-weight: 700; color: var(--accent2);" id="chart-fortnightly">—</div>
                 <div style="font-size: 11px; color: var(--muted); margin-top: 4px;" id="chart-fortnightly-avg">—/yr avg</div>
               </div>
               <div style="text-align: center;">
-                <div
-                  style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
-                  Monthly</div>
+                <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;" data-i18n="lbl-chart-monthly">Monthly</div>
                 <div style="font-size: 16px; font-weight: 700; color: var(--accent);" id="chart-monthly">—</div>
                 <div style="font-size: 11px; color: var(--muted); margin-top: 4px;" id="chart-monthly-avg">—/yr avg</div>
               </div>
               <div style="text-align: center;">
-                <div
-                  style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">
-                  Yearly</div>
+                <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;" data-i18n="lbl-chart-yearly">Yearly</div>
                 <div style="font-size: 16px; font-weight: 700; color: #999;" id="chart-yearly">—</div>
                 <div style="font-size: 11px; color: var(--muted); margin-top: 4px;" id="chart-yearly-avg">—/yr avg</div>
               </div>
@@ -1378,10 +1383,10 @@
             
               <!-- Inputs -->
               <div class="sc-card">
-                <p class="sc-card-title">Comparison Parameters</p>
+                <p class="sc-card-title" data-i18n="lbl-comparison-params">Comparison Parameters</p>
                 <div class="sc-inputs-grid">
                   <div class="field">
-                    <label>Annual Investment <span id="sc-lbl-amount">$10,000</span></label>
+                    <label><span data-i18n="lbl-annual-investment">Annual Investment</span> <span id="sc-lbl-amount">$10,000</span></label>
                     <div class="input-wrap has-prefix">
                       <span class="prefix">$</span>
                       <input type="number" id="sc-amount" value="10000" min="1000" max="500000" step="500" />
@@ -1392,7 +1397,7 @@
                     </div>
                   </div>
                   <div class="field">
-                    <label>Investment Horizon <span id="sc-lbl-years">30 years</span></label>
+                    <label><span data-i18n="lbl-investment-horizon">Investment Horizon</span> <span id="sc-lbl-years">30 years</span></label>
                     <div class="input-wrap has-suffix">
                       <input type="number" id="sc-years" value="30" min="1" max="50" step="1" />
                       <span class="suffix">yrs</span>
@@ -1403,13 +1408,13 @@
                     </div>
                   </div>
                   <div class="field">
-                    <label>Starting Year <span id="sc-lbl-start-year" style="font-family:'JetBrains Mono',monospace;color:var(--accent)">2025</span></label>
+                    <label><span data-i18n="lbl-starting-year">Starting Year</span> <span id="sc-lbl-start-year" style="font-family:'JetBrains Mono',monospace;color:var(--accent)">2025</span></label>
                     <div class="input-wrap">
                       <input type="number" id="sc-start-year" value="2025" min="2000" max="2060" step="1" style="font-family:'JetBrains Mono',monospace" />
                     </div>
                   </div>
                   <div class="field">
-                    <label>Marginal Tax Rate <span id="sc-lbl-tax">32.5%</span></label>
+                    <label><span data-i18n="lbl-marginal-tax-rate">Marginal Tax Rate</span> <span id="sc-lbl-tax">32.5%</span></label>
                     <select id="sc-tax-rate">
                       <option value="0">0% — Below $18,200</option>
                       <option value="19">19% — $18,201–$45,000</option>
@@ -1419,7 +1424,7 @@
                     </select>
                   </div>
                   <div class="field">
-                    <label>Home Loan Balance <span id="sc-lbl-loan">$500,000</span></label>
+                    <label><span data-i18n="lbl-home-loan-balance">Home Loan Balance</span> <span id="sc-lbl-loan">$500,000</span></label>
                     <div class="input-wrap has-prefix">
                       <span class="prefix">$</span>
                       <input type="number" id="sc-loan-balance" value="500000" min="50000" max="3000000" step="10000" />
@@ -1430,7 +1435,7 @@
                     </div>
                   </div>
                   <div class="field">
-                    <label>Home Loan Rate <span id="sc-lbl-loan-rate">6.20%</span></label>
+                    <label><span data-i18n="lbl-home-loan-rate">Home Loan Rate</span> <span id="sc-lbl-loan-rate">6.20%</span></label>
                     <div class="input-wrap has-suffix">
                       <input type="number" id="sc-loan-rate" value="6.2" min="1" max="15" step="0.05" />
                       <span class="suffix">%</span>
@@ -1441,7 +1446,7 @@
                     </div>
                   </div>
                   <div class="field">
-                    <label>Inflation Rate <span id="sc-lbl-inflation">3.0%</span></label>
+                    <label><span data-i18n="lbl-inflation-rate">Inflation Rate</span> <span id="sc-lbl-inflation">3.0%</span></label>
                     <div class="input-wrap has-suffix">
                       <input type="number" id="sc-inflation" value="3.0" min="0" max="10" step="0.1" />
                       <span class="suffix">%</span>
@@ -1455,53 +1460,52 @@
             
                 <!-- Advanced rates (collapsible) -->
                 <details style="margin-top:4px">
-                  <summary
-                    style="cursor:pointer; font-size:12px; color:var(--accent); font-weight:600; list-style:none; display:flex; align-items:center; gap:6px;">
-                    <span>▶</span> Advanced Return Rates
+                  <summary style="cursor:pointer; font-size:12px; color:var(--accent); font-weight:600; list-style:none; display:flex; align-items:center; gap:6px;">
+                    <span>▶</span> <span data-i18n="lbl-advanced-rates">Advanced Return Rates</span>
                   </summary>
                   <div class="sc-inputs-grid" style="margin-top:16px">
                     <div class="field">
-                      <label>S&P 500 ETF Return <span id="sc-lbl-sp500">10.5%</span></label>
+                    <label><span data-i18n="lbl-sp500-return">S&P 500 ETF Return</span> <span id="sc-lbl-sp500">10.5%</span></label>
                       <div class="input-wrap has-suffix">
                         <input type="number" id="sc-sp500" value="10.5" min="1" max="25" step="0.1" />
                         <span class="suffix">%</span>
                       </div>
                     </div>
                     <div class="field">
-                      <label>Nasdaq 100 ETF Return <span id="sc-lbl-ndq">12.0%</span></label>
+                      <label><span data-i18n="lbl-ndq-return">Nasdaq 100 ETF Return</span> <span id="sc-lbl-ndq">12.0%</span></label>
                       <div class="input-wrap has-suffix">
                         <input type="number" id="sc-ndq" value="12.0" min="1" max="30" step="0.1" />
                         <span class="suffix">%</span>
                       </div>
                     </div>
                     <div class="field">
-                      <label>Super Fund Return <span id="sc-lbl-super">7.5%</span></label>
+                      <label><span data-i18n="lbl-super-fund-return">Super Fund Return</span> <span id="sc-lbl-super">7.5%</span></label>
                       <div class="input-wrap has-suffix">
                         <input type="number" id="sc-super-rate" value="7.5" min="1" max="20" step="0.1" />
                         <span class="suffix">%</span>
                       </div>
                     </div>
                     <div class="field">
-                      <label>ETF Dividend Yield <span id="sc-lbl-div">1.8%</span></label>
+                      <label><span data-i18n="lbl-div-yield">ETF Dividend Yield</span> <span id="sc-lbl-div">1.8%</span></label>
                       <div class="input-wrap has-suffix">
                         <input type="number" id="sc-div-yield" value="1.8" min="0" max="6" step="0.1" />
                         <span class="suffix">%</span>
                       </div>
                     </div>
                     <div class="field">
-                      <label>Currency Drag (AUD) <span id="sc-lbl-fx">0.5%</span></label>
+                      <label><span data-i18n="lbl-currency-drag">Currency Drag (AUD)</span> <span id="sc-lbl-fx">0.5%</span></label>
                       <div class="input-wrap has-suffix">
                         <input type="number" id="sc-fx-drag" value="0.5" min="0" max="3" step="0.05" />
                         <span class="suffix">%</span>
                       </div>
                     </div>
                     <div class="field">
-                      <label>ETF Split (S&P / NDQ) <span id="sc-lbl-split">50 / 50</span></label>
+                      <label><span data-i18n="lbl-etf-split">ETF Split (S&P / NDQ)</span> <span id="sc-lbl-split">50 / 50</span></label>
                       <input type="range" id="sc-etf-split" min="0" max="100" step="10" value="50" />
                       <div class="range-labels"><span>100% S&P</span><span>100% NDQ</span></div>
                     </div>
                     <div class="field">
-                      <label>Retirement Tax Rate <span id="sc-lbl-retire-tax">0%</span></label>
+                      <label><span data-i18n="lbl-retirement-tax-rate">Retirement Tax Rate</span> <span id="sc-lbl-retire-tax">0%</span></label>
                       <select id="sc-retire-tax">
                         <option value="0" selected>0% — Tax-free retirement</option>
                         <option value="19">19% — Low income in retirement</option>
@@ -1510,7 +1514,7 @@
                       <p style="font-size:10px;color:var(--muted);margin-top:5px;font-family:'Plus Jakarta Sans',sans-serif;">Tax rate applied when selling ETFs in retirement (CGT discount still applies)</p>
                     </div>
                     <div class="field">
-                      <label>Franking Credit Yield <span id="sc-lbl-franking">0.0%</span></label>
+                      <label><span data-i18n="lbl-franking-credit">Franking Credit Yield</span> <span id="sc-lbl-franking">0.0%</span></label>
                       <div class="input-wrap has-suffix">
                         <input type="number" id="sc-franking" value="0.0" min="0" max="4" step="0.1" />
                         <span class="suffix">%</span>
@@ -1518,7 +1522,7 @@
                       <p style="font-size:10px;color:var(--muted);margin-top:5px;font-family:'Plus Jakarta Sans',sans-serif;">Franking credits boost ETF after-tax yield (AU-domiciled ETFs like VAS: ~1.5–2%)</p>
                     </div>
                     <div class="field">
-                      <label>Medicare Levy</label>
+                      <label data-i18n="lbl-medicare-levy">Medicare Levy</label>
                       <select id="sc-medicare">
                         <option value="2" selected>2% (standard)</option>
                         <option value="0">0% (exempt)</option>
@@ -1528,7 +1532,7 @@
                     </div>
                   </div>
                 </details>
-                <button class="calc-btn" id="sc-calc-btn" style="margin-top:20px">Compare Strategies</button>
+                <button class="calc-btn" id="sc-calc-btn" style="margin-top:20px" data-i18n="lbl-compare-strategies">Compare Strategies</button>
               </div>
             
               <!-- Results: 3 strategy cards -->
@@ -1553,19 +1557,19 @@
                   </div>
                   <div class="sc-mini-metrics">
                     <div class="sc-mini">
-                      <div class="sc-mini-lbl">Total Invested</div>
+                      <div class="sc-mini-lbl" data-i18n="lbl-total-invested">Total Invested</div>
                       <div class="sc-mini-val" id="sc-etf-invested">—</div>
                     </div>
                     <div class="sc-mini">
-                      <div class="sc-mini-lbl">Net Gain</div>
+                      <div class="sc-mini-lbl" data-i18n="lbl-net-gain">Net Gain</div>
                       <div class="sc-mini-val" id="sc-etf-gain">—</div>
                     </div>
                     <div class="sc-mini">
-                      <div class="sc-mini-lbl">Tax Paid</div>
+                      <div class="sc-mini-lbl" data-i18n="lbl-tax-paid">Tax Paid</div>
                       <div class="sc-mini-val" id="sc-etf-tax">—</div>
                     </div>
                     <div class="sc-mini">
-                      <div class="sc-mini-lbl">Gross Market Return</div>
+                      <div class="sc-mini-lbl" data-i18n="lbl-gross-market-return">Gross Market Return</div>
                       <div class="sc-mini-val" id="sc-etf-cagr">—</div>
                     </div>
                   </div>
@@ -1575,30 +1579,30 @@
                 <div class="sc-strat-card offset" id="sc-card-offset">
                   <div class="sc-strat-header">
                     <div>
-                      <div class="sc-strat-name">🏠 Home Loan Offset</div>
-                      <div class="sc-winner-badge" id="sc-badge-offset" style="display:none">⭐ Best Outcome</div>
+                      <div class="sc-strat-name" data-i18n="lbl-offset-strategy">🏠 Home Loan Offset</div>
+                      <div class="sc-winner-badge" id="sc-badge-offset" style="display:none" data-i18n="lbl-best-outcome">⭐ Best Outcome</div>
                     </div>
                   </div>
                   <div class="sc-metric">
-                    <div class="sc-metric-label">Interest Saved (Equivalent Wealth)</div>
+                    <div class="sc-metric-label" data-i18n="lbl-interest-saved-wealth">Interest Saved (Equivalent Wealth)</div>
                     <div class="sc-metric-value" id="sc-offset-final">—</div>
                     <div class="sc-metric-sub" id="sc-offset-real">—</div>
                   </div>
                   <div class="sc-mini-metrics">
                     <div class="sc-mini">
-                      <div class="sc-mini-lbl">Total Deposited</div>
+                      <div class="sc-mini-lbl" data-i18n="lbl-total-deposited">Total Deposited</div>
                       <div class="sc-mini-val" id="sc-offset-invested">—</div>
                     </div>
                     <div class="sc-mini">
-                      <div class="sc-mini-lbl">Interest Saved</div>
+                      <div class="sc-mini-lbl" data-i18n="lbl-interest-saved">Interest Saved</div>
                       <div class="sc-mini-val" id="sc-offset-gain">—</div>
                     </div>
                     <div class="sc-mini">
-                      <div class="sc-mini-lbl">Tax on Savings</div>
+                      <div class="sc-mini-lbl" data-i18n="lbl-tax-on-savings">Tax on Savings</div>
                       <div class="sc-mini-val" id="sc-offset-tax">$0 (tax-free)</div>
                     </div>
                     <div class="sc-mini">
-                      <div class="sc-mini-lbl">Tax-Free Return</div>
+                      <div class="sc-mini-lbl" data-i18n="lbl-tax-free-return">Tax-Free Return</div>
                       <div class="sc-mini-val" id="sc-offset-cagr">—</div>
                     </div>
                   </div>
@@ -1607,30 +1611,30 @@
 <div class="sc-strat-card super" id="sc-card-super">
   <div class="sc-strat-header">
     <div>
-      <div class="sc-strat-name">🦘 Super (Concessional)</div>
-      <div class="sc-winner-badge" id="sc-badge-super" style="display:none">⭐ Best Outcome</div>
+      <div class="sc-strat-name" data-i18n="lbl-super-strategy">🦘 Super (Concessional)</div>
+      <div class="sc-winner-badge" id="sc-badge-super" style="display:none" data-i18n="lbl-best-outcome">⭐ Best Outcome</div>
     </div>
         </div>
         <div class="sc-metric">
-          <div class="sc-metric-label">Final Super Balance</div>
+          <div class="sc-metric-label" data-i18n="lbl-final-super-balance">Final Super Balance</div>
           <div class="sc-metric-value" id="sc-super-final">—</div>
           <div class="sc-metric-sub" id="sc-super-real">—</div>
         </div>
         <div class="sc-mini-metrics">
           <div class="sc-mini">
-            <div class="sc-mini-lbl">Net Contributed</div>
+            <div class="sc-mini-lbl" data-i18n="lbl-net-contributed">Net Contributed</div>
             <div class="sc-mini-val" id="sc-super-invested">—</div>
           </div>
           <div class="sc-mini">
-            <div class="sc-mini-lbl">Net Gain</div>
+            <div class="sc-mini-lbl" data-i18n="lbl-net-gain">Net Gain</div>
             <div class="sc-mini-val" id="sc-super-gain">—</div>
           </div>
           <div class="sc-mini">
-            <div class="sc-mini-lbl">Contributions Tax</div>
+            <div class="sc-mini-lbl" data-i18n="lbl-contributions-tax">Contributions Tax</div>
             <div class="sc-mini-val" id="sc-super-tax">—</div>
           </div>
           <div class="sc-mini">
-            <div class="sc-mini-lbl">Gross Fund Return</div>
+            <div class="sc-mini-lbl" data-i18n="lbl-gross-fund-return">Gross Fund Return</div>
             <div class="sc-mini-val" id="sc-super-cagr">—</div>
           </div>
         </div>
@@ -1640,30 +1644,30 @@
 <div class="sc-strat-card debt-recycle" id="sc-card-dr">
   <div class="sc-strat-header">
     <div>
-      <div class="sc-strat-name">♻️ Debt Recycled ETFs</div>
-      <div class="sc-winner-badge" id="sc-badge-dr" style="display:none">⭐ Best Outcome</div>
+      <div class="sc-strat-name" data-i18n="lbl-dr-strategy">♻️ Debt Recycled ETFs</div>
+      <div class="sc-winner-badge" id="sc-badge-dr" style="display:none" data-i18n="lbl-best-outcome">⭐ Best Outcome</div>
     </div>
   </div>
   <div class="sc-metric">
-    <div class="sc-metric-label">Final Portfolio Value</div>
+    <div class="sc-metric-label" data-i18n="lbl-final-portfolio-value">Final Portfolio Value</div>
     <div class="sc-metric-value" id="sc-dr-final">—</div>
     <div class="sc-metric-sub" id="sc-dr-real">—</div>
   </div>
   <div class="sc-mini-metrics">
     <div class="sc-mini">
-      <div class="sc-mini-lbl">Total Invested</div>
+      <div class="sc-mini-lbl" data-i18n="lbl-total-invested">Total Invested</div>
       <div class="sc-mini-val" id="sc-dr-invested">—</div>
     </div>
     <div class="sc-mini">
-      <div class="sc-mini-lbl">Net Gain</div>
+      <div class="sc-mini-lbl" data-i18n="lbl-net-gain">Net Gain</div>
       <div class="sc-mini-val" id="sc-dr-gain">—</div>
     </div>
     <div class="sc-mini">
-      <div class="sc-mini-lbl">Tax Saved (DR boost)</div>
+      <div class="sc-mini-lbl" data-i18n="lbl-tax-saved-dr">Tax Saved (DR boost)</div>
       <div class="sc-mini-val" id="sc-dr-taxsaved">—</div>
     </div>
     <div class="sc-mini">
-      <div class="sc-mini-lbl">Eff. Annual Return</div>
+      <div class="sc-mini-lbl" data-i18n="lbl-eff-annual-return">Eff. Annual Return</div>
       <div class="sc-mini-val" id="sc-dr-cagr">—</div>
     </div>
   </div>
@@ -1673,30 +1677,30 @@
 
 <!-- After-tax return summary row -->
 <div class="sc-card" id="sc-return-summary-card" style="display:none">
-  <p class="sc-card-title">After-Tax Effective Annual Return — Side by Side</p>
+  <p class="sc-card-title" data-i18n="lbl-atr-title">After-Tax Effective Annual Return — Side by Side</p>
   <div class="sc-return-summary">
     <div class="sc-return-item offset-color">
-      <div class="sc-return-label">🏠 Offset</div>
+      <div class="sc-return-label" data-i18n="lbl-atr-offset-label">🏠 Offset</div>
       <div class="sc-return-rate" id="sc-atr-offset">—</div>
-      <div class="sc-return-sub">Tax-free equivalent</div>
+      <div class="sc-return-sub" data-i18n="lbl-atr-offset-sub">Tax-free equivalent</div>
     </div>
     <div class="sc-return-item etf-color">
-      <div class="sc-return-label">📈 ETFs</div>
+      <div class="sc-return-label" data-i18n="lbl-atr-etf-label">📈 ETFs</div>
       <div class="sc-return-rate" id="sc-atr-etf">—</div>
-      <div class="sc-return-sub">After div tax + CGT</div>
+      <div class="sc-return-sub" data-i18n="lbl-atr-etf-sub">After div tax + CGT</div>
     </div>
     <div class="sc-return-item dr-color">
-      <div class="sc-return-label">♻️ Debt Recycled</div>
+      <div class="sc-return-label" data-i18n="lbl-atr-dr-label">♻️ Debt Recycled</div>
       <div class="sc-return-rate" id="sc-atr-dr">—</div>
-      <div class="sc-return-sub">ETFs + interest deduction</div>
+      <div class="sc-return-sub" data-i18n="lbl-atr-dr-sub">ETFs + interest deduction</div>
     </div>
     <div class="sc-return-item super-color">
-      <div class="sc-return-label">🦘 Super</div>
+      <div class="sc-return-label" data-i18n="lbl-atr-super-label">🦘 Super</div>
       <div class="sc-return-rate" id="sc-atr-super">—</div>
-      <div class="sc-return-sub">Net of 15% tax on earnings</div>
+      <div class="sc-return-sub" data-i18n="lbl-atr-super-sub">Net of 15% tax on earnings</div>
     </div>
   </div>
-  <p style="font-size:11px;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;line-height:1.6;margin-top:2px;">
+  <p style="font-size:11px;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;line-height:1.6;margin-top:2px;" data-i18n="lbl-atr-footnote">
     These are annualised effective returns on your total pre-tax contributions. Offset is risk-free; ETFs and Super carry market risk.
     Debt recycling assumes your annual contribution routes through the home loan first, making that portion's interest tax-deductible.
   </p>
@@ -1704,91 +1708,91 @@
 
 <!-- Time Horizon Decision Guide -->
 <div class="sc-card" id="sc-horizon-card" style="display:none">
-  <p class="sc-card-title">⏱ Time Horizon Decision Guide</p>
+  <p class="sc-card-title" data-i18n="lbl-horizon-title">⏱ Time Horizon Decision Guide</p>
   <div class="sc-horizon-guide">
-    <div class="sc-horizon-title">Which strategy suits your timeframe?</div>
+    <div class="sc-horizon-title" data-i18n="lbl-horizon-sub">Which strategy suits your timeframe?</div>
     <div class="sc-horizon-track">
       <div class="sc-horizon-zone short" id="sc-hz-short">
-        <div class="sc-horizon-range">0–5 yrs</div>
-        <div class="sc-horizon-rec">🏠 Offset</div>
-        <div class="sc-horizon-why">Capital stability first. Market may be down when you need it.</div>
+        <div class="sc-horizon-range" data-i18n="lbl-hz-short-range">0–5 yrs</div>
+        <div class="sc-horizon-rec" data-i18n="lbl-hz-short-rec">🏠 Offset</div>
+        <div class="sc-horizon-why" data-i18n="lbl-hz-short-why">Capital stability first. Market may be down when you need it.</div>
       </div>
       <div class="sc-horizon-zone medium" id="sc-hz-medium">
-        <div class="sc-horizon-range">7–10+ yrs</div>
-        <div class="sc-horizon-rec">📈 ETFs</div>
-        <div class="sc-horizon-why">Long enough to ride volatility; higher expected return.</div>
+        <div class="sc-horizon-range" data-i18n="lbl-hz-medium-range">7–10+ yrs</div>
+        <div class="sc-horizon-rec" data-i18n="lbl-hz-medium-rec">📈 ETFs</div>
+        <div class="sc-horizon-why" data-i18n="lbl-hz-medium-why">Long enough to ride volatility; higher expected return.</div>
       </div>
       <div class="sc-horizon-zone dr" id="sc-hz-dr">
-        <div class="sc-horizon-range">7–10+ yrs</div>
-        <div class="sc-horizon-rec">♻️ Debt Recycle</div>
-        <div class="sc-horizon-why">ETFs + loan interest deduction. Best risk-adjusted return outside super.</div>
+        <div class="sc-horizon-range" data-i18n="lbl-hz-dr-range">7–10+ yrs</div>
+        <div class="sc-horizon-rec" data-i18n="lbl-hz-dr-rec">♻️ Debt Recycle</div>
+        <div class="sc-horizon-why" data-i18n="lbl-hz-dr-why">ETFs + loan interest deduction. Best risk-adjusted return outside super.</div>
       </div>
       <div class="sc-horizon-zone long" id="sc-hz-long">
-        <div class="sc-horizon-range">Until 60+</div>
-        <div class="sc-horizon-rec">🦘 Super</div>
-        <div class="sc-horizon-why">Tax on contributions slashed from your MTR to 15%. Compounding jackpot.</div>
+        <div class="sc-horizon-range" data-i18n="lbl-hz-long-range">Until 60+</div>
+        <div class="sc-horizon-rec" data-i18n="lbl-hz-long-rec">🦘 Super</div>
+        <div class="sc-horizon-why" data-i18n="lbl-hz-long-why">Tax on contributions slashed from your MTR to 15%. Compounding jackpot.</div>
       </div>
     </div>
     <div class="sc-horizon-verdict" id="sc-horizon-verdict">
-      Enter your details and click Compare Strategies to see a personalised recommendation.
+      <span data-i18n="lbl-horizon-default">Enter your details and click Compare Strategies to see a personalised recommendation.</span>
     </div>
   </div>
 </div>
 
 <!-- Bad Debt Alert -->
 <div class="sc-bad-debt-alert" id="sc-bad-debt-alert">
-  ⚠️ <strong>Pay off high-interest debt first!</strong> At your loan rate of <span id="sc-bad-debt-rate">—</span>, paying down this debt delivers a guaranteed after-tax equivalent return <em>higher</em> than all three investment strategies. Credit cards, personal loans, and car loans (typically 8–22%) should be eliminated before investing. Every dollar of bad debt costs your after-tax income — and it compounds against you.
+  ⚠️ <strong data-i18n="lbl-bad-debt-title">Pay off high-interest debt first!</strong> <span data-i18n="lbl-bad-debt-body">At your loan rate of</span> <span id="sc-bad-debt-rate">—</span>, <span data-i18n="lbl-bad-debt-body2">paying down this debt delivers a guaranteed after-tax equivalent return higher than all three investment strategies. Credit cards, personal loans, and car loans (typically 8–22%) should be eliminated before investing. Every dollar of bad debt costs your after-tax income — and it compounds against you.</span>
 </div>
 <!-- Charts -->
 <div class="sc-card" id="sc-charts-card" style="display:none">
-  <p class="sc-card-title">Growth Over Time</p>
+  <p class="sc-card-title" data-i18n="lbl-growth-over-time">Growth Over Time</p>
   <div class="sc-chart-toggle" id="sc-chart-toggle">
-    <button class="sc-toggle-btn active" data-chart="growth">📈 Portfolio Growth</button>
-    <button class="sc-toggle-btn" data-chart="bar">📊 Final Comparison</button>
-    <button class="sc-toggle-btn" data-chart="real">💰 Inflation-Adjusted</button>
+    <button class="sc-toggle-btn active" data-chart="growth" data-i18n="lbl-portfolio-growth">📈 Portfolio Growth</button>
+    <button class="sc-toggle-btn" data-chart="bar" data-i18n="lbl-final-comparison">📊 Final Comparison</button>
+    <button class="sc-toggle-btn" data-chart="real" data-i18n="lbl-inflation-adjusted">💰 Inflation-Adjusted</button>
       </div>
       <div class="sc-chart-wrap">
         <canvas id="sc-chart-canvas"></canvas>
       </div>
       <div class="legend" style="justify-content:center; gap:24px; margin-top:4px">
         <div class="legend-item">
-          <div class="legend-dot" style="background:#5b4fff"></div><span>ETF Portfolio</span>
+          <div class="legend-dot" style="background:#5b4fff"></div><span data-i18n="lbl-etf-portfolio">ETF Portfolio</span>
         </div>
         <div class="legend-item">
-          <div class="legend-dot" style="background:#00c98d"></div><span>Offset Savings</span>
+          <div class="legend-dot" style="background:#00c98d"></div><span data-i18n="lbl-offset-savings">Offset Savings</span>
         </div>
         <div class="legend-item">
-          <div class="legend-dot" style="background:#f59e0b"></div><span>Super Balance</span>
+          <div class="legend-dot" style="background:#f59e0b"></div><span data-i18n="lbl-super-balance">Super Balance</span>
         </div>
         <div class="legend-item">
-          <div class="legend-dot" style="background:#ff6b6b"></div><span>Debt Recycled ETFs</span>
+          <div class="legend-dot" style="background:#ff6b6b"></div><span data-i18n="lbl-dr-legend">Debt Recycled ETFs</span>
         </div>
       </div>
 <!-- Assumptions -->
 <div style="margin-top:20px">
-  <p class="sc-card-title">Key Assumptions</p>
+  <p class="sc-card-title" data-i18n="lbl-key-assumptions">Key Assumptions</p>
   <div class="sc-assumption-grid" id="sc-assumptions"></div>
 </div>
       <div class="sc-disclaimer">
-        ⚠️ <strong>General information only — not financial advice.</strong> This comparison uses simplified modelling.
+        ⚠️ <strong data-i18n="lbl-disclaimer-title">General information only — not financial advice.</strong> <span data-i18n="lbl-disclaimer-body">This comparison uses simplified modelling.
         Returns are not guaranteed. Tax treatment depends on individual circumstances. Super has preservation rules
         (accessible from age 60). ETF returns are historical averages in USD; AUD returns may differ. Consult a licensed
-        financial adviser before making investment decisions. Super concessional cap is $30,000/yr for FY2025.
+        financial adviser before making investment decisions. Super concessional cap is $30,000/yr for FY2025.</span>
       </div>
       </div>
 <!-- AI Analysis -->
 <div class="sc-card sc-ai-card" id="sc-ai-card" style="display:none">
-  <p class="sc-card-title">✨ AI Strategy Analysis</p>
-  <p style="font-size:13px; color:var(--muted); line-height:1.6">Get a plain-English explanation of the results,
+  <p class="sc-card-title" data-i18n="lbl-ai-analysis-title">✨ AI Strategy Analysis</p>
+  <p style="font-size:13px; color:var(--muted); line-height:1.6" data-i18n="lbl-ai-analysis-desc">Get a plain-English explanation of the results,
     including which strategy suits your situation and what factors could change the outcome.</p>
   <button class="sc-ai-btn" id="sc-ai-btn">
-    <span>✦</span> Analyse with Claude AI
+    <span>✦</span> <span data-i18n="lbl-analyse-claude">Analyse with Claude AI</span>
   </button>
   <div class="sc-ai-spinner" id="sc-ai-spinner">
-    <div class="spinner-dot"></div><span>Claude is thinking…</span>
+    <div class="spinner-dot"></div><span data-i18n="lbl-claude-thinking">Claude is thinking…</span>
   </div>
   <div class="sc-ai-output" id="sc-ai-output"></div>
-  <p style="font-size:11px; color:var(--muted); margin-top:12px; font-style:italic">General information only. Not
+  <p style="font-size:11px; color:var(--muted); margin-top:12px; font-style:italic" data-i18n="lbl-ai-disclaimer">General information only. Not
     financial advice. Claude may make errors — verify with a licensed financial adviser.</p>
     </div>
 
@@ -2871,18 +2875,26 @@
             SC('sc-atr-super').textContent  = scFmtPct(d.atr.super * 100);
 
             // ── Time horizon verdict ──────────────────────────────────────
+            const vLang = localStorage.getItem('finCalcLang') || 'en';
+            const vT = k => (window.TRANSLATIONS && window.TRANSLATIONS[k]) ? window.TRANSLATIONS[k][vLang] : k;
             const yrs = d.years;
             let hzShort = false, hzMed = false, hzLong = false, hzDR = false;
             let verdictText = '';
             if (yrs <= 5) {
               hzShort = true;
-              verdictText = `<strong>${yrs} years is a short horizon.</strong> The Offset is the safest choice — market volatility means ETFs may be down when you need the money. Build your offset first, then reassess when your horizon extends beyond 7 years.`;
+              verdictText = vLang === 'zh'
+                ? `<strong>${yrs}年是短期投资期。</strong>对冲账户是最安全的选择——市场波动意味着您需要用钱时ETF可能正处于低点。先建立对冲账户，等投资期超过7年后再重新评估。`
+                : `<strong>${yrs} years is a short horizon.</strong> The Offset is the safest choice — market volatility means ETFs may be down when you need the money. Build your offset first, then reassess when your horizon extends beyond 7 years.`;
             } else if (yrs <= 10) {
               hzMed = true; hzDR = true;
-              verdictText = `<strong>${yrs} years is a medium horizon.</strong> Long enough to consider ETFs with reasonable confidence of recovering from a downturn. If you have a home loan, <strong>Debt Recycling</strong> is the standout — it gives ETF-level growth plus an annual tax deduction on loan interest. Don't ignore Super for any retirement-age goals in this window.`;
+              verdictText = vLang === 'zh'
+                ? `<strong>${yrs}年是中期投资期。</strong>时间足够长，可以合理信心投资ETF并从下跌中恢复。如果您有住房贷款，<strong>债务循环</strong>是最优选——它提供ETF级别的增长，同时每年可抵扣贷款利息税务。对于此窗口期内的退休目标，不要忽视养老金。`
+                : `<strong>${yrs} years is a medium horizon.</strong> Long enough to consider ETFs with reasonable confidence of recovering from a downturn. If you have a home loan, <strong>Debt Recycling</strong> is the standout — it gives ETF-level growth plus an annual tax deduction on loan interest. Don't ignore Super for any retirement-age goals in this window.`;
             } else {
               hzMed = true; hzDR = true; hzLong = true;
-              verdictText = `<strong>${yrs} years is a long horizon.</strong> You have time to let compounding work fully. The <strong>optimal split</strong> is: max Super contributions for retirement from age 60 (the 15% concessional tax rate is a guaranteed 25–60% boost on your MTR), then use Debt Recycling for everything before 60. Plain ETFs without debt recycling leave tax savings on the table.`;
+              verdictText = vLang === 'zh'
+                ? `<strong>${yrs}年是长期投资期。</strong>您有充足的时间让复利充分发挥。<strong>最优分配</strong>是：最大化养老金供款用于60岁后的退休生活（15%的优惠税率相当于您边际税率25–60%的保证提升），然后将债务循环用于60岁前的财富积累。不使用债务循环的普通ETF投资会错失可观的税务节省。`
+                : `<strong>${yrs} years is a long horizon.</strong> You have time to let compounding work fully. The <strong>optimal split</strong> is: max Super contributions for retirement from age 60 (the 15% concessional tax rate is a guaranteed 25–60% boost on your MTR), then use Debt Recycling for everything before 60. Plain ETFs without debt recycling leave tax savings on the table.`;
             }
             ['short','medium','long','dr'].forEach(z => {
               const el = SC('sc-hz-' + z);
@@ -2901,19 +2913,22 @@
             }
 
             // ── Assumptions ───────────────────────────────────────────────
+            const aLang = localStorage.getItem('finCalcLang') || 'en';
+            const aT = k => (window.TRANSLATIONS && window.TRANSLATIONS[k]) ? window.TRANSLATIONS[k][aLang] : k;
+            const mlLabel = aLang === 'zh' ? '医疗保险税' : 'ML';
             SC('sc-assumptions').innerHTML = [
-              ['Period', d.startYear + ' → ' + endYear + ' (' + d.years + ' yrs)'],
-              ['ETF Return (blended)', scFmtPct(d.blendedReturn * 100)],
-              ['Super Return', SC('sc-super-rate').value + '%'],
-              ['Home Loan Rate', scFmtPct(d.loanRate * 100)],
-              ['Inflation', scFmtPct(d.inflation * 100)],
-              ['Marginal Tax Rate', scFmtPct(d.taxRate * 100) + ' + ' + scFmtPct(d.medicareLevy * 100) + ' ML'],
-              ['Retirement Sale Tax', scFmtPct(d.retireTax * 100)],
-              ['CGT Discount', '50% (AU, >12mo)'],
-              ['Franking Credits', scFmtPct(d.frankingYield * 100) + ' of div yield'],
-              ['Super Contributions Tax', '15%'],
-              ['Super Earnings Tax', '15%/yr'],
-              ['Super Concessional Cap', '$30,000/yr'],
+              [aT('asmp-period'),        d.startYear + ' → ' + endYear + ' (' + d.years + (aLang === 'zh' ? '年' : ' yrs') + ')'],
+              [aT('asmp-etf-return'),    scFmtPct(d.blendedReturn * 100)],
+              [aT('asmp-super-return'),  SC('sc-super-rate').value + '%'],
+              [aT('asmp-loan-rate'),     scFmtPct(d.loanRate * 100)],
+              [aT('asmp-inflation'),     scFmtPct(d.inflation * 100)],
+              [aT('asmp-mtr'),           scFmtPct(d.taxRate * 100) + ' + ' + scFmtPct(d.medicareLevy * 100) + ' ' + mlLabel],
+              [aT('asmp-retire-tax'),    scFmtPct(d.retireTax * 100)],
+              [aT('asmp-cgt'),           aLang === 'zh' ? '50%（澳大利亚，持有>12个月）' : '50% (AU, >12mo)'],
+              [aT('asmp-franking'),      scFmtPct(d.frankingYield * 100) + (aLang === 'zh' ? ' 占股息收益率' : ' of div yield')],
+              [aT('asmp-super-contr-tax'), '15%'],
+              [aT('asmp-super-earn-tax'),  '15%/yr'],
+              [aT('asmp-super-cap'),       '$30,000/yr'],
             ].map(([l, v]) => `<div class="sc-assumption"><span class="sc-assumption-lbl">${l}</span><span class="sc-assumption-val">${v}</span></div>`).join('');
 
             renderChart(d, scActiveChart);
@@ -3137,6 +3152,255 @@ Use real dollar figures from the results. Keep it plain English. Do not give per
           if (window.scLastDataRef && window.scActiveChartRef) {
             setTimeout(() => renderChartRef(window.scLastDataRef, window.scActiveChartRef), 50);
           }
+        });
+      })();
+      // ─── Language toggle ───────────────────────────────────────────
+      (function () {
+        const TRANSLATIONS = window.TRANSLATIONS = {
+          // Tabs
+          'tab-mortgage':    { en: 'Mortgage',          zh: '房屋贷款' },
+          'tab-auto':        { en: 'Auto Loan',          zh: '汽车贷款' },
+          'tab-personal':    { en: 'Personal Loan',      zh: '个人贷款' },
+          'tab-student':     { en: 'Student Loan',       zh: '学生贷款' },
+          'tab-investment':  { en: 'Investment',         zh: '投资' },
+          'tab-strategy':    { en: 'Strategy Compare',   zh: '策略对比' },
+          // Header
+          'page-title':      { en: 'Loan',               zh: '贷款' },
+          'page-subtitle':   { en: 'Estimate your monthly payments and total cost of borrowing.', zh: '估算您的每月还款额和总借贷成本。' },
+          // Buttons
+          'btn-calculate':          { en: 'Calculate',              zh: '计算' },
+          'lbl-compare-strategies': { en: '⚡ Compare Strategies',  zh: '⚡ 对比策略' },
+          'lbl-analyse-claude':     { en: 'Analyse with Claude AI', zh: '用 Claude AI 分析' },
+          'lbl-claude-thinking':    { en: 'Claude is thinking…',    zh: 'Claude 正在思考…' },
+          'btn-view-amortization':  { en: 'View Amortization Schedule', zh: '查看分期还款计划' },
+          // Card titles
+          'title-loan-details':       { en: 'Loan Details',          zh: '贷款详情' },
+          'title-rate-fees':          { en: 'Rate & Fees',           zh: '利率与费用' },
+          'title-investment-details': { en: 'Investment Details',    zh: '投资详情' },
+          'title-periodic-investing': { en: 'Periodic investing',    zh: '定期投资' },
+          'title-your-results':       { en: 'Your Results',          zh: '计算结果' },
+          'lbl-comparison-params':    { en: 'Comparison Parameters', zh: '对比参数' },
+          'lbl-advanced-rates':       { en: 'Advanced Return Rates', zh: '高级回报率设置' },
+          // Loan inputs
+          'lbl-loan-amount':        { en: 'Loan Amount',           zh: '贷款金额' },
+          'lbl-down-payment':       { en: 'Down Payment',          zh: '首付款' },
+          'lbl-loan-term':          { en: 'Loan Term',             zh: '贷款期限' },
+          'lbl-payment-frequency':  { en: 'Payment Frequency',     zh: '还款频率' },
+          'lbl-interest-rate':      { en: 'Annual Interest Rate',  zh: '年利率' },
+          'lbl-pmi':                { en: 'PMI Rate (annual)',      zh: '私人抵押贷款保险（年）' },
+          'lbl-property-tax':       { en: 'Annual Property Tax',   zh: '年度房产税' },
+          'lbl-home-insurance':     { en: 'Annual Home Insurance', zh: '年度房屋保险' },
+          // Frequency options
+          'opt-monthly':     { en: 'Monthly',     zh: '每月' },
+          'opt-biweekly':    { en: 'Bi-weekly',   zh: '每两周' },
+          'opt-weekly':      { en: 'Weekly',       zh: '每周' },
+          'opt-fortnightly': { en: 'Fortnightly',  zh: '每两周' },
+          'opt-yearly':      { en: 'Yearly',       zh: '每年' },
+          'opt-end-period':  { en: 'End of period (ordinary annuity)',  zh: '期末（普通年金）' },
+          'opt-start-period':{ en: 'Start of period (annuity due)',     zh: '期初（即付年金）' },
+          // Investment inputs
+          'lbl-initial-investment':   { en: 'Initial Investment',       zh: '初始投资金额' },
+          'lbl-investment-period':    { en: 'Investment Period',         zh: '投资期限' },
+          'lbl-annual-return':        { en: 'Annual Return Rate',        zh: '年化收益率' },
+          'lbl-contribution-amount':  { en: 'Contribution Amount',       zh: '定投金额' },
+          'lbl-contribution-freq':    { en: 'Contribution Frequency',    zh: '定投频率' },
+          'lbl-contribution-timing':  { en: 'Contribution Timing',       zh: '定投时机' },
+          // Strategy compare inputs
+          'lbl-annual-investment':     { en: 'Annual Investment',      zh: '年度投资额' },
+          'lbl-investment-horizon':    { en: 'Investment Horizon',     zh: '投资期限' },
+          'lbl-starting-year':         { en: 'Starting Year',          zh: '起始年份' },
+          'lbl-marginal-tax-rate':     { en: 'Marginal Tax Rate',      zh: '边际税率' },
+          'lbl-home-loan-balance':     { en: 'Home Loan Balance',      zh: '住房贷款余额' },
+          'lbl-home-loan-rate':        { en: 'Home Loan Rate',         zh: '住房贷款利率' },
+          'lbl-inflation-rate':        { en: 'Inflation Rate',         zh: '通货膨胀率' },
+          'lbl-sp500-return':          { en: 'S&P 500 ETF Return',     zh: '标普500 ETF回报率' },
+          'lbl-ndq-return':            { en: 'Nasdaq 100 ETF Return',  zh: '纳斯达克100 ETF回报率' },
+          'lbl-super-fund-return':     { en: 'Super Fund Return',      zh: '养老金基金回报率' },
+          'lbl-div-yield':             { en: 'ETF Dividend Yield',     zh: 'ETF股息收益率' },
+          'lbl-currency-drag':         { en: 'Currency Drag (AUD)',    zh: '货币拖累（澳元）' },
+          'lbl-etf-split':             { en: 'ETF Split (S&P / NDQ)',  zh: 'ETF比例（标普/纳指）' },
+          'lbl-retirement-tax-rate':   { en: 'Retirement Tax Rate',    zh: '退休税率' },
+          'lbl-franking-credit':       { en: 'Franking Credit Yield',  zh: '法兰克抵税额收益率' },
+          'lbl-medicare-levy':         { en: 'Medicare Levy',          zh: '医疗保险税' },
+          // Loan results
+          'lbl-monthly-payment':       { en: 'Monthly Payment',          zh: '月供' },
+          'lbl-principal-interest':    { en: 'Principal & Interest',     zh: '本金与利息' },
+          'lbl-total-principal':       { en: 'Total Principal',          zh: '贷款本金' },
+          'lbl-loan-amount-sub':       { en: 'Loan amount',              zh: '贷款金额' },
+          'lbl-total-interest':        { en: 'Total Interest',           zh: '总利息' },
+          'lbl-total-cost':            { en: 'Total Cost',               zh: '总费用' },
+          'lbl-principal-interest-sub':{ en: 'Principal + interest',     zh: '本金 + 利息' },
+          'lbl-payoff-date':           { en: 'Payoff Date',              zh: '还清日期' },
+          'lbl-cost-breakdown':        { en: 'Cost Breakdown',           zh: '费用明细' },
+          'lbl-principal':             { en: 'Principal',                zh: '本金' },
+          'lbl-interest':              { en: 'Interest',                 zh: '利息' },
+          // Amortization table headers
+          'th-period':    { en: 'Period',    zh: '期数' },
+          'th-payment':   { en: 'Payment',   zh: '还款额' },
+          'th-principal': { en: 'Principal', zh: '本金' },
+          'th-interest':  { en: 'Interest',  zh: '利息' },
+          'th-balance':   { en: 'Balance',   zh: '余额' },
+          // DCA / investment results
+          'lbl-dca-simulation':       { en: 'Periodic investing simulation — with periodic contributions', zh: '定期投资模拟 — 含定期定投' },
+          'lbl-final-balance-dca':    { en: 'Final Balance (Periodic Investing)', zh: '最终余额（定期投资）' },
+          'lbl-lump-plus-contrib':    { en: 'Lump sum + contributions',           zh: '一次性投资 + 定投' },
+          'lbl-total-contributed':    { en: 'Total Contributed',                  zh: '总投入' },
+          'lbl-principal-deposits':   { en: 'Principal + deposits',               zh: '本金 + 定投' },
+          'lbl-interest-earned':      { en: 'Interest Earned',                    zh: '利息收益' },
+          'lbl-total-deposits':       { en: 'Total Deposits',                     zh: '总定投金额' },
+          'lbl-periodic-contributions':{ en: 'Periodic contributions',            zh: '定期定投' },
+          'lbl-wealth-breakdown':     { en: 'Wealth Breakdown',                   zh: '财富构成' },
+          'lbl-initial-principal':    { en: 'Initial Principal',                  zh: '初始本金' },
+          'lbl-deposits':             { en: 'Deposits',                           zh: '定投' },
+          'lbl-lump-sum-growth':      { en: 'Lump Sum Growth — Without Periodic Investment', zh: '一次性投资增长（不含定期投资）' },
+          'lbl-starting-amount':      { en: 'Starting amount',                    zh: '初始金额' },
+          'lbl-final-amount-annual':  { en: 'Final Amount (Annual)',              zh: '最终金额（按年复利）' },
+          'lbl-compounded-yearly':    { en: 'Compounded yearly',                  zh: '按年复利' },
+          'lbl-weekly-invest':        { en: 'Weekly Investment',                  zh: '每周投资' },
+          'lbl-fortnightly-invest':   { en: 'Fortnightly Investment',             zh: '每两周投资' },
+          'lbl-monthly-invest':       { en: 'Monthly Investment',                 zh: '每月投资' },
+          'lbl-yearly-invest':        { en: 'Yearly Investment',                  zh: '每年投资' },
+          'lbl-final-returns':        { en: 'Final Returns Comparison',           zh: '最终收益对比' },
+          'lbl-chart-weekly':         { en: 'Weekly',      zh: '每周' },
+          'lbl-chart-fortnightly':    { en: 'Fortnightly', zh: '每两周' },
+          'lbl-chart-monthly':        { en: 'Monthly',     zh: '每月' },
+          'lbl-chart-yearly':         { en: 'Yearly',      zh: '每年' },
+          // Strategy card names
+          'lbl-etf-strategy':         { en: '📈 S&P 500 + Nasdaq ETFs',   zh: '📈 标普500 + 纳斯达克ETF' },
+          'lbl-offset-strategy':      { en: '🏠 Home Loan Offset',         zh: '🏠 住房贷款对冲账户' },
+          'lbl-super-strategy':       { en: '🦘 Super (Concessional)',     zh: '🦘 养老金（优惠供款）' },
+          'lbl-dr-strategy':          { en: '♻️ Debt Recycled ETFs',       zh: '♻️ 债务循环ETF' },
+          'lbl-best-outcome':         { en: '⭐ Best Outcome',             zh: '⭐ 最佳结果' },
+          // Strategy card metrics
+          'lbl-final-portfolio-value':     { en: 'Final Portfolio Value',           zh: '最终投资组合价值' },
+          'lbl-interest-saved-wealth':     { en: 'Interest Saved (Equivalent Wealth)', zh: '节省利息（等效财富）' },
+          'lbl-final-super-balance':       { en: 'Final Super Balance',             zh: '最终养老金余额' },
+          'lbl-total-invested':            { en: 'Total Invested',                  zh: '总投入' },
+          'lbl-net-gain':                  { en: 'Net Gain',                        zh: '净收益' },
+          'lbl-tax-paid':                  { en: 'Tax Paid',                        zh: '已缴税款' },
+          'lbl-gross-market-return':       { en: 'Gross Market Return',             zh: '市场毛回报率' },
+          'lbl-total-deposited':           { en: 'Total Deposited',                 zh: '总存入金额' },
+          'lbl-interest-saved':            { en: 'Interest Saved',                  zh: '节省利息' },
+          'lbl-tax-on-savings':            { en: 'Tax on Savings',                  zh: '储蓄税' },
+          'lbl-tax-free-return':           { en: 'Tax-Free Return',                 zh: '免税回报率' },
+          'lbl-net-contributed':           { en: 'Net Contributed',                 zh: '净供款额' },
+          'lbl-contributions-tax':         { en: 'Contributions Tax',               zh: '供款税' },
+          'lbl-gross-fund-return':         { en: 'Gross Fund Return',               zh: '基金毛回报率' },
+          'lbl-tax-saved-dr':              { en: 'Tax Saved (DR boost)',            zh: '节税金额（债务循环）' },
+          'lbl-eff-annual-return':         { en: 'Eff. Annual Return',              zh: '有效年回报率' },
+          // After-tax return summary
+          'lbl-atr-title':       { en: 'After-Tax Effective Annual Return — Side by Side', zh: '税后年化有效收益率 — 横向对比' },
+          'lbl-atr-offset-label':{ en: '🏠 Offset',        zh: '🏠 对冲账户' },
+          'lbl-atr-etf-label':   { en: '📈 ETFs',          zh: '📈 ETF' },
+          'lbl-atr-dr-label':    { en: '♻️ Debt Recycled', zh: '♻️ 债务循环' },
+          'lbl-atr-super-label': { en: '🦘 Super',         zh: '🦘 养老金' },
+          'lbl-atr-offset-sub':  { en: 'Tax-free equivalent',        zh: '税收等价回报' },
+          'lbl-atr-etf-sub':     { en: 'After div tax + CGT',        zh: '股息税+资本利得税后' },
+          'lbl-atr-dr-sub':      { en: 'ETFs + interest deduction',  zh: 'ETF + 利息抵扣' },
+          'lbl-atr-super-sub':   { en: 'Net of 15% tax on earnings', zh: '扣除15%收益税后' },
+          'lbl-atr-footnote':    { en: 'These are annualised effective returns on your total pre-tax contributions. Offset is risk-free; ETFs and Super carry market risk. Debt recycling assumes your annual contribution routes through the home loan first, making that portion\'s interest tax-deductible.', zh: '以上为税前总供款的年化有效回报率。对冲账户无风险；ETF和养老金存在市场风险。债务循环假设年度供款先通过住房贷款，使相应利息可抵扣税务。' },
+          // Time horizon
+          'lbl-horizon-title':   { en: '⏱ Time Horizon Decision Guide',       zh: '⏱ 投资期限决策指南' },
+          'lbl-horizon-sub':     { en: 'Which strategy suits your timeframe?', zh: '哪种策略适合您的投资期限？' },
+          'lbl-hz-short-range':  { en: '0–5 yrs',    zh: '0–5年' },
+          'lbl-hz-medium-range': { en: '7–10+ yrs',  zh: '7–10年以上' },
+          'lbl-hz-dr-range':     { en: '7–10+ yrs',  zh: '7–10年以上' },
+          'lbl-hz-long-range':   { en: 'Until 60+',  zh: '直至60岁以上' },
+          'lbl-hz-short-rec':    { en: '🏠 Offset',       zh: '🏠 对冲账户' },
+          'lbl-hz-medium-rec':   { en: '📈 ETFs',         zh: '📈 ETF' },
+          'lbl-hz-dr-rec':       { en: '♻️ Debt Recycle', zh: '♻️ 债务循环' },
+          'lbl-hz-long-rec':     { en: '🦘 Super',        zh: '🦘 养老金' },
+          'lbl-hz-short-why':    { en: 'Capital stability first. Market may be down when you need it.',             zh: '优先保障资本稳定。需要用钱时市场可能下跌。' },
+          'lbl-hz-medium-why':   { en: 'Long enough to ride volatility; higher expected return.',                   zh: '时间足够长，可承受波动；预期回报更高。' },
+          'lbl-hz-dr-why':       { en: 'ETFs + loan interest deduction. Best risk-adjusted return outside super.', zh: 'ETF + 贷款利息抵扣。养老金以外风险调整后回报最优。' },
+          'lbl-hz-long-why':     { en: 'Tax on contributions slashed from your MTR to 15%. Compounding jackpot.',  zh: '供款税从边际税率降至15%。复利增长神器。' },
+          'lbl-horizon-default': { en: 'Enter your details and click Compare Strategies to see a personalised recommendation.', zh: '输入您的信息并点击"对比策略"以获取个性化建议。' },
+          // Bad debt alert
+          'lbl-bad-debt-title':  { en: 'Pay off high-interest debt first!', zh: '请先偿还高息债务！' },
+          'lbl-bad-debt-body':   { en: 'At your loan rate of',              zh: '您的贷款利率为' },
+          'lbl-bad-debt-body2':  { en: 'paying down this debt delivers a guaranteed after-tax equivalent return higher than all three investment strategies. Credit cards, personal loans, and car loans (typically 8–22%) should be eliminated before investing. Every dollar of bad debt costs your after-tax income — and it compounds against you.', zh: '偿还此债务所获得的保证性税后等效回报高于所有三种投资策略。信用卡、个人贷款和汽车贷款（通常8–22%）应在投资前优先还清。每一元坏债都在侵蚀您的税后收入——而且复利计算。' },
+          // Charts & panels
+          'lbl-growth-over-time':   { en: 'Growth Over Time',       zh: '随时间增长' },
+          'lbl-portfolio-growth':   { en: '📈 Portfolio Growth',    zh: '📈 投资组合增长' },
+          'lbl-final-comparison':   { en: '📊 Final Comparison',    zh: '📊 最终对比' },
+          'lbl-inflation-adjusted': { en: '💰 Inflation-Adjusted',  zh: '💰 通胀调整后' },
+          'lbl-etf-portfolio':      { en: 'ETF Portfolio',          zh: 'ETF投资组合' },
+          'lbl-offset-savings':     { en: 'Offset Savings',         zh: '对冲账户储蓄' },
+          'lbl-super-balance':      { en: 'Super Balance',          zh: '养老金余额' },
+          'lbl-dr-legend':          { en: 'Debt Recycled ETFs',     zh: '债务循环ETF' },
+          'lbl-key-assumptions':    { en: 'Key Assumptions',        zh: '主要假设' },
+          'lbl-disclaimer-title':   { en: 'General information only — not financial advice.', zh: '仅供参考，不构成财务建议。' },
+          'lbl-disclaimer-body':    { en: 'This comparison uses simplified modelling. Returns are not guaranteed. Tax treatment depends on individual circumstances. Super has preservation rules (accessible from age 60). ETF returns are historical averages in USD; AUD returns may differ. Consult a licensed financial adviser before making investment decisions. Super concessional cap is $30,000/yr for FY2025.', zh: '本对比采用简化模型。回报不作保证。税务处理因个人情况而异。养老金有保全规定（60岁起可取用）。ETF回报为美元历史平均值，澳元回报可能有所不同。投资前请咨询持牌理财顾问。FY2025养老金优惠供款上限为每年$30,000。' },
+          // AI panel
+          'lbl-ai-analysis-title':  { en: '✨ AI Strategy Analysis', zh: '✨ AI策略分析' },
+          'lbl-ai-analysis-desc':   { en: 'Get a plain-English explanation of the results, including which strategy suits your situation and what factors could change the outcome.', zh: '获取通俗易懂的结果解析，包括哪种策略适合您的情况以及哪些因素可能影响结果。' },
+          'lbl-ai-disclaimer':      { en: 'General information only. Not financial advice. Claude may make errors — verify with a licensed financial adviser.', zh: '仅供参考，不构成财务建议。Claude可能存在错误，请向持牌理财顾问核实。' },
+          // Toolbar buttons
+          'lbl-dark-mode':  { en: 'Dark',  zh: '深色' },
+          'lbl-light-mode': { en: 'Light', zh: '浅色' },
+          // Key Assumptions labels
+          'asmp-period':          { en: 'Period',                   zh: '投资期' },
+          'asmp-etf-return':      { en: 'ETF Return (blended)',     zh: 'ETF回报率（混合）' },
+          'asmp-super-return':    { en: 'Super Return',             zh: '养老金回报率' },
+          'asmp-loan-rate':       { en: 'Home Loan Rate',           zh: '住房贷款利率' },
+          'asmp-inflation':       { en: 'Inflation',                zh: '通货膨胀率' },
+          'asmp-mtr':             { en: 'Marginal Tax Rate',        zh: '边际税率' },
+          'asmp-retire-tax':      { en: 'Retirement Sale Tax',      zh: '退休出售税' },
+          'asmp-cgt':             { en: 'CGT Discount',             zh: '资本利得税折扣' },
+          'asmp-franking':        { en: 'Franking Credits',         zh: '法兰克抵税额' },
+          'asmp-super-contr-tax': { en: 'Super Contributions Tax',  zh: '养老金供款税' },
+          'asmp-super-earn-tax':  { en: 'Super Earnings Tax',       zh: '养老金收益税' },
+          'asmp-super-cap':       { en: 'Super Concessional Cap',   zh: '养老金优惠供款上限' },
+        };
+
+        function applyLang(lang) {
+          const t = k => TRANSLATIONS[k] ? TRANSLATIONS[k][lang] : null;
+
+          // All data-i18n elements
+          document.querySelectorAll('[data-i18n]').forEach(el => {
+            const val = t(el.dataset.i18n);
+            if (val) el.textContent = val;
+          });
+
+          // Select options with data-i18n-opt
+          document.querySelectorAll('[data-i18n-opt]').forEach(opt => {
+            const val = t(opt.dataset.i18nOpt);
+            if (val) opt.textContent = val;
+          });
+
+          // Main tabs (text node only, no child elements)
+          document.querySelectorAll('.tab').forEach(btn => {
+            const map = { mortgage:'tab-mortgage', auto:'tab-auto', personal:'tab-personal', student:'tab-student', investment:'tab-investment', strategy:'tab-strategy' };
+            const key = map[btn.dataset.type];
+            if (key && t(key)) btn.textContent = t(key);
+          });
+
+          // ETF card — name and mini-labels (inside card with no data-i18n on the name span itself)
+          const etfNameEl = document.querySelector('.sc-strat-card.etf .sc-strat-name');
+          if (etfNameEl && !etfNameEl.dataset.i18n) etfNameEl.textContent = t('lbl-etf-strategy');
+          const etfMetricEl = document.querySelector('.sc-strat-card.etf .sc-metric-label');
+          if (etfMetricEl && !etfMetricEl.dataset.i18n) etfMetricEl.textContent = t('lbl-final-portfolio-value');
+          const etfMiniKeys = ['lbl-total-invested','lbl-net-gain','lbl-tax-paid','lbl-gross-market-return'];
+          document.querySelectorAll('.sc-strat-card.etf .sc-mini-lbl').forEach((el, i) => {
+            if (etfMiniKeys[i] && !el.dataset.i18n) el.textContent = t(etfMiniKeys[i]);
+          });
+          const etfBadgeEl = document.getElementById('sc-badge-etf');
+          if (etfBadgeEl && !etfBadgeEl.dataset.i18n) etfBadgeEl.textContent = t('lbl-best-outcome');
+
+          // Lang toggle label
+          const langLabel = document.getElementById('lang-label');
+          if (langLabel) langLabel.textContent = lang === 'zh' ? 'EN' : '中文';
+          localStorage.setItem('finCalcLang', lang);
+        }
+
+        // Language toggle button
+        const btn = document.getElementById('lang-toggle');
+        let currentLang = localStorage.getItem('finCalcLang') || 'en';
+        applyLang(currentLang);
+
+        btn.addEventListener('click', () => {
+          currentLang = currentLang === 'en' ? 'zh' : 'en';
+          applyLang(currentLang);
         });
       })();
     </script>
